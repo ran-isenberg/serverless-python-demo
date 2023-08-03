@@ -48,7 +48,7 @@ def test_internal_server_error():
     assert response['statusCode'] == HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-def test_handler_bad_request(mocker):
+def test_handler_bad_request():
     response = call_create_order(generate_api_gw_event({'order_item_count': 5}))
     assert response['statusCode'] == HTTPStatus.BAD_REQUEST
     body_dict = json.loads(response['body'])
