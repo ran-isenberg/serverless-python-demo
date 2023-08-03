@@ -1,0 +1,3 @@
+{
+  "app": "poetry run python app.py"
+}
