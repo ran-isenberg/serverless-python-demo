@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "aws_lambda_handler_cookbook"
-version = "3.0.0"
-description = "This repository provides a working, deployable, open source based, AWS Lambda handler and CDK Python code. This handler embodies Serverless best practices and has all the bells and whistles for a proper production ready handler"
-authors = ["Ran Isenberg"]
+name = "serverless-python-demo"
+version = "1.0.0"
+description = "a sample serverless service written in Python"
+authors = ["Ran Isenberg, Heitor Lessa, Efi Merdler-Kravitz"]
 classifiers=[
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -10,9 +10,9 @@ classifiers=[
     "Natural Language :: English",
     "Programming Language :: Python :: 3.11",
 ]
-repository="https://github.com/ran-isenberg/aws-lambda-handler-cookbook"
+repository="https://github.com/"
 readme = "README.md"
-keywords = ["aws lambda cookbook", "guide to aws lambda", "cdk template", "best practices", "serverless service template"]
+keywords = ["serverless"]
 license = "MIT-0"
 
 [tool.poetry.dependencies]
@@ -28,10 +28,10 @@ aws-lambda-env-modeler = "*"
 [tool.poetry.dev-dependencies]
 # CDK
 service-cdk = {path = "cdk", develop = true}
-aws-cdk-lib = ">=2.75.0"
+aws-cdk-lib = ">=2.88.0"
 constructs = ">=10.0.0"
 cdk-nag = ">2.0.0"
-"aws-cdk.aws-lambda-python-alpha" = "^2.75.0-alpha.0"
+"aws-cdk.aws-lambda-python-alpha" = "^2.88.0-alpha.0"
 # DEV
 pytest = "*"
 pytest-mock = "*"

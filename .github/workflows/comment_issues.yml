@@ -1,10 +1,4 @@
 name: Comment when opened
-
-permissions:
-  issues: write
-  checks: read
-  contents: read
-
 on:
   issues:
     types:
