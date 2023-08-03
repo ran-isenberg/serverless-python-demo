@@ -7,7 +7,7 @@ from constructs import Construct
 from git import Repo
 
 from cdk.service.constants import SERVICE_NAME
-from service.api_construct import ApiConstruct  # type: ignore
+from cdk.service.api_construct import ApiConstruct  # type: ignore
 
 
 def get_username() -> str:

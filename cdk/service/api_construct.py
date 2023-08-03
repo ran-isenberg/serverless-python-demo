@@ -7,7 +7,7 @@ from aws_cdk.aws_logs import RetentionDays
 from constructs import Construct
 
 import cdk.service.constants as constants
-from service.api_db_construct import ApiDbConstruct  # type: ignore
+from cdk.service.api_db_construct import ApiDbConstruct  # type: ignore
 
 
 class ApiConstruct(Construct):
