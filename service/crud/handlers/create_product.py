@@ -24,14 +24,14 @@ from service.crud.schemas.output import CreateProductOutput
 @tracer.capture_lambda_handler(capture_response=False)
 def create_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
     logger.set_correlation_id(context.aws_request_id)
-
+    
     env_vars: CrudVars = get_environment_variables(model=CrudVars)
     logger.debug('environment variables', extra=env_vars.model_dump())
 
     try:
         # we want to extract and parse the HTTP body from the api gw envelope
         create_input: CreateProductRequest = parse(event=event, model=CreateProductRequest, envelope=ApiGatewayEnvelope)
-        logger.info('got create order request', extra={'order_item_count': create_input.order_item_count})
+        logger.info('got create product request', extra={'name': create_input.name, 'price': create_input.price})
     except (ValidationError, TypeError) as exc:  # pragma: no cover
         logger.error('event failed input validation', extra={'error': str(exc)})
         return build_response(http_status=HTTPStatus.BAD_REQUEST, body={})
@@ -43,8 +43,8 @@ def create_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, A
             table_name=env_vars.TABLE_NAME,
         )
     except InternalServerException:  # pragma: no cover
-        logger.error('finished handling create order request with internal error')
+        logger.error('finished handling create product request with internal error')
         return build_response(http_status=HTTPStatus.INTERNAL_SERVER_ERROR, body={})
 
-    logger.info('finished handling create order request')
+    logger.info('finished handling create product request')
     return build_response(http_status=HTTPStatus.OK, body=response.model_dump())

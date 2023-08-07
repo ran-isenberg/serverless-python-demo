@@ -2,7 +2,7 @@ import json
 import random
 import string
 from typing import Any, Dict, Optional
-
+import uuid
 import boto3
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
@@ -104,3 +104,7 @@ def get_stack_output(output_key: str) -> str:
         if str(value['OutputKey']) == output_key:
             return value['OutputValue']
     raise Exception(f'stack output {output_key} was not found')
+
+
+def generate_product_id() -> str:
+    return str(uuid.uuid4())

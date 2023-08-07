@@ -32,7 +32,7 @@ def test_handler_200_ok(mocker, table_name: str):
     # assert side effect - DynamoDB table
     dynamodb_table = boto3.resource('dynamodb').Table(table_name)
     response = dynamodb_table.get_item(Key={'product_id': body_dict['product_id']})
-    assert 'Item' in response  # order was found
+    assert 'Item' in response  # product was found
     assert response['Item']['customer_name'] == customer_name
     assert response['Item']['order_item_count'] == order_item_count
 

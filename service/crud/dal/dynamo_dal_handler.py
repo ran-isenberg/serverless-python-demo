@@ -26,20 +26,20 @@ class DynamoDalHandler(DalHandler):
         return dynamodb.Table(self.table_name)
 
     @tracer.capture_method(capture_response=False)
-    def create_product_in_db(self, customer_name: str, order_item_count: int) -> ProductEntry:
+    def create_product_in_db(self, product_id: str, product_name: str, product_price: float) -> ProductEntry:
         product_id = str(uuid.uuid4())
-        logger.info('trying to save product', extra={'product_id': product_id})
+        logger.info('trying to create a product', extra={'product_id': product_id})
         try:
-            entry = ProductEntry(product_id=product_id, customer_name=customer_name, order_item_count=order_item_count)
-            logger.info('opening connection to dynamodb table', extra={'table_name': self.table_name})
+            entry = ProductEntry(name=product_name, product_id=product_id, price=product_price)
+            logger.debug('opening connection to dynamodb table', extra={'table_name': self.table_name})
             table: Table = self._get_db_handler()
             table.put_item(Item=entry.model_dump())
         except (ClientError, ValidationError) as exc:
             error_msg = 'failed to create product'
-            logger.exception(error_msg, extra={'exception': str(exc), 'customer_name': customer_name})
+            logger.exception(error_msg, extra={'exception': str(exc)})
             raise InternalServerException(error_msg) from exc
 
-        logger.info('finished create product', extra={'product_id': product_id, 'order_item_count': order_item_count, 'customer_name': customer_name})
+        logger.info('finished create product', extra={'product_id': product_id})
         return entry
 
 
