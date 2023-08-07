@@ -4,12 +4,12 @@ from uuid import UUID
 from pydantic import BaseModel, Field, PositiveInt, field_validator
 
 
-class OrderEntry(BaseModel):
+class ProductEntry(BaseModel):
     order_item_count: PositiveInt
     customer_name: Annotated[str, Field(min_length=1, max_length=20)]
-    order_id: str  # primary key
+    product_id: str  # primary key
 
-    @field_validator('order_id')
+    @field_validator('product_id')
     def valid_uuid(cls, v):
         try:
             UUID(v, version=4)

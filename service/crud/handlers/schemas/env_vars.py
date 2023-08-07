@@ -1,6 +1,6 @@
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field
 
 
 class Observability(BaseModel):
@@ -12,7 +12,5 @@ class Idempotency(BaseModel):
     IDEMPOTENCY_TABLE_NAME: Annotated[str, Field(min_length=1)]
 
 
-class MyHandlerEnvVars(Observability):
-    REST_API: HttpUrl
-    ROLE_ARN: Annotated[str, Field(min_length=20, max_length=2048)]
+class CrudVars(Observability):
     TABLE_NAME: Annotated[str, Field(min_length=1)]

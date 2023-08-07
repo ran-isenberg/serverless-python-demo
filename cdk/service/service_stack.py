@@ -30,7 +30,7 @@ class ServiceStack(Stack):
 
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
-        Tags.of(self).add('service_name', 'Products')
+        Tags.of(self).add('service_name', SERVICE_NAME)
 
         self.api = ApiConstruct(self, f'{id}Crud'[0:64])
 
@@ -74,10 +74,6 @@ class ServiceStack(Stack):
                 {
                     'id': 'AwsSolutions-COG4',
                     'reason': 'not using cognito'
-                },
-                {
-                    'id': 'AwsSolutions-L1',
-                    'reason': 'https://github.com/aws/aws-cdk/issues/26451'
                 },
             ],
         )

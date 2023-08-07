@@ -27,7 +27,7 @@ class ApiConstruct(Construct):
             self,
             'crud-rest-api',
             rest_api_name='Product CRUD Rest API',
-            description='This service handles /api/products requests',
+            description='This service handles /api/product requests',
             deploy_options=aws_apigateway.StageOptions(throttling_rate_limit=2, throttling_burst_limit=10),
             cloud_watch_role=False,
         )
@@ -86,12 +86,10 @@ class ApiConstruct(Construct):
             constants.CREATE_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='service.handlers.create_order.create_order',
+            handler='service.crud.handlers.create_product.create_product',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
-                'REST_API': 'https://www.ranthebuilder.cloud/api',  # for env vars example
-                'ROLE_ARN': 'arn:partition:service:region:account-id:resource-type:resource-id',  # for env vars example
                 'TABLE_NAME': db.table_name,
                 'IDEMPOTENCY_TABLE_NAME': idempotency_table.table_name,
             },
@@ -104,5 +102,5 @@ class ApiConstruct(Construct):
             log_retention=RetentionDays.ONE_DAY,
         )
 
-        # POST /api/orders/
+        # POST /api/product/
         api_name.add_method(http_method='POST', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))

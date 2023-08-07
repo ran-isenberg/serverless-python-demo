@@ -1,6 +1,6 @@
 from abc import ABC, ABCMeta, abstractmethod
 
-from service.dal.schemas.db import OrderEntry
+from service.crud.dal.schemas.db import ProductEntry
 
 
 class _SingletonMeta(ABCMeta):
@@ -15,5 +15,5 @@ class _SingletonMeta(ABCMeta):
 class DalHandler(ABC, metaclass=_SingletonMeta):
 
     @abstractmethod
-    def create_order_in_db(self, customer_name: str, order_item_count: int) -> OrderEntry:
+    def create_product_in_db(self, customer_name: str, order_item_count: int) -> ProductEntry:
         ...  # pragma: no cover

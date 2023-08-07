@@ -79,31 +79,31 @@ typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "aws-cdk-aws-lambda-python-alpha"
-version = "2.89.0a0"
+version = "2.90.0a0"
 description = "The CDK Construct Library for AWS Lambda in Python"
 optional = false
 python-versions = "~=3.7"
 files = [
-    {file = "aws-cdk.aws-lambda-python-alpha-2.89.0a0.tar.gz", hash = "sha256:e974653db17779fdeba214528ea73a26fcdabc140991af3c9f3bf3d6e707f54e"},
-    {file = "aws_cdk.aws_lambda_python_alpha-2.89.0a0-py3-none-any.whl", hash = "sha256:0a4454b8e8670832e01935e430015bc8ab7690fa0a23b052c6abc44931ac3ede"},
+    {file = "aws-cdk.aws-lambda-python-alpha-2.90.0a0.tar.gz", hash = "sha256:f7af0a75d4503d44733ea15913450801489be183cf04503d05dd2d2ae4271a68"},
+    {file = "aws_cdk.aws_lambda_python_alpha-2.90.0a0-py3-none-any.whl", hash = "sha256:9e7ab648fcd134d95d2d8b3a16457f531ad6397a319f42e27a479d7bdf162ac6"},
 ]
 
 [package.dependencies]
-aws-cdk-lib = "2.89.0"
+aws-cdk-lib = "2.90.0"
 constructs = ">=10.0.0,<11.0.0"
-jsii = ">=1.85.0,<2.0.0"
+jsii = ">=1.86.0,<2.0.0"
 publication = ">=0.0.3"
 typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "aws-cdk-lib"
-version = "2.89.0"
+version = "2.90.0"
 description = "Version 2 of the AWS Cloud Development Kit library"
 optional = false
 python-versions = "~=3.7"
 files = [
-    {file = "aws-cdk-lib-2.89.0.tar.gz", hash = "sha256:8fbd1d4ee0ffeb67bcc845bef5a10575dbc678ad07f74cdb3cb4243afc433db7"},
-    {file = "aws_cdk_lib-2.89.0-py3-none-any.whl", hash = "sha256:92eeebd77fe17b36029fae20f46eb601710485ea7c808c3d33fe1c71fee125bd"},
+    {file = "aws-cdk-lib-2.90.0.tar.gz", hash = "sha256:d99e304f96f1b04c41922cfa2fc98c1cdd7c88e45c6ebb980ecfc367cdc77e87"},
+    {file = "aws_cdk_lib-2.90.0-py3-none-any.whl", hash = "sha256:ef481a40c3ece38aeaf15706ecbfeea19860b8a7b789ea7b28056a9f456c65d1"},
 ]
 
 [package.dependencies]
@@ -111,7 +111,7 @@ files = [
 "aws-cdk.asset-kubectl-v20" = ">=2.1.2,<3.0.0"
 "aws-cdk.asset-node-proxy-agent-v5" = ">=2.0.166,<3.0.0"
 constructs = ">=10.0.0,<11.0.0"
-jsii = ">=1.85.0,<2.0.0"
+jsii = ">=1.86.0,<2.0.0"
 publication = ">=0.0.3"
 typeguard = ">=2.13.3,<2.14.0"
 
@@ -168,17 +168,17 @@ wrapt = "*"
 
 [[package]]
 name = "boto3"
-version = "1.28.18"
+version = "1.28.20"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "boto3-1.28.18-py3-none-any.whl", hash = "sha256:f2ec3e6f173fe8d141d512ea7d90138db5a58af130773e26ce8e72bdbfd2cddc"},
-    {file = "boto3-1.28.18.tar.gz", hash = "sha256:87ecac82d2a68430c0292b7946512c8b1f01ea6971b43dc5832582fcb176c0dd"},
+    {file = "boto3-1.28.20-py3-none-any.whl", hash = "sha256:a654d57e3882e7fd2c1260d604a44364a2fed00da4f52faf37e5901e71145df1"},
+    {file = "boto3-1.28.20.tar.gz", hash = "sha256:e3c2e8e55c17af6671a5332d6ab4635ad9793c80d0ac6d78af7b30a994d0681b"},
 ]
 
 [package.dependencies]
-botocore = ">=1.31.18,<1.32.0"
+botocore = ">=1.31.20,<1.32.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -187,13 +187,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.31.18"
+version = "1.31.20"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "botocore-1.31.18-py3-none-any.whl", hash = "sha256:909db57f5d6ca765fc9dc9dcae962a87566d0123da1d2bd5be32432493d5785e"},
-    {file = "botocore-1.31.18.tar.gz", hash = "sha256:c4c01fae2ba32c242ce62175cad719aa49415618560d6e215ed76dab91991dc5"},
+    {file = "botocore-1.31.20-py3-none-any.whl", hash = "sha256:be51c5352162700e7beb0aa27af394adbbf86f8e7a2ca0c437d448d0a7b2bdfb"},
+    {file = "botocore-1.31.20.tar.gz", hash = "sha256:485ef175cd011ebc965f4577d8cc02a226c46bd608dd2bb75ce6938328cff0fd"},
 ]
 
 [package.dependencies]
@@ -240,13 +240,13 @@ ujson = ["ujson (>=5.4.0,<6.0.0)"]
 
 [[package]]
 name = "cdk-nag"
-version = "2.27.89"
+version = "2.27.93"
 description = "Check CDK v2 applications for best practices using a combination on available rule packs."
 optional = false
 python-versions = "~=3.7"
 files = [
-    {file = "cdk-nag-2.27.89.tar.gz", hash = "sha256:ea60100dac663f24c280347e73fdc2365c14d29f6d020437311ac6a87c87cb7f"},
-    {file = "cdk_nag-2.27.89-py3-none-any.whl", hash = "sha256:8099a5cc3a5264a9c9d20a1ddde73775947ea88a0648ab3dc6c2585d3212dcf9"},
+    {file = "cdk-nag-2.27.93.tar.gz", hash = "sha256:c8c9eaed36e0c1314d47aa00e6dc8a00814ea0e4c658eff95f6074bb81cd32ad"},
+    {file = "cdk_nag-2.27.93-py3-none-any.whl", hash = "sha256:14cdd250b447c39e227908564e440101ae4cf42febde3f8623fb9d533245e839"},
 ]
 
 [package.dependencies]
@@ -652,13 +652,13 @@ testing = ["flufl.flake8", "importlib-resources (>=1.3)", "packaging", "pyfakefs
 
 [[package]]
 name = "importlib-resources"
-version = "6.0.0"
+version = "6.0.1"
 description = "Read resources from Python packages"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "importlib_resources-6.0.0-py3-none-any.whl", hash = "sha256:d952faee11004c045f785bb5636e8f885bed30dc3c940d5d42798a2a4541c185"},
-    {file = "importlib_resources-6.0.0.tar.gz", hash = "sha256:4cf94875a8368bd89531a756df9a9ebe1f150e0f885030b461237bc7f2d905f2"},
+    {file = "importlib_resources-6.0.1-py3-none-any.whl", hash = "sha256:134832a506243891221b88b4ae1213327eea96ceb4e407a00d790bb0626f45cf"},
+    {file = "importlib_resources-6.0.1.tar.gz", hash = "sha256:4359457e42708462b9626a04657c6208ad799ceb41e5c58c57ffa0e6a098a5d4"},
 ]
 
 [package.extras]
@@ -979,13 +979,13 @@ reports = ["lxml"]
 
 [[package]]
 name = "mypy-boto3-dynamodb"
-version = "1.28.16"
-description = "Type annotations for boto3.DynamoDB 1.28.16 service generated with mypy-boto3-builder 7.17.1"
+version = "1.28.19"
+description = "Type annotations for boto3.DynamoDB 1.28.19 service generated with mypy-boto3-builder 7.17.2"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "mypy-boto3-dynamodb-1.28.16.tar.gz", hash = "sha256:540fad881e240cb624b6e22b4461048c31cfb9ef1da6ae26ca70d1f385605930"},
-    {file = "mypy_boto3_dynamodb-1.28.16-py3-none-any.whl", hash = "sha256:e9be4037aaad101689aae080fc3ca9ee8995a4d721235fc5d88aa005e3cf67c2"},
+    {file = "mypy-boto3-dynamodb-1.28.19.tar.gz", hash = "sha256:6b9b407c9e2fc73ac5d475a8c98af4e1bea3899e5e74ce00d11cb9c878af761b"},
+    {file = "mypy_boto3_dynamodb-1.28.19-py3-none-any.whl", hash = "sha256:a0859c469f46f7e354ae707f1f97bea36746d5538ee851b18d5b61cfb9cf91b9"},
 ]
 
 [[package]]
@@ -1261,13 +1261,13 @@ files = [
 
 [[package]]
 name = "pygments"
-version = "2.15.1"
+version = "2.16.1"
 description = "Pygments is a syntax highlighting package written in Python."
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "Pygments-2.15.1-py3-none-any.whl", hash = "sha256:db2db3deb4b4179f399a09054b023b6a586b76499d36965813c71aa8ed7b5fd1"},
-    {file = "Pygments-2.15.1.tar.gz", hash = "sha256:8ace4d3c1dd481894b2005f560ead0f9f19ee64fe983366be1a21e171d12775c"},
+    {file = "Pygments-2.16.1-py3-none-any.whl", hash = "sha256:13fc09fa63bc8d8671a6d247e1eb303c4b343eaee81d861f3404db2935653692"},
+    {file = "Pygments-2.16.1.tar.gz", hash = "sha256:1daff0494820c69bc8941e407aa20f577374ee88364ee10a98fdbe0aece96e29"},
 ]
 
 [package.extras]
@@ -1962,4 +1962,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.0"
-content-hash = "ecfce3e37c6f96cf30a654e8afcb54be2b9e4d082b2adea93dbf04542fd20102"
+content-hash = "2820cdec254c7b901d77101451709c812ea92ce240322e9067c531cf792eb0d3"
