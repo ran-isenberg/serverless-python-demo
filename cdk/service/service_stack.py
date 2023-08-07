@@ -8,6 +8,7 @@ from git import Repo
 
 from cdk.service.api_construct import ApiConstruct
 from cdk.service.constants import SERVICE_NAME
+from cdk.service.async_construct import AsyncConstruct
 
 
 def get_username() -> str:
@@ -26,14 +27,18 @@ def get_stack_name() -> str:
         return f'{username}-{SERVICE_NAME}'
 
 
+def get_construct_name(stack_prefix: str, construct_name: str) -> str:
+    return f'{stack_prefix}{construct_name}'[0:64]
+
+
 class ServiceStack(Stack):
 
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
         Tags.of(self).add('service_name', SERVICE_NAME)
 
-        self.api = ApiConstruct(self, f'{id}Crud'[0:64])
-
+        self.api = ApiConstruct(self, get_construct_name(id, 'Crud'))
+        self.async_flow = AsyncConstruct(self, get_construct_name(id, 'Async'))
         # add security check
         self._add_security_tests()
 
