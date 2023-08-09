@@ -5,8 +5,8 @@ from cdk_nag import AwsSolutionsChecks, NagSuppressions
 from constructs import Construct
 
 import cdk.service.constants as constants
-from cdk.service.api_construct import ApiConstruct
 from cdk.service.async_construct import AsyncConstruct
+from cdk.service.crud_api_construct import CrudApiConstruct
 from cdk.service.utils import get_construct_name, get_username
 
 
@@ -17,7 +17,7 @@ class ServiceStack(Stack):
         self._add_stack_tags()
         self.shared_layer = self._build_common_lambda_layer(id)
 
-        self.api = ApiConstruct(
+        self.api = CrudApiConstruct(
             self,
             id_=get_construct_name(id, constants.CRUD_CONSTRUCT_NAME),
             lambda_layer=self.shared_layer,
