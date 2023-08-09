@@ -25,13 +25,13 @@ def test_handler_200_ok(api_gw_url: str, product_id: str):
     response = requests.put(url=url_with_product_id, data=body.model_dump_json(), timeout=10)
     assert response.status_code == HTTPStatus.OK
     body_dict = json.loads(response.text)
-    assert body_dict['id'] == body.id
+    assert body_dict['id'] == product_id
 
     # check idempotency, send same request
     response = requests.put(url=url_with_product_id, data=body.model_dump_json(), timeout=10)
     assert response.status_code == HTTPStatus.OK
     body_dict = json.loads(response.text)
-    assert body_dict['id'] == body.id
+    assert body_dict['id'] == product_id
 
 
 def test_handler_bad_request(api_gw_url: str, product_id: str):
