@@ -15,7 +15,8 @@ class AsyncConstruct(Construct):
 
     def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table) -> None:
         super().__init__(scope, id_)
-        self.event_bus = events.EventBus(self, f'{id_}{constants.EVENT_BUS_NAME}', event_bus_name=constants.EVENT_BUS_NAME)
+        bus_name = f'{id_}{constants.EVENT_BUS_NAME}'
+        self.event_bus = events.EventBus(self, bus_name, event_bus_name=bus_name)
         self.role = self._build_lambda_role(dynamodb_table, self.event_bus)
 
         self.lambda_function = self._build_async_lambda(self.role, lambda_layer, dynamodb_table)
