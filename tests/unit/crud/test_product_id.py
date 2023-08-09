@@ -1,5 +1,6 @@
-from service.crud.schemas.shared_types import validate_uuid
 import pytest
+
+from service.crud.schemas.shared_types import validate_uuid
 
 
 def test_invalid_id():
