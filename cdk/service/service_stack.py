@@ -1,46 +1,50 @@
-import os
-from pathlib import Path
-
-from aws_cdk import Aspects, Stack, Tags
+from aws_cdk import Aspects, RemovalPolicy, Stack, Tags
+from aws_cdk import aws_lambda as _lambda
+from aws_cdk.aws_lambda_python_alpha import PythonLayerVersion
 from cdk_nag import AwsSolutionsChecks, NagSuppressions
 from constructs import Construct
-from git import Repo
 
+import cdk.service.constants as constants
 from cdk.service.api_construct import ApiConstruct
 from cdk.service.async_construct import AsyncConstruct
-from cdk.service.constants import SERVICE_NAME
-
-
-def get_username() -> str:
-    try:
-        return os.getlogin().replace('.', '-')
-    except Exception:
-        return 'github'
-
-
-def get_stack_name() -> str:
-    repo = Repo(Path.cwd())
-    username = get_username()
-    try:
-        return f'{username}-{repo.active_branch}-{SERVICE_NAME}'
-    except TypeError:
-        return f'{username}-{SERVICE_NAME}'
-
-
-def get_construct_name(stack_prefix: str, construct_name: str) -> str:
-    return f'{stack_prefix}{construct_name}'[0:64]
+from cdk.service.utils import get_construct_name, get_username
 
 
 class ServiceStack(Stack):
 
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
-        Tags.of(self).add('service_name', SERVICE_NAME)
+        self._add_stack_tags()
+        self.shared_layer = self._build_common_lambda_layer(id)
 
-        self.api = ApiConstruct(self, get_construct_name(id, 'Crud'))
-        self.async_flow = AsyncConstruct(self, get_construct_name(id, 'Async'))
+        self.api = ApiConstruct(
+            self,
+            id_=get_construct_name(id, constants.CRUD_CONSTRUCT_NAME),
+            lambda_layer=self.shared_layer,
+        )
+
+        self.async_flow = AsyncConstruct(
+            self,
+            id_=get_construct_name(id, constants.ASYNC_CONSTRUCT_NAME),
+            lambda_layer=self.shared_layer,
+            dynamodb_table=self.api.api_db.db,
+        )
+
         # add security check
         self._add_security_tests()
+
+    def _build_common_lambda_layer(self, id_: str) -> PythonLayerVersion:
+        return PythonLayerVersion(
+            self,
+            f'{id_}{constants.LAMBDA_LAYER_NAME}',
+            entry=constants.COMMON_LAYER_BUILD_FOLDER,
+            compatible_runtimes=[_lambda.Runtime.PYTHON_3_11],
+            removal_policy=RemovalPolicy.DESTROY,
+        )
+
+    def _add_stack_tags(self) -> None:
+        Tags.of(self).add(constants.SERVICE_NAME_TAG, constants.SERVICE_NAME)
+        Tags.of(self).add(constants.OWNER_TAG, get_username())
 
     def _add_security_tests(self) -> None:
         Aspects.of(self).add(AwsSolutionsChecks(verbose=True))

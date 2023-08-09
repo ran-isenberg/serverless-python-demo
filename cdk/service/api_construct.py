@@ -1,4 +1,4 @@
-from aws_cdk import CfnOutput, Duration, RemovalPolicy, aws_apigateway
+from aws_cdk import CfnOutput, Duration, aws_apigateway
 from aws_cdk import aws_dynamodb as dynamodb
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_lambda as _lambda
@@ -12,12 +12,11 @@ from cdk.service.api_db_construct import ApiDbConstruct
 
 class ApiConstruct(Construct):
 
-    def __init__(self, scope: Construct, id_: str) -> None:
+    def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion) -> None:
         super().__init__(scope, id_)
-        self.id_ = id_
         self.api_db = ApiDbConstruct(self, f'{id_}db')
         self.lambda_role = self._build_lambda_role(self.api_db.db, self.api_db.idempotency_db)
-        self.common_layer = self._build_common_layer()
+        self.common_layer = lambda_layer
         self.rest_api = self._build_api_gw()
         api_resource: aws_apigateway.Resource = self.rest_api.root.add_resource('api').add_resource(constants.GW_RESOURCE)
         self._add_post_lambda_integration(api_resource, self.lambda_role, self.api_db.db, self.api_db.idempotency_db)
@@ -25,7 +24,7 @@ class ApiConstruct(Construct):
     def _build_api_gw(self) -> aws_apigateway.RestApi:
         rest_api: aws_apigateway.RestApi = aws_apigateway.RestApi(
             self,
-            'crud-rest-api',
+            constants.REST_API_NAME,
             rest_api_name='Product CRUD Rest API',
             description='This service handles /api/product requests',
             deploy_options=aws_apigateway.StageOptions(throttling_rate_limit=2, throttling_burst_limit=10),
@@ -41,14 +40,6 @@ class ApiConstruct(Construct):
             constants.SERVICE_ROLE_ARN,
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
             inline_policies={
-                'dynamic_configuration':
-                    iam.PolicyDocument(statements=[
-                        iam.PolicyStatement(
-                            actions=['appconfig:GetLatestConfiguration', 'appconfig:StartConfigurationSession'],
-                            resources=['*'],
-                            effect=iam.Effect.ALLOW,
-                        )
-                    ]),
                 'dynamodb_db':
                     iam.PolicyDocument(statements=[
                         iam.PolicyStatement(
@@ -69,15 +60,6 @@ class ApiConstruct(Construct):
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name(managed_policy_name=(f'service-role/{constants.LAMBDA_BASIC_EXECUTION_ROLE}'))
             ],
-        )
-
-    def _build_common_layer(self) -> PythonLayerVersion:
-        return PythonLayerVersion(
-            self,
-            f'{self.id_}{constants.LAMBDA_LAYER_NAME}',
-            entry=constants.COMMON_LAYER_BUILD_FOLDER,
-            compatible_runtimes=[_lambda.Runtime.PYTHON_3_11],
-            removal_policy=RemovalPolicy.DESTROY,
         )
 
     def _add_post_lambda_integration(self, api_name: aws_apigateway.Resource, role: iam.Role, db: dynamodb.Table, idempotency_table: dynamodb.Table):
