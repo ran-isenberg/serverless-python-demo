@@ -24,14 +24,14 @@ from service.crud.schemas.output import CreateProductOutput
 @tracer.capture_lambda_handler(capture_response=False)
 def create_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
     logger.set_correlation_id(context.aws_request_id)
-    
+
     env_vars: CrudVars = get_environment_variables(model=CrudVars)
     logger.debug('environment variables', extra=env_vars.model_dump())
 
     try:
         # we want to extract and parse the HTTP body from the api gw envelope
         create_input: CreateProductRequest = parse(event=event, model=CreateProductRequest, envelope=ApiGatewayEnvelope)
-        logger.info('got create product request', extra={'name': create_input.name, 'price': create_input.price})
+        logger.info('got create product request', extra={'product': create_input.model_dump()})
     except (ValidationError, TypeError) as exc:  # pragma: no cover
         logger.error('event failed input validation', extra={'error': str(exc)})
         return build_response(http_status=HTTPStatus.BAD_REQUEST, body={})

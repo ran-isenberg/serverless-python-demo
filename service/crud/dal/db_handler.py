@@ -15,5 +15,5 @@ class _SingletonMeta(ABCMeta):
 class DalHandler(ABC, metaclass=_SingletonMeta):
 
     @abstractmethod
-    def create_product_in_db(self, product_id: str, product_name: str, product_price: float) -> ProductEntry:
+    def create_product_in_db(self, product_id: str, product_name: str, product_price: int) -> ProductEntry:
         ...  # pragma: no cover

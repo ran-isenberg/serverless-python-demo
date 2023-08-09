@@ -13,4 +13,4 @@ def handle_create_request(request: CreateProductRequest, table_name: str) -> Cre
     dal_handler: DalHandler = get_dal_handler(table_name)
     product: ProductEntry = dal_handler.create_product_in_db(product_id=request.id, product_name=request.name, product_price=request.price)
     # convert from db entry to output, they won't always be the same
-    return CreateProductOutput(id=product.product_id)
+    return CreateProductOutput(id=product.id)

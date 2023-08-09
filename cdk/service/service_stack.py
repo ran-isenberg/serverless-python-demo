@@ -7,8 +7,8 @@ from constructs import Construct
 from git import Repo
 
 from cdk.service.api_construct import ApiConstruct
-from cdk.service.constants import SERVICE_NAME
 from cdk.service.async_construct import AsyncConstruct
+from cdk.service.constants import SERVICE_NAME
 
 
 def get_username() -> str:

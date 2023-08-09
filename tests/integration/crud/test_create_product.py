@@ -7,7 +7,7 @@ from botocore.stub import Stubber
 
 from service.crud.dal.dynamo_dal_handler import DynamoDalHandler
 from service.crud.schemas.input import CreateProductRequest
-from tests.utils import generate_api_gw_event, generate_context, generate_random_string
+from tests.utils import generate_api_gw_event, generate_context, generate_product_id, generate_random_string
 
 
 def call_create_product(body: Dict[str, Any]) -> Dict[str, Any]:
@@ -19,22 +19,22 @@ def call_create_product(body: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def test_handler_200_ok(mocker, table_name: str):
-    customer_name = f'{generate_random_string()}-RanTheBuilder'
-    order_item_count = 5
-    body = CreateProductRequest(customer_name=customer_name, order_item_count=order_item_count)
+    product_name = generate_random_string()
+    price = 5
+    product_id = generate_product_id()
+    body = CreateProductRequest(id=product_id, name=product_name, price=price)
     response = call_create_product(generate_api_gw_event(body.model_dump()))
     # assert response
     assert response['statusCode'] == HTTPStatus.OK
     body_dict = json.loads(response['body'])
-    assert body_dict['product_id']
-    assert body_dict['customer_name'] == customer_name
-    assert body_dict['order_item_count'] == 5
+    assert body_dict['id'] == product_id
     # assert side effect - DynamoDB table
     dynamodb_table = boto3.resource('dynamodb').Table(table_name)
-    response = dynamodb_table.get_item(Key={'product_id': body_dict['product_id']})
+    response = dynamodb_table.get_item(Key={'id': body_dict['id']})
     assert 'Item' in response  # product was found
-    assert response['Item']['customer_name'] == customer_name
-    assert response['Item']['order_item_count'] == order_item_count
+    assert response['Item']['name'] == product_name
+    assert response['Item']['price'] == price
+    assert response['Item']['id'] == product_id
 
 
 def test_internal_server_error():
@@ -43,7 +43,10 @@ def test_internal_server_error():
     stubber = Stubber(table.meta.client)
     stubber.add_client_error(method='put_item', service_error_code='ValidationException')
     stubber.activate()
-    body = CreateProductRequest(customer_name='RanTheBuilder', order_item_count=5)
+    product_name = generate_random_string()
+    price = 5
+    product_id = generate_product_id()
+    body = CreateProductRequest(id=product_id, name=product_name, price=price)
     response = call_create_product(generate_api_gw_event(body.model_dump()))
     assert response['statusCode'] == HTTPStatus.INTERNAL_SERVER_ERROR
     stubber.deactivate()
@@ -51,7 +54,7 @@ def test_internal_server_error():
 
 
 def test_handler_bad_request():
-    response = call_create_product(generate_api_gw_event({'order_item_count': 5}))
+    response = call_create_product(generate_api_gw_event({'price': 5}))
     assert response['statusCode'] == HTTPStatus.BAD_REQUEST
     body_dict = json.loads(response['body'])
     assert body_dict == {}

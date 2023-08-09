@@ -1,5 +1,6 @@
 import pytest
 from aws_lambda_powertools.utilities.parser import ValidationError
+
 from service.crud.schemas.input import CreateProductRequest
 
 
@@ -29,9 +30,9 @@ def test_invalid_price_type(product_id):
 
 
 def test_valid_input(product_id):
-    CreateProductRequest(id=product_id, name='a', price=4.4)
+    CreateProductRequest(id=product_id, name='a', price=4)
 
 
 def test_invalid_id():
     with pytest.raises(ValidationError):
-        CreateProductRequest(id='aaa', name='a', price=4.4)
+        CreateProductRequest(id='aaa', name='a', price=4)

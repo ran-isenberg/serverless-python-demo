@@ -1,6 +1,6 @@
-from tests.utils import generate_product_id
-
 import pytest
+
+from tests.utils import generate_product_id
 
 
 @pytest.fixture(scope='module', autouse=True)

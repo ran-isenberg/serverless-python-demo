@@ -1,8 +1,9 @@
 import json
 import random
 import string
-from typing import Any, Dict, Optional
 import uuid
+from typing import Any, Dict, Optional
+
 import boto3
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
