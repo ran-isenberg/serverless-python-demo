@@ -7,10 +7,10 @@ from aws_cdk.aws_logs import RetentionDays
 from constructs import Construct
 
 import cdk.service.constants as constants
-from cdk.service.api_db_construct import ApiDbConstruct
+from cdk.service.crud_api_db_construct import ApiDbConstruct
 
 
-class ApiConstruct(Construct):
+class CrudApiConstruct(Construct):
 
     def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion) -> None:
         super().__init__(scope, id_)
@@ -19,7 +19,7 @@ class ApiConstruct(Construct):
         self.common_layer = lambda_layer
         self.rest_api = self._build_api_gw()
         api_resource: aws_apigateway.Resource = self.rest_api.root.add_resource('api').add_resource(constants.GW_RESOURCE)
-        self._add_post_lambda_integration(api_resource, self.lambda_role, self.api_db.db, self.api_db.idempotency_db)
+        self._add_put_product_lambda_integration(api_resource, self.lambda_role, self.api_db.db, self.api_db.idempotency_db)
 
     def _build_api_gw(self) -> aws_apigateway.RestApi:
         rest_api: aws_apigateway.RestApi = aws_apigateway.RestApi(
@@ -41,13 +41,12 @@ class ApiConstruct(Construct):
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
             inline_policies={
                 'dynamodb_db':
-                    iam.PolicyDocument(statements=[
-                        iam.PolicyStatement(
-                            actions=['dynamodb:PutItem', 'dynamodb:GetItem'],
+                    iam.PolicyDocument(
+                        statements=[iam.PolicyStatement(
+                            actions=['dynamodb:PutItem'],
                             resources=[db.table_arn],
                             effect=iam.Effect.ALLOW,
-                        )
-                    ]),
+                        )]),
                 'idempotency_table':
                     iam.PolicyDocument(statements=[
                         iam.PolicyStatement(
@@ -62,7 +61,14 @@ class ApiConstruct(Construct):
             ],
         )
 
-    def _add_post_lambda_integration(self, api_name: aws_apigateway.Resource, role: iam.Role, db: dynamodb.Table, idempotency_table: dynamodb.Table):
+    def _add_put_product_lambda_integration(
+        self,
+        api_resource: aws_apigateway.Resource,
+        role: iam.Role,
+        db: dynamodb.Table,
+        idempotency_table: dynamodb.Table,
+    ):
+        put_resource = api_resource.add_resource('{product}')
         lambda_function = _lambda.Function(
             self,
             constants.CREATE_LAMBDA,
@@ -84,5 +90,5 @@ class ApiConstruct(Construct):
             log_retention=RetentionDays.ONE_DAY,
         )
 
-        # POST /api/product/
-        api_name.add_method(http_method='POST', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))
+        # PUT /api/product/{product}/
+        put_resource.add_method(http_method='PUT', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))

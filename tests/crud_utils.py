@@ -2,18 +2,18 @@ import json
 import uuid
 from typing import Any, Dict, Optional
 
-from service.crud.schemas.input import CreateProductRequest
+from service.crud.schemas.input import PutProductBody
 from tests.utils import generate_random_integer, generate_random_string
 
 
 # example taken from AWS Lambda Powertools test files
 # https://github.com/awslabs/aws-lambda-powertools-python/blob/develop/tests/events/apiGatewayProxyEvent.json
-def generate_api_gw_event(body: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+def generate_api_gw_event(body: Optional[Dict[str, Any]] = None, path_params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     return {
         'version': '1.0',
-        'resource': '/my/path',
-        'path': '/my/path',
-        'httpMethod': 'POST',
+        'resource': '/api/product',
+        'path': '/api/product',
+        'httpMethod': 'PUT',
         'headers': {
             'Header1': 'value1',
             'Header2': 'value2'
@@ -40,7 +40,7 @@ def generate_api_gw_event(body: Optional[Dict[str, Any]]) -> Dict[str, Any]:
             'domainName': 'id.execute-api.us-east-1.amazonaws.com',
             'domainPrefix': 'id',
             'extendedRequestId': 'request-id',
-            'httpMethod': 'POST',
+            'httpMethod': 'PUT',
             'identity': {
                 'accessKey': None,
                 'accountId': None,
@@ -65,16 +65,16 @@ def generate_api_gw_event(body: Optional[Dict[str, Any]]) -> Dict[str, Any]:
                     }
                 }
             },
-            'path': '/my/path',
+            'path': '/api/product',
             'protocol': 'HTTP/1.1',
             'requestId': 'id=',
             'requestTime': '04/Mar/2020:19:15:17 +0000',
             'requestTimeEpoch': 1583349317135,
             'resourceId': None,
-            'resourcePath': '/my/path',
+            'resourcePath': '/api/product',
             'stage': '$default'
         },
-        'pathParameters': None,
+        'pathParameters': path_params,
         'stageVariables': None,
         'body': 'Hello from Lambda!' if body is None else json.dumps(body),
         'isBase64Encoded': True
@@ -85,5 +85,5 @@ def generate_product_id() -> str:
     return str(uuid.uuid4())
 
 
-def generate_create_product_request_body() -> CreateProductRequest:
-    return CreateProductRequest(id=generate_product_id(), name=generate_random_string(), price=generate_random_integer())
+def generate_create_product_request_body() -> PutProductBody:
+    return PutProductBody(name=generate_random_string(), price=generate_random_integer())
