@@ -15,14 +15,14 @@ This structure has proven its worth in production for us. However, there's no ri
 
 You can read more about it [here](https://www.ranthebuilder.cloud/post/aws-cdk-best-practices-from-the-trenches)
 
-### CDK 
+### CDK
 
 #### What
 We chose AWS CDK as the IaC of choice.
 
 #### Why
 
-- There are many IaC options. We chose CDK since we enjoy working with it and have a very positive experience with it and with the experience of defining resources in code instead of YAML files. 
+- There are many IaC options. We chose CDK since we enjoy working with it and have a very positive experience with it and with the experience of defining resources in code instead of YAML files.
 - Choose what fits your organization best: AWS SAM, Serverless, Terraform, Pulumi, etc.
 
 ### CDK Constructs Structure
@@ -76,7 +76,7 @@ We use a Lambda layer that all our Lambda functions use.
 
 #### Why
 
-We use it as a deployment optimization since all our functions require mostly (or the same) dependencies. 
+We use it as a deployment optimization since all our functions require mostly (or the same) dependencies.
 
 It comprises all '[tool.poetry.dependencies]' in the 'pyproject. toml' file.
 
@@ -93,11 +93,11 @@ We use as build stage as part of 'make deploy' to copy the Lambda contents from 
 
 #### Why
 
-You must supply an asset folder when building a Lambda layer/lambda function with CDK. It removes the top folder and takes the contents. 
+You must supply an asset folder when building a Lambda layer/lambda function with CDK. It removes the top folder and takes the contents.
 
 If we were to supply the 'product' folder as the root folder, we would get import issues when invoking the function since the imports in our lambda function contain 'product.x.y' same as it resides on GitHub.
 
-To solve this issue, we have a build step that it runs when you run 'make deploy'; it copies the 'product' folder from the root level to a new root level folder, the '.build.' 
+To solve this issue, we have a build step that it runs when you run 'make deploy'; it copies the 'product' folder from the root level to a new root level folder, the '.build.'
 
 This way, when CDK takes the lambda contents from this new top level, it also takes the 'product' top folder and the imports remain valid.
 
@@ -112,14 +112,14 @@ Under product, you have several folders: one per domain.
 
 Each domain: crud and stream processor, have different layers.
 
-We have different architectural layers: handler -> domain logic -> data access layer. 
+We have different architectural layers: handler -> domain logic -> data access layer.
 
 Each layer has folders for Pydantic schema classes and utilities.
 
 
 #### Why
 
-This is an opinionated structure backed by AWS best practices to separate handler code from domain logic. 
+This is an opinionated structure backed by AWS best practices to separate handler code from domain logic.
 
 You can read more about it [here](https://www.ranthebuilder.cloud/post/learn-how-to-write-aws-lambda-functions-with-architecture-layers).
 
