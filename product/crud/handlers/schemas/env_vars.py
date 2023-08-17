@@ -12,5 +12,5 @@ class Idempotency(BaseModel):
     IDEMPOTENCY_TABLE_NAME: Annotated[str, Field(min_length=1)]
 
 
-class CrudVars(Observability):
+class CrudVars(Observability, Idempotency):
     TABLE_NAME: Annotated[str, Field(min_length=1)]

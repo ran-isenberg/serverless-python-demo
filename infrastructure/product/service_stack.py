@@ -4,10 +4,10 @@ from aws_cdk.aws_lambda_python_alpha import PythonLayerVersion
 from cdk_nag import AwsSolutionsChecks, NagSuppressions
 from constructs import Construct
 
-import cdk.service.constants as constants
-from cdk.service.async_construct import AsyncConstruct
-from cdk.service.crud_api_construct import CrudApiConstruct
-from cdk.service.utils import get_construct_name, get_username
+import infrastructure.product.constants as constants
+from infrastructure.product.crud_api_construct import CrudApiConstruct
+from infrastructure.product.stream_processor_construct import StreamProcessorConstruct
+from infrastructure.product.utils import get_construct_name, get_username
 
 
 class ServiceStack(Stack):
@@ -23,9 +23,9 @@ class ServiceStack(Stack):
             lambda_layer=self.shared_layer,
         )
 
-        self.async_flow = AsyncConstruct(
+        self.stream_processor = StreamProcessorConstruct(
             self,
-            id_=get_construct_name(id, constants.ASYNC_CONSTRUCT_NAME),
+            id_=get_construct_name(id, constants.STREAM_PROC_CONSTRUCT_NAME),
             lambda_layer=self.shared_layer,
             dynamodb_table=self.api.api_db.db,
         )
@@ -43,6 +43,7 @@ class ServiceStack(Stack):
         )
 
     def _add_stack_tags(self) -> None:
+        # best practice to help identify resources in the console
         Tags.of(self).add(constants.SERVICE_NAME_TAG, constants.SERVICE_NAME)
         Tags.of(self).add(constants.OWNER_TAG, get_username())
 

@@ -1,4 +1,4 @@
-.PHONY: dev lint complex coverage pre-commit yapf sort deploy destroy deps unit infra-tests integration e2e pipeline-tests docs lint-docs build
+.PHONY: dev lint complex coverage pre-commit yapf sort deploy destroy deps unit infra-tests integration e2e coverage-tests docs lint-docs build
 
 
 
@@ -10,7 +10,7 @@ dev:
 
 lint:
 	@echo "Running flake8"
-	flake8 service/* cdk/* tests/* --exclude patterns='build,cdk.json,cdk.context.json,.yaml'
+	flake8 product/* infrastructure/* tests/* --exclude patterns='build,cdk.json,cdk.context.json,.yaml'
 	@echo "Running mypy"
 	make mypy-lint
 
@@ -27,18 +27,18 @@ pre-commit:
 	pre-commit run -a --show-diff-on-failure
 
 mypy-lint:
-	mypy --pretty service cdk tests
+	mypy --pretty product infrastructure tests
 
 deps:
 	poetry export --only=dev --without-hashes --format=requirements.txt > dev_requirements.txt
 	poetry export --without=dev --without-hashes --format=requirements.txt > lambda_requirements.txt
 
 unit:
-	pytest tests/unit  --cov-config=.coveragerc --cov=service --cov-report xml
+	pytest tests/unit  --cov-config=.coveragerc --cov=product --cov-report xml
 
 build:
 	make deps
-	mkdir -p .build/lambdas ; cp -r service .build/lambdas
+	mkdir -p .build/lambdas ; cp -r product .build/lambdas
 	mkdir -p .build/common_layer ; poetry export --without=dev --without-hashes --format=requirements.txt > .build/common_layer/requirements.txt
 
 infra-tests:
@@ -46,18 +46,18 @@ infra-tests:
 	pytest tests/infrastructure
 
 integration:
-	pytest tests/integration  --cov-config=.coveragerc --cov=service --cov-report xml
+	pytest tests/integration  --cov-config=.coveragerc --cov=product --cov-report xml
 
 e2e:
-	pytest tests/e2e  --cov-config=.coveragerc --cov=service --cov-report xml
+	pytest tests/e2e  --cov-config=.coveragerc --cov=product --cov-report xml
 
 pr: deps yapf sort pre-commit complex lint unit deploy integration e2e
 
 yapf:
 	yapf -i -vv --style=./.style --exclude=.venv --exclude=.build --exclude=cdk.out --exclude=.git  -r .
 
-pipeline-tests:
-	pytest tests/unit tests/integration  --cov-config=.coveragerc --cov=service --cov-report xml
+coverage-tests:
+	pytest tests/unit tests/integration  --cov-config=.coveragerc --cov=product --cov-report xml
 
 deploy:
 	make build

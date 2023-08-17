@@ -4,7 +4,7 @@ from http import HTTPStatus
 import pytest
 import requests
 
-from cdk.service.constants import APIGATEWAY, GW_RESOURCE
+from infrastructure.product.constants import APIGATEWAY, GW_RESOURCE
 from tests.crud_utils import generate_create_product_request_body, generate_product_id
 from tests.utils import get_stack_output
 

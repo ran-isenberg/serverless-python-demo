@@ -1,7 +1,7 @@
 import pytest
 from aws_lambda_powertools.utilities.parser import ValidationError
 
-from service.crud.schemas.input import PutProductBody
+from product.crud.schemas.input import PutProductBody
 
 
 def test_invalid_name():

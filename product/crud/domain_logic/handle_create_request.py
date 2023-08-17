@@ -1,8 +1,8 @@
-from service.crud.dal.db_handler import DalHandler
-from service.crud.dal.dynamo_dal_handler import get_dal_handler
-from service.crud.dal.schemas.db import ProductEntry
-from service.crud.handlers.utils.observability import logger, tracer
-from service.crud.schemas.output import CreateProductOutput
+from product.crud.dal.db_handler import DalHandler
+from product.crud.dal.dynamo_dal_handler import get_dal_handler
+from product.crud.dal.schemas.db import ProductEntry
+from product.crud.handlers.utils.observability import logger, tracer
+from product.crud.schemas.output import CreateProductOutput
 
 
 @tracer.capture_method(capture_response=False)

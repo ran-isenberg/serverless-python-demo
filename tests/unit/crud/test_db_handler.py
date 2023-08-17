@@ -1,8 +1,8 @@
 import pytest
 from botocore.stub import Stubber
 
-from service.crud.dal.dynamo_dal_handler import DynamoDalHandler
-from service.crud.schemas.exceptions import InternalServerException
+from product.crud.dal.dynamo_dal_handler import DynamoDalHandler
+from product.crud.schemas.exceptions import InternalServerException
 
 
 def test_raise_exception(product_id):
