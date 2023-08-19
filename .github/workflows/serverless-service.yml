@@ -87,11 +87,9 @@ jobs:
       - name: Install dependencies
         run: make dev
       - name: Unit tests
-        run: |
-          make unit
+        run: make unit
       - name: Infrastructure tests
-        run: |
-          make infra-tests
+        run: make infra-tests
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355 # v2.2.0
         with:
@@ -105,8 +103,7 @@ jobs:
       # NOTE: these run unit and integration tests
       # we can look into coverage collection only later to make it faster and less brittle (--collect-only)
       - name: Code coverage tests
-        run: |
-          make coverage-tests
+        run: make coverage-tests
       - name: Codecov
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         with:
