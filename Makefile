@@ -1,8 +1,10 @@
 .PHONY: dev lint complex coverage pre-commit yapf sort deploy destroy deps unit infra-tests integration e2e coverage-tests docs lint-docs build
 CWD := $(shell pwd)
 
-
+.ONESHELL:  # run all commands in a single shell, ensuring it runs within a local virtual env
 dev:
+	python3 -m venv .venv
+	. .venv/bin/activate
 	pip install --upgrade pip pre-commit poetry
 	pre-commit install
 	poetry config --local virtualenvs.in-project true
@@ -32,8 +34,8 @@ mypy-lint:
 	mypy --pretty product infrastructure tests
 
 deps:
-	poetry export --only=dev --without-hashes --format=requirements.txt > dev_requirements.txt
-	poetry export --without=dev --without-hashes --format=requirements.txt > lambda_requirements.txt
+	poetry export --only=dev --format=requirements.txt > dev_requirements.txt
+	poetry export --without=dev --format=requirements.txt > lambda_requirements.txt
 
 unit:
 	pytest tests/unit  --cov-config=.coveragerc --cov=product --cov-report xml
