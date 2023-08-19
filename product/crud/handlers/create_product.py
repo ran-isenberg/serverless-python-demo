@@ -7,14 +7,14 @@ from aws_lambda_powertools.utilities.idempotency import idempotent
 from aws_lambda_powertools.utilities.parser import ValidationError, parse
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
-from service.crud.handlers.schemas.env_vars import CrudVars
-from service.crud.handlers.utils.http_responses import build_response
-from service.crud.handlers.utils.idempotency import IDEMPOTENCY_CONFIG, IDEMPOTENCY_LAYER
-from service.crud.handlers.utils.observability import logger, metrics, tracer
-from service.crud.logic.handle_create_request import handle_create_request
-from service.crud.schemas.exceptions import InternalServerException
-from service.crud.schemas.input import CreateProductRequest
-from service.crud.schemas.output import CreateProductOutput
+from product.crud.domain_logic.handle_create_request import handle_create_request
+from product.crud.handlers.schemas.env_vars import CrudVars
+from product.crud.handlers.utils.http_responses import build_response
+from product.crud.handlers.utils.idempotency import IDEMPOTENCY_CONFIG, IDEMPOTENCY_LAYER
+from product.crud.handlers.utils.observability import logger, metrics, tracer
+from product.crud.schemas.exceptions import InternalServerException
+from product.crud.schemas.input import CreateProductRequest
+from product.crud.schemas.output import CreateProductOutput
 
 
 @init_environment_variables(model=CrudVars)

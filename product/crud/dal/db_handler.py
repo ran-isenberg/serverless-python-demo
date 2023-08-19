@@ -1,6 +1,6 @@
 from abc import ABC, ABCMeta, abstractmethod
 
-from service.crud.dal.schemas.db import ProductEntry
+from product.crud.dal.schemas.db import ProductEntry
 
 
 class _SingletonMeta(ABCMeta):

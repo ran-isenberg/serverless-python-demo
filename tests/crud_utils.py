@@ -2,7 +2,7 @@ import json
 import uuid
 from typing import Any, Dict, Optional
 
-from service.crud.schemas.input import PutProductBody
+from product.crud.schemas.input import PutProductBody
 from tests.utils import generate_random_integer, generate_random_string
 
 

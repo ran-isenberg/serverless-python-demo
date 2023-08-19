@@ -27,7 +27,7 @@ aws-lambda-env-modeler = "*"
 
 [tool.poetry.dev-dependencies]
 # CDK
-service-cdk = {path = "cdk", develop = true}
+infrastructure = {path = "infrastructure", develop = true}
 aws-cdk-lib = ">=2.88.0"
 constructs = ">=10.0.0"
 cdk-nag = ">2.0.0"

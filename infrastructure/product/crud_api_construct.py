@@ -6,8 +6,8 @@ from aws_cdk.aws_lambda_python_alpha import PythonLayerVersion
 from aws_cdk.aws_logs import RetentionDays
 from constructs import Construct
 
-import cdk.service.constants as constants
-from cdk.service.crud_api_db_construct import ApiDbConstruct
+import infrastructure.product.constants as constants
+from infrastructure.product.crud_api_db_construct import ApiDbConstruct
 
 
 class CrudApiConstruct(Construct):
@@ -74,7 +74,7 @@ class CrudApiConstruct(Construct):
             constants.CREATE_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='service.crud.handlers.create_product.create_product',
+            handler='product.crud.handlers.create_product.create_product',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger

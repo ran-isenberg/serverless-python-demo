@@ -2,7 +2,13 @@ import os
 
 import pytest
 
-from cdk.service.constants import IDEMPOTENCY_TABLE_NAME_OUTPUT, POWER_TOOLS_LOG_LEVEL, POWERTOOLS_SERVICE_NAME, SERVICE_NAME, TABLE_NAME_OUTPUT
+from infrastructure.product.constants import (
+    IDEMPOTENCY_TABLE_NAME_OUTPUT,
+    POWER_TOOLS_LOG_LEVEL,
+    POWERTOOLS_SERVICE_NAME,
+    SERVICE_NAME,
+    TABLE_NAME_OUTPUT,
+)
 from tests.utils import get_stack_output
 
 

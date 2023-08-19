@@ -3,7 +3,7 @@ from pathlib import Path
 
 from git import Repo
 
-import cdk.service.constants as constants
+import infrastructure.product.constants as constants
 
 
 def get_username() -> str:

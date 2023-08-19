@@ -1,7 +1,7 @@
 import pytest
 from aws_lambda_powertools.utilities.parser import ValidationError
 
-from service.crud.dal.schemas.db import ProductEntry
+from product.crud.dal.schemas.db import ProductEntry
 
 
 def test_invalid_items_type(product_id):

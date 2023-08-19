@@ -8,10 +8,10 @@ from aws_cdk.aws_lambda_python_alpha import PythonLayerVersion
 from aws_cdk.aws_logs import RetentionDays
 from constructs import Construct
 
-import cdk.service.constants as constants
+import infrastructure.product.constants as constants
 
 
-class AsyncConstruct(Construct):
+class StreamProcessorConstruct(Construct):
 
     def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table) -> None:
         super().__init__(scope, id_)
@@ -19,12 +19,12 @@ class AsyncConstruct(Construct):
         self.event_bus = events.EventBus(self, bus_name, event_bus_name=bus_name)
         self.role = self._build_lambda_role(dynamodb_table, self.event_bus)
 
-        self.lambda_function = self._build_async_lambda(self.role, lambda_layer, dynamodb_table)
+        self.lambda_function = self._build_stream_processor_lambda(self.role, lambda_layer, dynamodb_table)
 
     def _build_lambda_role(self, db: dynamodb.Table, bus: events.EventBus) -> iam.Role:
         return iam.Role(
             self,
-            constants.ASYNC_SERVICE_ROLE_ARN,
+            constants.STREAM_PROC_SERVICE_ROLE_ARN,
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
             inline_policies={
                 'streams':
@@ -48,13 +48,13 @@ class AsyncConstruct(Construct):
             ],
         )
 
-    def _build_async_lambda(self, role: iam.Role, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table) -> _lambda.Function:
+    def _build_stream_processor_lambda(self, role: iam.Role, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table) -> _lambda.Function:
         lambda_function = _lambda.Function(
             self,
-            constants.ASYNC_LAMBDA,
+            constants.STREAM_PROC_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='service.async.handlers.async_handler.handle_events',
+            handler='product.stream_processor.handlers.stream_handler.handle_events',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger

@@ -5,7 +5,7 @@ from typing import Any, Dict
 import boto3
 from botocore.stub import Stubber
 
-from service.crud.dal.dynamo_dal_handler import DynamoDalHandler
+from product.crud.dal.dynamo_dal_handler import DynamoDalHandler
 from tests.crud_utils import generate_api_gw_event, generate_create_product_request_body, generate_product_id
 from tests.utils import generate_context
 
@@ -14,7 +14,7 @@ def call_create_product(body: Dict[str, Any]) -> Dict[str, Any]:
     # important is done here since idempotency decorator requires an env. variable during import time
     # conf.test sets that env. variable (table name) but it runs after imports
     # this way, idempotency import runs after conftest sets the values already
-    from service.crud.handlers.create_product import create_product
+    from product.crud.handlers.create_product import create_product
     return create_product(body, generate_context())
 
 

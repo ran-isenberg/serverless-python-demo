@@ -7,10 +7,10 @@ from mypy_boto3_dynamodb import DynamoDBServiceResource
 from mypy_boto3_dynamodb.service_resource import Table
 from pydantic import ValidationError
 
-from service.crud.dal.db_handler import DalHandler
-from service.crud.dal.schemas.db import ProductEntry
-from service.crud.handlers.utils.observability import logger, tracer
-from service.crud.schemas.exceptions import InternalServerException
+from product.crud.dal.db_handler import DalHandler
+from product.crud.dal.schemas.db import ProductEntry
+from product.crud.handlers.utils.observability import logger, tracer
+from product.crud.schemas.exceptions import InternalServerException
 
 
 class DynamoDalHandler(DalHandler):

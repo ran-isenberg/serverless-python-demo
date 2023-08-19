@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field, PositiveInt
 
-from service.crud.schemas.shared_types import ProductId
+from product.crud.schemas.shared_types import ProductId
 
 
 class ProductEntry(BaseModel):

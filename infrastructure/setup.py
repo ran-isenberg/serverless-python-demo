@@ -6,7 +6,7 @@ from setuptools import find_packages, setup
 here = path.abspath(path.dirname(__file__))
 
 setup(
-    name='service-cdk',
+    name='infrastructure',
     version='1.0',
     description='CDK code for deploying the serverless service',
     classifiers=[
