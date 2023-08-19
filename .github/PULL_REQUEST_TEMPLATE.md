@@ -1,5 +1,6 @@
 <!-- markdownlint-disable MD041 MD043 -->
-**Issue number:** 
+<!-- Add issue number next to close keyword so it links PR and issue for auto-closure -->
+closes ISSUE_NUMBER
 
 ## Summary
 
