@@ -11,8 +11,30 @@ permissions:
 on:
   push:
     branches: [main]
+    paths:
+      - "product/**"                # source code
+      - "infrastructure/**"         # CDK source code
+      - "tests/**"
+      - "pyproject.toml"            # deps
+      - "poetry.lock"               # deps
+      - "mypy.ini"
+      - "app.py"                    # CDK entrypoint
+      - ".flake8"                   # linter settings
+      - ".isort.cfg"                # formatter settings
+
   pull_request:
     branches: [main]
+    paths:
+      - "product/**"                # source code
+      - "infrastructure/**"         # CDK source code
+      - "tests/**"
+      - "pyproject.toml"            # deps
+      - "poetry.lock"               # deps
+      - "mypy.ini"
+      - "app.py"                    # CDK entrypoint
+      - ".flake8"                   # linter settings
+      - ".isort.cfg"                # formatter settings
+
 
 jobs:
   build:
