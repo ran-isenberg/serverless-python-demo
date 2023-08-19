@@ -98,7 +98,6 @@ jobs:
           name: aws-lambda-handler-cookbook-codecov
           fail_ci_if_error: false # optional (default = false)
           verbose: false # optional (default = false)
-          token: ${{ secrets.CODECOV_TOKEN }}
       - name: Run E2E tests
         run: make e2e
       - name: Destroy stack
