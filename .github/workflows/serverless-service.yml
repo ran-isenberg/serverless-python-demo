@@ -4,8 +4,6 @@ name: Serverless Service CI/CD
 
 permissions:
   id-token: write # This is required for requesting the JWT
-  issues: write
-  checks: read
   contents: read
 
 on:
