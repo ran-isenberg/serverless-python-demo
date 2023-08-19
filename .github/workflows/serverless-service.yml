@@ -3,7 +3,6 @@
 name: Serverless Service CI/CD
 
 permissions:
-  id-token: write # This is required for requesting the JWT
   contents: read
 
 on:
@@ -35,13 +34,43 @@ on:
 
 
 jobs:
-  build:
+  quality_standards:
     runs-on: ubuntu-latest
-    environment: dev
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event.\n" >> $GITHUB_STEP_SUMMARY
       - run: echo "🐧 This job is now running on a ${{  runner.os }} server hosted by GitHub!\n" >> $GITHUB_STEP_SUMMARY
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}.\n" >> $GITHUB_STEP_SUMMARY
+      - name: Check out repository code
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4.7.0
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip pre-commit poetry
+          make deps
+          pip install -r dev_requirements.txt
+          pip install -r lambda_requirements.txt
+      - name: pre commit
+        run: |
+          make pre-commit
+      - name: Lint with flake8 and mypy
+        run: |
+          make lint
+      - name: file format
+        run: |
+          yapf -d -vv --style=./.style --exclude=.venv --exclude=.build --exclude=cdk.out --exclude=.git  -r .
+      - name: Complexity scan
+        run: |
+          make complex
+  tests:
+    needs: quality_standards
+    runs-on: ubuntu-latest
+    environment: dev
+    permissions:
+      id-token: write  # required for requesting the JWT (GitHub OIDC)
+    steps:
       - name: Check out repository code
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: Set up Python 3.11
@@ -59,33 +88,22 @@ jobs:
           make deps
           pip install -r dev_requirements.txt
           pip install -r lambda_requirements.txt
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355 # v2.2.0
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE }}
-          role-session-name: samplerolesession
-          aws-region: us-east-1
-      - name: pre commit
-        run: |
-          make pre-commit
-      - name: Lint with flake8 and mypy
-        run: |
-          make lint
-      - name: file format
-        run: |
-          yapf -d -vv --style=./.style --exclude=.venv --exclude=.build --exclude=cdk.out --exclude=.git  -r .
-      - name: Complexity scan
-        run: |
-          make complex
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: Unit tests
         run: |
           make unit
       - name: Infrastructure tests
         run: |
           make infra-tests
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355 # v2.2.0
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-session-name: samplerolesession
+          aws-region: us-east-1
       - name: Deploy to AWS
         run: make deploy
+      # NOTE: these run unit and integration tests
+      # we can look into coverage collection only later to make it faster and less brittle (--collect-only)
       - name: Code coverage tests
         run: |
           make coverage-tests
