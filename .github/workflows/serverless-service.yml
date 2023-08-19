@@ -60,23 +60,13 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
       - name: Install dependencies
-        run: |
-          pip install --upgrade pip pre-commit poetry
-          make deps
-          pip install -r dev_requirements.txt
-          pip install -r lambda_requirements.txt
+        run: make dev
       - name: pre commit
-        run: |
-          make pre-commit
-      - name: Lint with flake8 and mypy
-        run: |
-          make lint
-      - name: file format
-        run: |
-          yapf -d -vv --style=./.style --exclude=.venv --exclude=.build --exclude=cdk.out --exclude=.git  -r .
+        run: make pre-commit
+      - name: Formatting and Linting
+        run: make lint
       - name: Complexity scan
-        run: |
-          make complex
+        run: make complex
   tests:
     needs: quality_standards
     runs-on: ubuntu-latest

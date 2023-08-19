@@ -1,5 +1,5 @@
 .PHONY: dev lint complex coverage pre-commit yapf sort deploy destroy deps unit infra-tests integration e2e coverage-tests docs lint-docs build
-
+CWD := $(shell pwd)
 
 
 dev:
@@ -8,7 +8,11 @@ dev:
 	poetry config --local virtualenvs.in-project true
 	poetry install
 
-lint:
+format:
+	isort $(CWD)
+	yapf -d -vv --style=./.style --exclude=.venv --exclude=.build --exclude=cdk.out --exclude=.git -r .
+
+lint: format
 	@echo "Running flake8"
 	flake8 product/* infrastructure/* tests/* --exclude patterns='build,cdk.json,cdk.context.json,.yaml'
 	@echo "Running mypy"
@@ -19,9 +23,6 @@ complex:
 	radon cc -e 'tests/*,cdk.out/*' .
 	@echo "Running xenon"
 	xenon --max-absolute B --max-modules A --max-average A -e 'tests/*,.venv/*,cdk.out/*' .
-
-sort:
-	isort ${PWD}
 
 pre-commit:
 	pre-commit run -a --show-diff-on-failure
