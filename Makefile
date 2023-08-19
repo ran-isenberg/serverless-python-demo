@@ -12,7 +12,7 @@ lint:
 	@echo "Running flake8"
 	flake8 product/* infrastructure/* tests/* --exclude patterns='build,cdk.json,cdk.context.json,.yaml'
 	@echo "Running mypy"
-	make mypy-lint
+	$(MAKE) mypy-lint
 
 complex:
 	@echo "Running Radon"
@@ -36,13 +36,11 @@ deps:
 unit:
 	pytest tests/unit  --cov-config=.coveragerc --cov=product --cov-report xml
 
-build:
-	make deps
+build: deps
 	mkdir -p .build/lambdas ; cp -r product .build/lambdas
 	mkdir -p .build/common_layer ; poetry export --without=dev --without-hashes --format=requirements.txt > .build/common_layer/requirements.txt
 
-infra-tests:
-	make build
+infra-tests: build
 	pytest tests/infrastructure
 
 integration:
@@ -59,8 +57,7 @@ yapf:
 coverage-tests:
 	pytest tests/unit tests/integration  --cov-config=.coveragerc --cov=product --cov-report xml
 
-deploy:
-	make build
+deploy: build
 	cdk deploy --app="python3 ${PWD}/app.py" --require-approval=never
 
 destroy:
