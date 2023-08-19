@@ -111,8 +111,10 @@ jobs:
         uses: aws-actions/configure-aws-credentials@5fd3084fc36e372ff1fff382a39b10d03659f355 # v2.2.0
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
-          role-session-name: samplerolesession
+          role-session-name: ${{ env.SESSION_NAME }}
           aws-region: ${{ env.AWS_REGION }}
+        env:
+          SESSION_NAME: "${{github.repository}}-at-${{github.sha}}"
       - name: Deploy to AWS
         run: make deploy
       # NOTE: these run unit and integration tests
