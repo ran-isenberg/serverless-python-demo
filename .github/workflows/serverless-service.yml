@@ -5,6 +5,11 @@ name: Serverless Service CI/CD
 permissions:
   contents: read
 
+env:
+  NODE_VERSION: "18"
+  PYTHON_VERSION: "3.11"
+  AWS_REGION: "us-east-1"
+
 on:
   push:
     branches: [main]
@@ -38,14 +43,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event.\n" >> $GITHUB_STEP_SUMMARY
-      - run: echo "🐧 This job is now running on a ${{  runner.os }} server hosted by GitHub!\n" >> $GITHUB_STEP_SUMMARY
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}.\n" >> $GITHUB_STEP_SUMMARY
+      - run: |
+          echo "🎉 The job was automatically triggered by a ${{ env.EVENT_NAME }} event.\n" >> $GITHUB_STEP_SUMMARY
+          echo "🐧 This job is now running on a ${{ env.OS_NAME }} ${{env.OS_ARCH}} server hosted by GitHub!\n" >> $GITHUB_STEP_SUMMARY
+          echo "🔎 The name of your branch is ${{ env.BRANCH_NAME }} and your repository is ${{ env.REPO_NAME }}.\n" >> $GITHUB_STEP_SUMMARY
+        env:
+          EVENT_NAME: ${{ github.event_name}}
+          OS_NAME: ${{ runner.os }}
+          OS_ARCH: ${{runner.arch }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          REPO_NAME: ${{ github.repository }}
       - name: Check out repository code
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-      - name: Set up Python 3.11
+      - name: Set up Python
         uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4.7.0
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: Install dependencies
         run: |
           pip install --upgrade pip pre-commit poetry
@@ -76,11 +89,11 @@ jobs:
       - name: Set up Python 3.11
         uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4.7.0
         with:
-          python-version: "3.11"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: Set up Node
         uses: actions/setup-node@bea5baf987ba7aa777a8a0b4ace377a21c45c381 # v3.8.0
         with:
-          node-version: "18"
+          node-version: ${{ env.NODE_VERSION }}
       - name: Install dependencies
         run: |
           pip install --upgrade pip pre-commit poetry
@@ -99,7 +112,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           role-session-name: samplerolesession
-          aws-region: us-east-1
+          aws-region: ${{ env.AWS_REGION }}
       - name: Deploy to AWS
         run: make deploy
       # NOTE: these run unit and integration tests
