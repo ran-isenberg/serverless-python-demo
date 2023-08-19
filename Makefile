@@ -7,6 +7,7 @@ dev:
 	pre-commit install
 	poetry config --local virtualenvs.in-project true
 	poetry install
+	npm ci
 
 format:
 	isort $(CWD)
@@ -59,10 +60,10 @@ coverage-tests:
 	pytest tests/unit tests/integration  --cov-config=.coveragerc --cov=product --cov-report xml
 
 deploy: build
-	cdk deploy --app="python3 ${PWD}/app.py" --require-approval=never
+	npx cdk deploy --app="python3 ${PWD}/app.py" --require-approval=never
 
 destroy:
-	cdk destroy --app="python3 ${PWD}/app.py" --force
+	npx cdk destroy --app="python3 ${PWD}/app.py" --force
 
 docs:
 	mkdocs serve

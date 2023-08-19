@@ -85,12 +85,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Install dependencies
-        run: |
-          pip install --upgrade pip pre-commit poetry
-          npm install -g aws-cdk
-          make deps
-          pip install -r dev_requirements.txt
-          pip install -r lambda_requirements.txt
+        run: make dev
       - name: Unit tests
         run: |
           make unit
