@@ -94,9 +94,6 @@ jobs:
           cache: "npm"
       - name: Install dependencies
         run: make dev
-      - name: Export short git commit sha for IAM Role session name
-        id: shorten_commit
-        run: echo "sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
       # NOTE: unit tests are connecting to AWS to instantiate boto3 clients/resources
       #       once that's discussed we can move unit and infra tests as part of the fast quality standards
       #       see https://github.com/ran-isenberg/serverless-python-demo/pull/38#discussion_r1299372169
@@ -107,7 +104,7 @@ jobs:
           role-session-name: ${{ env.SESSION_NAME }}
           aws-region: ${{ env.AWS_REGION }}
         env:
-          SESSION_NAME: "${{github.repository}}-at-${{steps.shorten_commit.outputs.sha}}"
+          SESSION_NAME: "github-${{github.sha}}"
       - name: Unit tests
         run: make unit
       - name: Infrastructure tests
