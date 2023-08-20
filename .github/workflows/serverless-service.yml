@@ -44,16 +44,15 @@ jobs:
   quality_standards:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event.\n" >> $GITHUB_STEP_SUMMARY
       - run: |
-          echo "🎉 The job was automatically triggered by a ${{ env.EVENT_NAME }} event.\n" >> $GITHUB_STEP_SUMMARY
-          echo "🐧 This job is now running on a ${{ env.OS_NAME }} ${{env.OS_ARCH}} server hosted by GitHub!\n" >> $GITHUB_STEP_SUMMARY
-          echo "🔎 The name of your branch is ${{ env.BRANCH_NAME }} and your repository is ${{ env.REPO_NAME }}.\n" >> $GITHUB_STEP_SUMMARY
+          echo "🎉 The job was automatically triggered by a ${{ env.EVENT_NAME }} event." >> $GITHUB_STEP_SUMMARY
+          echo "🐧 This job is now running on a ${{ env.OS_NAME }} ${{env.OS_ARCH}} server hosted by GitHub!" >> $GITHUB_STEP_SUMMARY
+          echo "🔎 The name of your branch is ${{ env.BRANCH_NAME }} and your repository is ${{ env.REPO_NAME }}." >> $GITHUB_STEP_SUMMARY
         env:
           EVENT_NAME: ${{ github.event_name}}
           OS_NAME: ${{ runner.os }}
           OS_ARCH: ${{runner.arch }}
-          BRANCH_NAME: ${{ github.ref_name }}
+          BRANCH_NAME: ${{ github.ref }}
           REPO_NAME: ${{ github.repository }}
       - name: Check out repository code
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
