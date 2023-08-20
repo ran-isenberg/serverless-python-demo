@@ -15,11 +15,13 @@ def get_username() -> str:
 
 def get_stack_name() -> str:
     repo = Repo(Path.cwd())
-    branch_name = f'{repo.active_branch}'.replace('/', '-')
     username = get_username()
     try:
+        branch_name = f'{repo.active_branch}'.replace('/', '-')
         return f'{username}-{branch_name}-{constants.SERVICE_NAME}'
     except TypeError:
+        # we're running in detached mode (HEAD)
+        # see https://github.com/gitpython-developers/GitPython/issues/633
         return f'{username}-{constants.SERVICE_NAME}'
 
 
