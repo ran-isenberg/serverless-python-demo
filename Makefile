@@ -13,11 +13,11 @@ dev:
 
 format:
 	isort $(CWD)
-	yapf -d -vv --style=./.style --exclude=.venv --exclude=.build --exclude=cdk.out --exclude=.git --exclude=node_modules -r .
+	yapf -d -vv --style=./.style -r .
 
 lint: format
 	@echo "Running flake8"
-	flake8 product/* infrastructure/* tests/* --exclude patterns='build,cdk.json,cdk.context.json,.yaml'
+	flake8 product/* infrastructure/* tests/*
 	@echo "Running mypy"
 	$(MAKE) mypy-lint
 

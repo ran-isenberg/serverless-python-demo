@@ -71,3 +71,6 @@ skip = [
     ".git",
     "node_modules",
 ]
+
+[tool.yapfignore]
+ignore_patterns = [".git", ".venv", ".build", "cdk.out", "node_modules"]
