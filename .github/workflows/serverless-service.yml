@@ -11,6 +11,8 @@ env:
   AWS_REGION: "us-east-1"
 
 on:
+  workflow_dispatch:
+
   push:
     branches: [main]
     paths:
