@@ -1,4 +1,4 @@
-.PHONY: dev lint complex coverage pre-commit yapf sort deploy destroy deps unit infra-tests integration e2e coverage-tests docs lint-docs build format
+.PHONY: dev lint complex coverage pre-commit sort deploy destroy deps unit infra-tests integration e2e coverage-tests docs lint-docs build format
 PYTHON := ".venv/bin/python3"
 
 .ONESHELL:  # run all commands in a single shell, ensuring it runs within a local virtual env
@@ -41,7 +41,7 @@ unit:
 
 build: deps
 	mkdir -p .build/lambdas ; cp -r product .build/lambdas
-	mkdir -p .build/common_layer ; poetry export --without=dev --without-hashes --format=requirements.txt > .build/common_layer/requirements.txt
+	mkdir -p .build/common_layer ; poetry export --without=dev --format=requirements.txt > .build/common_layer/requirements.txt
 
 infra-tests: build
 	poetry run pytest tests/infrastructure
@@ -52,7 +52,7 @@ integration:
 e2e:
 	poetry run pytest tests/e2e  --cov-config=.coveragerc --cov=product --cov-report xml
 
-pr: deps yapf sort pre-commit complex lint unit deploy integration e2e
+pr: deps pre-commit complex lint unit deploy integration e2e
 
 coverage-tests:
 	poetry run pytest tests/unit tests/integration  --cov-config=.coveragerc --cov=product --cov-report xml
