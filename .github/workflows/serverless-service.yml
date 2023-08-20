@@ -57,13 +57,11 @@ jobs:
           REPO_NAME: ${{ github.repository }}
       - name: Check out repository code
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-      - name: Install poetry
-        run: pipx install poetry
       - name: Set up Python
         uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4.7.0
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: "poetry"  # NOTE: poetry must be installed before this step, or else cache doesn't work
+          cache: "pip"  # `make dev` creates a virtual env in .venv; poetry reuses it
       - name: Install dependencies
         run: make dev
       - name: pre commit
@@ -81,13 +79,11 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-      - name: Install poetry
-        run: pipx install poetry
       - name: Set up Python
         uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4.7.0
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: "poetry"  # NOTE: poetry must be installed before this step, or else cache doesn't work
+          cache: "pip"  # `make dev` creates a virtual env in .venv; poetry reuses it
       - name: Set up Node
         uses: actions/setup-node@bea5baf987ba7aa777a8a0b4ace377a21c45c381 # v3.8.0
         with:
