@@ -15,9 +15,10 @@ def get_username() -> str:
 
 def get_stack_name() -> str:
     repo = Repo(Path.cwd())
+    branch_name = f'{repo.active_branch}'.replace('/', '-')
     username = get_username()
     try:
-        return f'{username}-{repo.active_branch}-{constants.SERVICE_NAME}'
+        return f'{username}-{branch_name}-{constants.SERVICE_NAME}'
     except TypeError:
         return f'{username}-{constants.SERVICE_NAME}'
 

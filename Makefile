@@ -1,5 +1,5 @@
 .PHONY: dev lint complex coverage pre-commit yapf sort deploy destroy deps unit infra-tests integration e2e coverage-tests docs lint-docs build format
-CWD := $(shell pwd)
+PYTHON := ".venv/bin/python3"
 
 .ONESHELL:  # run all commands in a single shell, ensuring it runs within a local virtual env
 dev:
@@ -11,7 +11,7 @@ dev:
 	npm ci
 
 format:
-	poetry run isort $(CWD)
+	poetry run isort .
 	poetry run yapf -d -vv --style=./.style -r .
 
 lint: format
@@ -58,10 +58,10 @@ coverage-tests:
 	poetry run pytest tests/unit tests/integration  --cov-config=.coveragerc --cov=product --cov-report xml
 
 deploy: build
-	npx cdk deploy --app="python3 ${PWD}/app.py" --require-approval=never
+	npx cdk deploy --app="${PYTHON} ${PWD}/app.py" --require-approval=never
 
 destroy:
-	npx cdk destroy --app="python3 ${PWD}/app.py" --force
+	npx cdk destroy --app="${PYTHON} ${PWD}/app.py" --force
 
 docs:
 	poetry run mkdocs serve
