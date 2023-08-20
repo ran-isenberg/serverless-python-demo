@@ -13,7 +13,7 @@ dev:
 
 format:
 	isort $(CWD)
-	yapf -d -vv --style=./.style --exclude=.venv --exclude=.build --exclude=cdk.out --exclude=.git -r .
+	yapf -d -vv --style=./.style --exclude=.venv --exclude=.build --exclude=cdk.out --exclude=.git --exclude=node_modules -r .
 
 lint: format
 	@echo "Running flake8"
