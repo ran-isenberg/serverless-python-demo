@@ -3,23 +3,23 @@ name = "serverless-python-demo"
 version = "1.0.0"
 description = "a sample serverless service written in Python"
 authors = ["Ran Isenberg, Heitor Lessa, Efi Merdler-Kravitz"]
-classifiers=[
+classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Programming Language :: Python :: 3.11",
 ]
-repository="https://github.com/"
+repository = "https://github.com/"
 readme = "README.md"
 keywords = ["serverless"]
 license = "MIT-0"
 
 [tool.poetry.dependencies]
 python = "^3.11.0"
-pydantic = {version = "^2.0.3"}
-email-validator = {version = "*"}
-aws-lambda-powertools =  {extras = ["tracer"],version = "^2.20.0"}
+pydantic = { version = "^2.0.3" }
+email-validator = { version = "*" }
+aws-lambda-powertools = { extras = ["tracer"], version = "^2.20.0" }
 mypy-boto3-dynamodb = "*"
 cachetools = "*"
 boto3 = "^1.26.125"
@@ -27,7 +27,7 @@ aws-lambda-env-modeler = "*"
 
 [tool.poetry.dev-dependencies]
 # CDK
-infrastructure = {path = "infrastructure", develop = true}
+infrastructure = { path = "infrastructure", develop = true }
 aws-cdk-lib = ">=2.88.0"
 constructs = ">=10.0.0"
 cdk-nag = ">2.0.0"
@@ -53,3 +53,24 @@ types-cachetools = "*"
 mypy = "*"
 types-requests = "*"
 toml = "*"
+
+
+[tool.isort]
+py_version = 311
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 150
+skip = [
+    ".gitignore",
+    ".dockerignore",
+    ".venv",
+    ".build",
+    "cdk.out",
+    ".git",
+    "node_modules",
+]
+
+[tool.yapfignore]
+ignore_patterns = [".git", ".venv", ".build", "cdk.out", "node_modules"]
