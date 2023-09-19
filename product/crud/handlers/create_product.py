@@ -32,7 +32,7 @@ def create_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, A
         create_input: CreateProductRequest = parse(event=event, model=CreateProductRequest)
         logger.info('got create product request', extra={'product': create_input.model_dump()})
     except (ValidationError, TypeError) as exc:  # pragma: no cover
-        logger.error('event failed input validation', extra={'error': str(exc)})
+        logger.exception('event failed input validation', extra={'error': str(exc)})
         return build_response(http_status=HTTPStatus.BAD_REQUEST, body={})
 
     metrics.add_metric(name='CreateProductEvents', unit=MetricUnit.Count, value=1)
@@ -44,7 +44,7 @@ def create_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, A
             table_name=env_vars.TABLE_NAME,
         )
     except InternalServerException:  # pragma: no cover
-        logger.error('finished handling create product request with internal error')
+        logger.exception('finished handling create product request with internal error')
         return build_response(http_status=HTTPStatus.INTERNAL_SERVER_ERROR, body={})
 
     logger.info('finished handling create product request')
