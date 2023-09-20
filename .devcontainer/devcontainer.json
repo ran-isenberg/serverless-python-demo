@@ -7,7 +7,7 @@
     },
     "mounts": [
       "source=projectname-bashhistory,target=/commandhistory,type=volume",
-      "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
-      "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind"
+      "source=${localEnv:HOME}/.aws,target=/home/codespace/.aws,type=bind,consistency=cached",
+      "source=${localEnv:HOME}/.ssh,target=/home/codespace/.ssh,type=bind"
   ]
   }
