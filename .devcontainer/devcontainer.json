@@ -1,0 +1,8 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/universal:2",
+    "features": {
+      "ghcr.io/devcontainers/features/aws-cli:1": {},
+      "ghcr.io/devcontainers-contrib/features/aws-cdk:2": {},
+      "ghcr.io/devcontainers-contrib/features/poetry:2": {}
+    }
+  }
