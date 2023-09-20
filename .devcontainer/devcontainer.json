@@ -4,5 +4,10 @@
       "ghcr.io/devcontainers/features/aws-cli:1": {},
       "ghcr.io/devcontainers-contrib/features/aws-cdk:2": {},
       "ghcr.io/devcontainers-contrib/features/poetry:2": {}
-    }
+    },
+    "mounts": [
+      "source=projectname-bashhistory,target=/commandhistory,type=volume",
+      "source=${localEnv:HOME}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached",
+      "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind"
+  ]
   }
