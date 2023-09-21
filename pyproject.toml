@@ -2,7 +2,7 @@
 name = "serverless-python-demo"
 version = "1.0.0"
 description = "a sample serverless service written in Python"
-authors = ["Ran Isenberg, Heitor Lessa, Efi Merdler-Kravitz"]
+authors = ["Ran Isenberg, Heitor Lessa"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",

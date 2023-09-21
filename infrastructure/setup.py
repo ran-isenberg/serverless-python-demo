@@ -15,7 +15,7 @@ setup(
         'Programming Language :: Python :: 3.11',
     ],
     url='https://github.com/ran-isenberg/serverless-python-demo',
-    author='Ran Isenberg, Heitor Lessa, Efi Merdler-Kravitz',
+    author='Ran Isenberg, Heitor Lessa',
     author_email='ran.isenberg@ranthebuilder.cloud',
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
     package_data={'': ['*.json']},
