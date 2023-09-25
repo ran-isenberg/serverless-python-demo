@@ -19,7 +19,6 @@ class DynamoDalHandler(DalHandler):
     # cache dynamodb connection data for no longer than 5 minutes
     @cached(cache=TTLCache(maxsize=1, ttl=300))
     def _get_db_handler(self, table_name: str) -> Table:
-        # if self.table is None:
         logger.debug('opening connection to dynamodb table', extra={'table_name': table_name})
         dynamodb: DynamoDBServiceResource = boto3.resource('dynamodb')
         return dynamodb.Table(table_name)
@@ -46,11 +45,11 @@ class DynamoDalHandler(DalHandler):
         try:
             table: Table = self._get_db_handler(self.table_name)
             response = table.get_item(Key={'id': product_id})
-            if response.get('Item') is None:
+            if response.get('Item') is None:  # pragma: no cover (covered in integration test)
                 error_str = 'product is not found in table'
                 logger.info(error_str, extra={'product_id': product_id})  # not a service error
                 raise ProductNotFoundException(error_str)
-        except ClientError as exc:
+        except ClientError as exc:  # pragma: no cover (covered in integration test)
             error_msg = 'failed to get product from db'
             logger.exception(error_msg, extra={'exception': str(exc)})
             raise InternalServerException(error_msg) from exc
@@ -58,7 +57,8 @@ class DynamoDalHandler(DalHandler):
         # parse to pydantic schema
         try:
             db_entry = ProductEntry.model_validate(response.get('Item', {}))
-        except ValidationError as exc:
+        except ValidationError as exc:  # pragma: no cover
+            # rare use case where items in DB don't match the schema
             error_msg = 'failed to parse product'
             logger.exception(error_msg, extra={'exception': str(exc)})
             raise InternalServerException(error_msg) from exc

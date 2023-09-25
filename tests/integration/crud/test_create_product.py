@@ -36,7 +36,7 @@ def test_handler_200_ok(table_name: str):
 
 
 def test_internal_server_error(table_name):
-    db_handler: DynamoDalHandler = DynamoDalHandler('table')
+    db_handler: DynamoDalHandler = DynamoDalHandler(table_name)
     table = db_handler._get_db_handler(table_name)
     with Stubber(table.meta.client) as stubber:
         stubber.add_client_error(method='put_item', service_error_code='ValidationException')
