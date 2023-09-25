@@ -12,5 +12,9 @@ class Idempotency(BaseModel):
     IDEMPOTENCY_TABLE_NAME: Annotated[str, Field(min_length=1)]
 
 
-class CrudVars(Observability, Idempotency):
+class CreateVars(Observability, Idempotency):
+    TABLE_NAME: Annotated[str, Field(min_length=1)]
+
+
+class GetVars(Observability):
     TABLE_NAME: Annotated[str, Field(min_length=1)]

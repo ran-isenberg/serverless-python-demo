@@ -85,5 +85,9 @@ def generate_product_id() -> str:
     return str(uuid.uuid4())
 
 
-def generate_create_product_request_body() -> PutProductBody:
-    return PutProductBody(name=generate_random_string(), price=generate_random_integer())
+def generate_create_product_request_body(name: str = '', price: int = 0) -> PutProductBody:
+    if not price:
+        price = generate_random_integer()
+    if not name:
+        name = generate_random_string()
+    return PutProductBody(name=name, price=price)

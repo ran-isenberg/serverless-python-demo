@@ -4,17 +4,17 @@ from aws_lambda_powertools.utilities.parser import ValidationError
 from product.crud.dal.schemas.db import ProductEntry
 
 
-def test_invalid_items_type(product_id):
+def test_invalid_items_price(product_id):
     with pytest.raises(ValidationError):
         ProductEntry(id=product_id, name='3333', price='a')
 
 
-def test_invalid_items_negative(product_id):
+def test_invalid_price_negative(product_id):
     with pytest.raises(ValidationError):
         ProductEntry(id=product_id, name='3333', price=-1)
 
 
-def test_invalid_items_zero(product_id):
+def test_invalid_price_zero(product_id):
     with pytest.raises(ValidationError):
         ProductEntry(id=product_id, name='3333', price=0)
 

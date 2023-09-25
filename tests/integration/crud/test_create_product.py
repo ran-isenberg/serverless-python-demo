@@ -18,7 +18,7 @@ def call_create_product(body: Dict[str, Any]) -> Dict[str, Any]:
     return create_product(body, generate_context())
 
 
-def test_handler_200_ok(mocker, table_name: str):
+def test_handler_200_ok(table_name: str):
     body = generate_create_product_request_body()
     product_id = generate_product_id()
     response = call_create_product(generate_api_gw_event(body=body.model_dump(), path_params={'product': product_id}))
@@ -35,17 +35,15 @@ def test_handler_200_ok(mocker, table_name: str):
     assert response['Item']['id'] == product_id
 
 
-def test_internal_server_error():
+def test_internal_server_error(table_name):
     db_handler: DynamoDalHandler = DynamoDalHandler('table')
-    table = db_handler._get_db_handler()
-    stubber = Stubber(table.meta.client)
-    stubber.add_client_error(method='put_item', service_error_code='ValidationException')
-    stubber.activate()
-    body = generate_create_product_request_body()
-    response = call_create_product(generate_api_gw_event(body=body.model_dump(), path_params={'product': generate_product_id()}))
+    table = db_handler._get_db_handler(table_name)
+    with Stubber(table.meta.client) as stubber:
+        stubber.add_client_error(method='put_item', service_error_code='ValidationException')
+        body = generate_create_product_request_body()
+        response = call_create_product(generate_api_gw_event(body=body.model_dump(), path_params={'product': generate_product_id()}))
+
     assert response['statusCode'] == HTTPStatus.INTERNAL_SERVER_ERROR
-    stubber.deactivate()
-    DynamoDalHandler._instances = {}
 
 
 def test_handler_bad_request_invalid_body():

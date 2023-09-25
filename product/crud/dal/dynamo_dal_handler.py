@@ -1,5 +1,3 @@
-from functools import lru_cache
-
 import boto3
 from botocore.exceptions import ClientError
 from cachetools import TTLCache, cached
@@ -10,7 +8,7 @@ from pydantic import ValidationError
 from product.crud.dal.db_handler import DalHandler
 from product.crud.dal.schemas.db import ProductEntry
 from product.crud.handlers.utils.observability import logger, tracer
-from product.crud.schemas.exceptions import InternalServerException
+from product.crud.schemas.exceptions import InternalServerException, ProductNotFoundException
 
 
 class DynamoDalHandler(DalHandler):
@@ -20,17 +18,19 @@ class DynamoDalHandler(DalHandler):
 
     # cache dynamodb connection data for no longer than 5 minutes
     @cached(cache=TTLCache(maxsize=1, ttl=300))
-    def _get_db_handler(self) -> Table:
+    def _get_db_handler(self, table_name: str) -> Table:
+        # if self.table is None:
+        logger.debug('opening connection to dynamodb table', extra={'table_name': table_name})
         dynamodb: DynamoDBServiceResource = boto3.resource('dynamodb')
-        return dynamodb.Table(self.table_name)
+        return dynamodb.Table(table_name)
 
     @tracer.capture_method(capture_response=False)
-    def create_product_in_db(self, product_id: str, product_name: str, product_price: int) -> ProductEntry:
+    def create_product(self, product_id: str, product_name: str, product_price: int) -> ProductEntry:
         logger.info('trying to create a product', extra={'product_id': product_id})
         try:
             entry = ProductEntry(name=product_name, id=product_id, price=product_price)
             logger.debug('opening connection to dynamodb table', extra={'table_name': self.table_name})
-            table: Table = self._get_db_handler()
+            table: Table = self._get_db_handler(self.table_name)
             table.put_item(Item=entry.model_dump())
         except (ClientError, ValidationError) as exc:
             error_msg = 'failed to create product'
@@ -40,7 +40,28 @@ class DynamoDalHandler(DalHandler):
         logger.info('finished create product', extra={'product_id': product_id})
         return entry
 
+    @tracer.capture_method(capture_response=False)
+    def get_product(self, product_id: str) -> ProductEntry:
+        logger.info('trying to get a product', extra={'product_id': product_id})
+        try:
+            table: Table = self._get_db_handler(self.table_name)
+            response = table.get_item(Key={'id': product_id})
+            if response.get('Item') is None:
+                error_str = 'product is not found in table'
+                logger.info(error_str, extra={'product_id': product_id})  # not a service error
+                raise ProductNotFoundException(error_str)
+        except ClientError as exc:
+            error_msg = 'failed to get product from db'
+            logger.exception(error_msg, extra={'exception': str(exc)})
+            raise InternalServerException(error_msg) from exc
 
-@lru_cache
-def get_dal_handler(table_name: str) -> DalHandler:
-    return DynamoDalHandler(table_name)
+        # parse to pydantic schema
+        try:
+            db_entry = ProductEntry.model_validate(response.get('Item', {}))
+        except ValidationError as exc:
+            error_msg = 'failed to parse product'
+            logger.exception(error_msg, extra={'exception': str(exc)})
+            raise InternalServerException(error_msg) from exc
+
+        logger.info('got item successfully', extra={'product_id': product_id})
+        return db_entry

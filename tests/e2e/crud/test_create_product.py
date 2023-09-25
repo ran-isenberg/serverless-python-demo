@@ -21,7 +21,7 @@ def test_handler_200_ok(api_gw_url_slash_product: str, product_id: str):
     assert body_dict['id'] == product_id
 
 
-def test_handler_bad_request(api_gw_url_slash_product: str, product_id: str):
+def test_handler_bad_request_invalid_body(api_gw_url_slash_product: str, product_id: str):
     body_str = json.dumps({'price': 5})
     url_with_product_id = f'{api_gw_url_slash_product}/{product_id}'
     response = requests.put(url=url_with_product_id, data=body_str)
