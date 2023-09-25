@@ -14,4 +14,4 @@
 This is a sample serverless application built in Python. It consists of an API Gateway backed by four Lambda functions and a DynamoDB table for storage.
 
 
-Maintained by Ran Isenberg [Ran the builder](https://www.ranthebuilder.cloud/) Heitor Lessa and Efi Merdler-Kravitz
+Maintained by Ran Isenberg [Ran the builder](https://www.ranthebuilder.cloud/) and Heitor Lessa

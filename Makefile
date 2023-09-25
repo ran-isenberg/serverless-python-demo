@@ -16,7 +16,7 @@ format:
 
 lint: format
 	@echo "Running flake8"
-	poetry run flake8 product/* infrastructure/* tests/*
+	poetry run flake8 product/* infrastructure/* tests/* docs/examples/*
 	@echo "Running mypy"
 	$(MAKE) mypy-lint
 
@@ -30,7 +30,7 @@ pre-commit:
 	poetry run pre-commit run -a --show-diff-on-failure
 
 mypy-lint:
-	poetry run mypy --pretty product infrastructure tests
+	poetry run mypy --pretty product infrastructure tests docs/examples/
 
 deps:
 	poetry export --only=dev --format=requirements.txt > dev_requirements.txt
