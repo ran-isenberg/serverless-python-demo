@@ -16,5 +16,10 @@ def api_gw_url_slash_products():
 
 
 @pytest.fixture(scope='module', autouse=True)
+def api_gw_url():
+    return f'{get_stack_output(APIGATEWAY)}api'
+
+
+@pytest.fixture(scope='module', autouse=True)
 def product_id():
     return generate_product_id()

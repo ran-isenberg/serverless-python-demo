@@ -18,3 +18,11 @@ class PutPathParams(BaseModel):
 class CreateProductRequest(APIGatewayProxyEventModel):
     body: Json[PutProductBody]  # type: ignore
     pathParameters: PutPathParams  # type: ignore
+
+
+class GetPathParams(BaseModel):
+    product: ProductId
+
+
+class GetProductRequest(APIGatewayProxyEventModel):
+    pathParameters: GetPathParams  # type: ignore

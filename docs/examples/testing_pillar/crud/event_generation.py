@@ -34,6 +34,6 @@ def generate_api_gw_event(
         },
         'pathParameters': path_params,
         'stageVariables': None,
-        'body': 'Hello from Lambda!' if body is None else json.dumps(body),
+        'body': '' if body is None else json.dumps(body),
         'isBase64Encoded': True
     }

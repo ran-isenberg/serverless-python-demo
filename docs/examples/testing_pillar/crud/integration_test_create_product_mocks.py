@@ -13,9 +13,9 @@ def call_create_product(body: Dict[str, Any]) -> Dict[str, Any]:
     return create_product(body, generate_context())
 
 
-def test_internal_server_error() -> None:
+def test_internal_server_error(table_name: str) -> None:
     db_handler: DynamoDalHandler = DynamoDalHandler('table')
-    table = db_handler._get_db_handler()
+    table = db_handler._get_db_handler(table_name)
     stubber = Stubber(table.meta.client)
     stubber.add_client_error(method='put_item', service_error_code='ValidationException')
     stubber.activate()
