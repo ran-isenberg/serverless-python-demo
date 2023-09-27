@@ -6,7 +6,7 @@ from aws_lambda_powertools.metrics import MetricUnit
 from aws_lambda_powertools.utilities.parser import ValidationError, parse
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
-from product.crud.domain_logic.handle_create_request import handle_get_request
+from product.crud.domain_logic.handle_get_request import handle_get_request
 from product.crud.handlers.schemas.env_vars import GetVars
 from product.crud.handlers.utils.http_responses import build_response
 from product.crud.handlers.utils.observability import logger, metrics, tracer

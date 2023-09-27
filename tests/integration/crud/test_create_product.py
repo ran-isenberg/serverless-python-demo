@@ -10,12 +10,12 @@ from tests.crud_utils import generate_api_gw_event, generate_create_product_requ
 from tests.utils import generate_context
 
 
-def call_create_product(body: Dict[str, Any]) -> Dict[str, Any]:
+def call_create_product(event: Dict[str, Any]) -> Dict[str, Any]:
     # important is done here since idempotency decorator requires an env. variable during import time
     # conf.test sets that env. variable (table name) but it runs after imports
     # this way, idempotency import runs after conftest sets the values already
     from product.crud.handlers.create_product import create_product
-    return create_product(body, generate_context())
+    return create_product(event, generate_context())
 
 
 def test_handler_200_ok(table_name: str):

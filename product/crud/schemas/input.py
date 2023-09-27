@@ -20,9 +20,13 @@ class CreateProductRequest(APIGatewayProxyEventModel):
     pathParameters: PutPathParams  # type: ignore
 
 
-class GetPathParams(BaseModel):
+class ProductPathParams(BaseModel):
     product: ProductId
 
 
 class GetProductRequest(APIGatewayProxyEventModel):
-    pathParameters: GetPathParams  # type: ignore
+    pathParameters: ProductPathParams  # type: ignore
+
+
+class DeleteProductRequest(APIGatewayProxyEventModel):
+    pathParameters: ProductPathParams  # type: ignore
