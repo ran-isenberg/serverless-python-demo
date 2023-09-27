@@ -10,7 +10,7 @@ from product.crud.domain_logic.handle_delete_request import handle_delete_reques
 from product.crud.handlers.schemas.env_vars import DeleteVars
 from product.crud.handlers.utils.http_responses import build_response
 from product.crud.handlers.utils.observability import logger, metrics, tracer
-from product.crud.schemas.exceptions import InternalServerException, ProductNotFoundException
+from product.crud.schemas.exceptions import InternalServerException
 from product.crud.schemas.input import DeleteProductRequest
 
 
@@ -38,11 +38,8 @@ def delete_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, A
             table_name=env_vars.TABLE_NAME,
         )
     except InternalServerException:  # pragma: no cover
-        logger.exception('finished handling get product request with internal error')
+        logger.exception('finished handling delete product request with internal error')
         return build_response(http_status=HTTPStatus.INTERNAL_SERVER_ERROR, body={})
-    except ProductNotFoundException:  # pragma: no cover
-        logger.exception('finished handling get product request - product not found')
-        return build_response(http_status=HTTPStatus.NOT_FOUND, body={})
 
     logger.info('finished handling delete product request')
     return build_response(http_status=HTTPStatus.NO_CONTENT, body={})
