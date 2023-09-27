@@ -7,7 +7,7 @@ from tests.e2e.crud.utils import create_product
 
 
 # create product and then delete it
-def test_handler_200_ok(api_gw_url_slash_product: str) -> None:
+def test_handler_204_success_delete(api_gw_url_slash_product: str) -> None:
     product_id = generate_product_id()
     price = generate_random_integer()
     name = generate_random_string()
