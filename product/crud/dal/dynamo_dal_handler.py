@@ -65,3 +65,16 @@ class DynamoDalHandler(DalHandler):
 
         logger.info('got item successfully', extra={'product_id': product_id})
         return db_entry
+
+    @tracer.capture_method(capture_response=False)
+    def delete_product(self, product_id: str) -> None:
+        logger.info('trying to delete a product', extra={'product_id': product_id})
+        try:
+            table: Table = self._get_db_handler(self.table_name)
+            table.delete_item(Key={'id': product_id})
+        except ClientError as exc:  # pragma: no cover (covered in integration test)
+            error_msg = 'failed to delete product from db'
+            logger.exception(error_msg, extra={'exception': str(exc)})
+            raise InternalServerException(error_msg) from exc
+
+        logger.info('deleted product successfully', extra={'product_id': product_id})

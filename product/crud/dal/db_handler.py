@@ -21,3 +21,7 @@ class DalHandler(ABC, metaclass=_SingletonMeta):
     @abstractmethod
     def get_product(self, product_id: str) -> ProductEntry:
         ...  # pragma: no cover
+
+    @abstractmethod
+    def delete_product(self, product_id: str) -> None:
+        ...  # pragma: no cover

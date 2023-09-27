@@ -18,3 +18,7 @@ class CreateVars(Observability, Idempotency):
 
 class GetVars(Observability):
     TABLE_NAME: Annotated[str, Field(min_length=1)]
+
+
+class DeleteVars(Observability):
+    TABLE_NAME: Annotated[str, Field(min_length=1)]
