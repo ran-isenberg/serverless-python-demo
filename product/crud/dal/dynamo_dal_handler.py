@@ -46,7 +46,7 @@ class DynamoDalHandler(DalHandler):
         logger.info('trying to get a product', extra={'product_id': product_id})
         try:
             table: Table = self._get_db_handler(self.table_name)
-            response = table.get_item(Key={'id': product_id})
+            response = table.get_item(Key={'id': product_id}, ConsistentRead=True)
             if response.get('Item') is None:  # pragma: no cover (covered in integration test)
                 error_str = 'product is not found in table'
                 logger.info(error_str, extra={'product_id': product_id})  # not a service error
@@ -87,7 +87,7 @@ class DynamoDalHandler(DalHandler):
         try:
             table: Table = self._get_db_handler(self.table_name)
             # production readiness : add pagination support
-            response = table.scan()
+            response = table.scan(ConsistentRead=True)
         except ClientError as exc:  # pragma: no cover (covered in integration test)
             error_msg = 'failed to get product from db'
             logger.exception(error_msg, extra={'exception': str(exc)})

@@ -12,3 +12,10 @@ def create_product(api_gw_url_slash_product: str, product_id: str, price: int, n
     url_with_product_id = f'{api_gw_url_slash_product}/{product_id}'
     response = requests.put(url=url_with_product_id, data=body.model_dump_json(), timeout=10)
     assert response.status_code == HTTPStatus.OK
+
+
+# delete product by product id
+def delete_product(api_gw_url_slash_product: str, product_id: str) -> None:
+    url_with_product_id = f'{api_gw_url_slash_product}/{product_id}'
+    response = requests.delete(url=url_with_product_id, timeout=10)
+    assert response.status_code == HTTPStatus.NO_CONTENT
