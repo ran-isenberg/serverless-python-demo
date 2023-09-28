@@ -14,7 +14,5 @@ def handle_list_request(table_name: str) -> ListProductsOutput:
     dal_handler: DalHandler = get_dal_handler(table_name)
     products: List[Product] = dal_handler.list_products()
     # convert from db entry to output, they won't always be the same
-    outlist = []
-    for product in products:
-        outlist.append(product.model_dump())
-    return ListProductsOutput.model_validate({'products': outlist})
+    list_output = [product.model_dump() for product in products]
+    return ListProductsOutput.model_validate({'products': list_output})
