@@ -1,17 +1,62 @@
 from http import HTTPStatus
-from typing import Any, Dict
+from typing import Generator
 
+import boto3
+import pytest
+from botocore.stub import Stubber
+
+from product.crud.dal.dynamo_dal_handler import DynamoDalHandler
+from product.crud.dal.schemas.db import ProductEntry
 from product.crud.handlers.list_products import list_products
-from tests.crud_utils import generate_api_gw_event, generate_create_product_request_body
+from product.crud.schemas.output import ListProductsOutput
+from tests.crud_utils import clear_table, generate_api_gw_event, generate_product_id
 from tests.utils import generate_context
 
 
-def call_delete_product(body: Dict[str, Any]) -> Dict[str, Any]:
-    return list_products(body, generate_context())
+@pytest.fixture()
+def add_product_entry_to_db(table_name: str) -> Generator[ProductEntry, None, None]:
+    clear_table(table_name)
+    product = ProductEntry(id=generate_product_id(), price=1, name='test')
+    table = boto3.resource('dynamodb').Table(table_name)
+    table.put_item(Item=product.model_dump())
+    yield product
+    table.delete_item(Key={'id': product.id})
 
 
-def test_handler_200_ok():
-    body = generate_create_product_request_body()
-    response = call_delete_product(generate_api_gw_event(body=body.model_dump()))
+def test_handler_200_ok(add_product_entry_to_db: ProductEntry):
+    # when adding one product to the table and listing it, one item is returned
+    event = generate_api_gw_event()
+    response = list_products(event, generate_context())
     # assert response
-    assert response['statusCode'] == HTTPStatus.NOT_IMPLEMENTED
+    assert response['statusCode'] == HTTPStatus.OK
+    response_entry = ListProductsOutput.model_validate_json(response['body'])
+    products = response_entry.products
+    # we cleared the table so only one product
+    assert len(products) == 1
+    # assert we got the item we expect
+    assert products[0].model_dump() == add_product_entry_to_db.model_dump()
+
+
+def test_handler_empty_list(table_name: str):
+    # when listing an empty table, an empty list of products is returned
+    clear_table(table_name)
+    event = generate_api_gw_event()
+    response = list_products(event, generate_context())
+    # assert response
+    assert response['statusCode'] == HTTPStatus.OK
+    response_entry = ListProductsOutput.model_validate_json(response['body'])
+    products = response_entry.products
+    assert not products
+
+
+def test_internal_server_error(table_name):
+    # when a DynamoDB exception is raised, internal server error is returned
+    db_handler: DynamoDalHandler = DynamoDalHandler(table_name)
+    table = db_handler._get_db_handler(table_name)
+
+    with Stubber(table.meta.client) as stubber:
+        stubber.add_client_error(method='scan', service_error_code='ValidationException')
+        event = generate_api_gw_event()
+        response = list_products(event, generate_context())
+
+    assert response['statusCode'] == HTTPStatus.INTERNAL_SERVER_ERROR

@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List
 
 from pydantic import BaseModel, Field, PositiveInt
 
@@ -9,3 +9,7 @@ class ProductEntry(BaseModel):
     name: Annotated[str, Field(min_length=1, max_length=30)]
     id: ProductId  # primary key
     price: PositiveInt
+
+
+class ProductEntries(BaseModel):
+    Items: List[ProductEntry]

@@ -38,6 +38,7 @@ def test_handler_204_success_delete(add_product_entry_to_db: ProductEntry):
 
 
 def test_internal_server_error(table_name):
+    # when a DynamoDB exception is raised, internal server error is returned
     db_handler: DynamoDalHandler = DynamoDalHandler(table_name)
     table = db_handler._get_db_handler(table_name)
 
@@ -50,6 +51,7 @@ def test_internal_server_error(table_name):
 
 
 def test_handler_bad_request_invalid_path_params():
+    # when calling the API with incorrect path params, you get an HTTP bad request error code
     event = generate_api_gw_event(path_params={'dummy': generate_product_id()})
     response = call_delete_product(event)
     assert response['statusCode'] == HTTPStatus.BAD_REQUEST

@@ -24,6 +24,7 @@ def add_product_entry_to_db(table_name: str) -> Generator[ProductEntry, None, No
 
 
 def test_handler_200_ok(add_product_entry_to_db: ProductEntry):
+    # when adding a new product and then trying to get it, the product is returned correctly
     product_id = add_product_entry_to_db.id
     event = generate_api_gw_event(path_params={'product': product_id})
     response = get_product(event, generate_context())
@@ -34,6 +35,7 @@ def test_handler_200_ok(add_product_entry_to_db: ProductEntry):
 
 
 def test_internal_server_error(table_name):
+    # when a DynamoDB exception is raised, internal server error is returned
     db_handler: DynamoDalHandler = DynamoDalHandler(table_name)
     table = db_handler._get_db_handler(table_name)
 
@@ -46,6 +48,7 @@ def test_internal_server_error(table_name):
 
 
 def test_handler_bad_request_invalid_path_params():
+    # when calling the API with incorrect path params, you get an HTTP bad request error code
     event = generate_api_gw_event(path_params={'dummy': generate_product_id()})
     response = get_product(event, generate_context())
     assert response['statusCode'] == HTTPStatus.BAD_REQUEST

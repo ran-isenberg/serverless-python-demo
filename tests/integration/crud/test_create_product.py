@@ -35,7 +35,8 @@ def test_handler_200_ok(table_name: str):
     assert response['Item']['id'] == product_id
 
 
-def test_internal_server_error(table_name):
+def test_internal_server_error(table_name: str):
+    # when a DynamoDB exception is raised, internal server error is returned
     db_handler: DynamoDalHandler = DynamoDalHandler(table_name)
     table = db_handler._get_db_handler(table_name)
     with Stubber(table.meta.client) as stubber:

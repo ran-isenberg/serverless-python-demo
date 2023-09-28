@@ -1,3 +1,5 @@
+from typing import List
+
 import boto3
 from botocore.exceptions import ClientError
 from cachetools import TTLCache, cached
@@ -6,7 +8,7 @@ from mypy_boto3_dynamodb.service_resource import Table
 from pydantic import ValidationError
 
 from product.crud.dal.db_handler import DalHandler
-from product.crud.dal.schemas.db import ProductEntry
+from product.crud.dal.schemas.db import ProductEntries, ProductEntry
 from product.crud.handlers.utils.observability import logger, tracer
 from product.crud.schemas.exceptions import InternalServerException, ProductNotFoundException
 
@@ -78,3 +80,27 @@ class DynamoDalHandler(DalHandler):
             raise InternalServerException(error_msg) from exc
 
         logger.info('deleted product successfully', extra={'product_id': product_id})
+
+    @tracer.capture_method(capture_response=False)
+    def list_products(self) -> List[ProductEntry]:
+        logger.info('trying to list all products')
+        try:
+            table: Table = self._get_db_handler(self.table_name)
+            # production readiness : add pagination support
+            response = table.scan()
+        except ClientError as exc:  # pragma: no cover (covered in integration test)
+            error_msg = 'failed to get product from db'
+            logger.exception(error_msg, extra={'exception': str(exc)})
+            raise InternalServerException(error_msg) from exc
+
+        # parse to pydantic schema
+        try:
+            db_entries = ProductEntries.model_validate(response)
+        except ValidationError as exc:  # pragma: no cover
+            # rare use case where items in DB don't match the schema
+            error_msg = 'failed to parse product'
+            logger.exception(error_msg, extra={'exception': str(exc)})
+            raise InternalServerException(error_msg) from exc
+
+        logger.info('got products successfully')
+        return db_entries.Items

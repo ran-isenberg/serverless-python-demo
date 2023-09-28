@@ -1,4 +1,5 @@
 from abc import ABC, ABCMeta, abstractmethod
+from typing import List
 
 from product.crud.dal.schemas.db import ProductEntry
 
@@ -24,4 +25,8 @@ class DalHandler(ABC, metaclass=_SingletonMeta):
 
     @abstractmethod
     def delete_product(self, product_id: str) -> None:
+        ...  # pragma: no cover
+
+    @abstractmethod
+    def list_products(self) -> List[ProductEntry]:
         ...  # pragma: no cover
