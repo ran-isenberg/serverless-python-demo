@@ -19,6 +19,7 @@ def call_create_product(event: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def test_handler_200_ok(table_name: str):
+    # when sending a create product request, we expect its output to match the DynamoDB item
     body = generate_create_product_request_body()
     product_id = generate_product_id()
     response = call_create_product(generate_api_gw_event(body=body.model_dump(), path_params={'product': product_id}))
@@ -35,7 +36,8 @@ def test_handler_200_ok(table_name: str):
     assert response['Item']['id'] == product_id
 
 
-def test_internal_server_error(table_name):
+def test_internal_server_error(table_name: str):
+    # when a DynamoDB exception is raised, internal server error is returned
     db_handler: DynamoDalHandler = DynamoDalHandler(table_name)
     table = db_handler._get_db_handler(table_name)
     with Stubber(table.meta.client) as stubber:
@@ -47,6 +49,7 @@ def test_internal_server_error(table_name):
 
 
 def test_handler_bad_request_invalid_body():
+    # when sending a request with invalid body payload, we get HTTP bad request status code
     response = call_create_product(generate_api_gw_event({'price': 5}, path_params={'product': generate_product_id()}))
     assert response['statusCode'] == HTTPStatus.BAD_REQUEST
     body_dict = json.loads(response['body'])
@@ -54,6 +57,7 @@ def test_handler_bad_request_invalid_body():
 
 
 def test_handler_bad_request_invalid_path_params():
+    # when sending a request with invalid path params, we get HTTP bad request status code
     body = generate_create_product_request_body()
     response = call_create_product(generate_api_gw_event(body=body.model_dump(), path_params={'dummy': generate_product_id()}))
     assert response['statusCode'] == HTTPStatus.BAD_REQUEST

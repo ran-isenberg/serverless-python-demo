@@ -2,6 +2,8 @@ import json
 import uuid
 from typing import Any, Dict, Optional
 
+import boto3
+
 from product.crud.schemas.input import PutProductBody
 from tests.utils import generate_random_integer, generate_random_string
 
@@ -91,3 +93,11 @@ def generate_create_product_request_body(name: str = '', price: int = 0) -> PutP
     if not name:
         name = generate_random_string()
     return PutProductBody(name=name, price=price)
+
+
+def clear_table(table_name: str) -> None:
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table(table_name)
+    response = table.scan()
+    for item in response['Items']:
+        table.delete_item(Key={'id': item['id']})

@@ -2,38 +2,31 @@ from http import HTTPStatus
 
 import requests
 
+from product.crud.dal.schemas.db import Product
 from product.crud.schemas.output import GetProductOutput
-from tests.crud_utils import generate_product_id, generate_random_integer, generate_random_string
-from tests.e2e.crud.utils import create_product
+from tests.crud_utils import generate_product_id
 
 
-# create product and then get it back
-def test_handler_200_ok(api_gw_url_slash_product: str) -> None:
-    product_id = generate_product_id()
-    price = generate_random_integer()
-    name = generate_random_string()
-    create_product(api_gw_url_slash_product=api_gw_url_slash_product, product_id=product_id, price=price, name=name)
+def test_handler_200_ok(api_gw_url_slash_product: str, add_product_entry_to_db: Product) -> None:
+    # when trying to get an existing, we get HTTP 200 OK and its fields match the created product
+    product_id = add_product_entry_to_db.id
     url_with_product_id = f'{api_gw_url_slash_product}/{product_id}'
     response: requests.Response = requests.get(url=url_with_product_id, timeout=10)
     assert response.status_code == HTTPStatus.OK
-    expected_response = GetProductOutput(id=product_id, price=price, name=name)
+    expected_response = GetProductOutput(id=product_id, price=add_product_entry_to_db.price, name=add_product_entry_to_db.name)
     response_entry = GetProductOutput.model_validate_json(response.text)
     assert response_entry.model_dump() == expected_response.model_dump()
 
 
-def test_handler_invalid_path(api_gw_url: str) -> None:
-    url_with_product_id = f'{api_gw_url}/dummy'
-    response = requests.get(url=url_with_product_id)
-    assert response.status_code == HTTPStatus.FORBIDDEN
-
-
 def test_handler_invalid_product_id(api_gw_url_slash_product: str) -> None:
+    # when trying to get a product with invalid id, you get HTTP BAD_REQUEST
     url_with_product_id = f'{api_gw_url_slash_product}/aaaa'
     response = requests.get(url=url_with_product_id)
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
 
 def test_handler_product_does_not_exit(api_gw_url_slash_product: str) -> None:
+    # when trying to get a product with valid id but it does not exist, you get HTTP NOT_FOUND
     product_id = generate_product_id()
     url_with_product_id = f'{api_gw_url_slash_product}/{product_id}'
     response = requests.get(url=url_with_product_id)

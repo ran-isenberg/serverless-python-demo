@@ -1,6 +1,6 @@
 import boto3
 
-from product.crud.dal.schemas.db import ProductEntry
+from product.crud.dal.schemas.db import Product
 from product.crud.handlers.utils.observability import logger
 from product.crud.schemas.output import CreateProductOutput
 
@@ -12,7 +12,7 @@ def handle_create_request(
     table_name: str,
 ) -> CreateProductOutput:
     logger.info('handling create product request', extra={'product_id': product_id})
-    entry = ProductEntry(name=product_name, id=product_id, price=product_price)
+    entry = Product(name=product_name, id=product_id, price=product_price)
 
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table(table_name)

@@ -22,3 +22,7 @@ class GetVars(Observability):
 
 class DeleteVars(Observability):
     TABLE_NAME: Annotated[str, Field(min_length=1)]
+
+
+class ListVars(Observability):
+    TABLE_NAME: Annotated[str, Field(min_length=1)]
