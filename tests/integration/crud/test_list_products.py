@@ -6,7 +6,7 @@ import pytest
 from botocore.stub import Stubber
 
 from product.crud.dal.dynamo_dal_handler import DynamoDalHandler
-from product.crud.dal.schemas.db import ProductEntry
+from product.crud.dal.schemas.db import Product
 from product.crud.handlers.list_products import list_products
 from product.crud.schemas.output import ListProductsOutput
 from tests.crud_utils import clear_table, generate_api_gw_event, generate_product_id
@@ -14,16 +14,16 @@ from tests.utils import generate_context
 
 
 @pytest.fixture()
-def add_product_entry_to_db(table_name: str) -> Generator[ProductEntry, None, None]:
+def add_product_entry_to_db(table_name: str) -> Generator[Product, None, None]:
     clear_table(table_name)
-    product = ProductEntry(id=generate_product_id(), price=1, name='test')
+    product = Product(id=generate_product_id(), price=1, name='test')
     table = boto3.resource('dynamodb').Table(table_name)
     table.put_item(Item=product.model_dump())
     yield product
     table.delete_item(Key={'id': product.id})
 
 
-def test_handler_200_ok(add_product_entry_to_db: ProductEntry):
+def test_handler_200_ok(add_product_entry_to_db: Product):
     # when adding one product to the table and listing it, one item is returned
     event = generate_api_gw_event()
     response = list_products(event, generate_context())

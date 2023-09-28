@@ -2,12 +2,12 @@ from http import HTTPStatus
 
 import requests
 
-from product.crud.dal.schemas.db import ProductEntry
+from product.crud.dal.schemas.db import Product
 from product.crud.schemas.output import ListProductsOutput
 
 
 # create product and then get it back
-def test_handler_200_ok(api_gw_url_slash_products: str, add_product_entry_to_db: ProductEntry) -> None:
+def test_handler_200_ok(api_gw_url_slash_products: str, add_product_entry_to_db: Product) -> None:
     # when starting with an empty table, creating a new product and then listing products will return a list with one product - the one we created
     response: requests.Response = requests.get(url=api_gw_url_slash_products, timeout=10)
 

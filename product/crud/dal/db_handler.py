@@ -1,7 +1,7 @@
 from abc import ABC, ABCMeta, abstractmethod
 from typing import List
 
-from product.crud.dal.schemas.db import ProductEntry
+from product.crud.dal.schemas.db import Product
 
 
 class _SingletonMeta(ABCMeta):
@@ -16,11 +16,11 @@ class _SingletonMeta(ABCMeta):
 class DalHandler(ABC, metaclass=_SingletonMeta):
 
     @abstractmethod
-    def create_product(self, product_id: str, product_name: str, product_price: int) -> ProductEntry:
+    def create_product(self, product: Product) -> None:
         ...  # pragma: no cover
 
     @abstractmethod
-    def get_product(self, product_id: str) -> ProductEntry:
+    def get_product(self, product_id: str) -> Product:
         ...  # pragma: no cover
 
     @abstractmethod
@@ -28,5 +28,5 @@ class DalHandler(ABC, metaclass=_SingletonMeta):
         ...  # pragma: no cover
 
     @abstractmethod
-    def list_products(self) -> List[ProductEntry]:
+    def list_products(self) -> List[Product]:
         ...  # pragma: no cover

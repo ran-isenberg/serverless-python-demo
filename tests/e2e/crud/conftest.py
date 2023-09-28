@@ -3,7 +3,7 @@ from typing import Generator
 import pytest
 
 from infrastructure.product.constants import APIGATEWAY, PRODUCT_RESOURCE, PRODUCTS_RESOURCE, TABLE_NAME_OUTPUT
-from product.crud.dal.schemas.db import ProductEntry
+from product.crud.dal.schemas.db import Product
 from tests.crud_utils import clear_table, generate_product_id
 from tests.e2e.crud.utils import create_product, delete_product
 from tests.utils import get_stack_output
@@ -35,10 +35,10 @@ def table_name():
 
 
 @pytest.fixture()
-def add_product_entry_to_db(api_gw_url_slash_product: str, table_name: str) -> Generator[ProductEntry, None, None]:
+def add_product_entry_to_db(api_gw_url_slash_product: str, table_name: str) -> Generator[Product, None, None]:
     clear_table(table_name)
     product_id = generate_product_id()
-    product = ProductEntry(id=product_id, price=1, name='test')
+    product = Product(id=product_id, price=1, name='test')
     create_product(api_gw_url_slash_product=api_gw_url_slash_product, product_id=product_id, price=product.price, name=product.name)
     yield product
     delete_product(api_gw_url_slash_product, product_id)

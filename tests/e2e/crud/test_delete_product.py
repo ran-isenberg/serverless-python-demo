@@ -2,10 +2,10 @@ from http import HTTPStatus
 
 import requests
 
-from product.crud.dal.schemas.db import ProductEntry
+from product.crud.dal.schemas.db import Product
 
 
-def test_handler_204_success_delete(api_gw_url_slash_product: str, add_product_entry_to_db: ProductEntry) -> None:
+def test_handler_204_success_delete(api_gw_url_slash_product: str, add_product_entry_to_db: Product) -> None:
     # when deleting an existing product, we get HTTP NO_CONTENT
     url_with_product_id = f'{api_gw_url_slash_product}/{add_product_entry_to_db.id}'
     response: requests.Response = requests.delete(url=url_with_product_id, timeout=10)

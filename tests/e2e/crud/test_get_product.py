@@ -2,12 +2,12 @@ from http import HTTPStatus
 
 import requests
 
-from product.crud.dal.schemas.db import ProductEntry
+from product.crud.dal.schemas.db import Product
 from product.crud.schemas.output import GetProductOutput
 from tests.crud_utils import generate_product_id
 
 
-def test_handler_200_ok(api_gw_url_slash_product: str, add_product_entry_to_db: ProductEntry) -> None:
+def test_handler_200_ok(api_gw_url_slash_product: str, add_product_entry_to_db: Product) -> None:
     # when trying to get an existing, we get HTTP 200 OK and its fields match the created product
     product_id = add_product_entry_to_db.id
     url_with_product_id = f'{api_gw_url_slash_product}/{product_id}'

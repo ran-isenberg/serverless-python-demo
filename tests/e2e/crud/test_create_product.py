@@ -15,11 +15,11 @@ def test_handler_200_ok(api_gw_url_slash_product: str, product_id: str):
     body_dict = json.loads(response.text)
     assert body_dict['id'] == product_id
 
-    # check idempotency, send same request, get same product id back and HTTP OK
+    # check idempotency, send same request, get bad request as it already exists
     response = requests.put(url=url_with_product_id, data=body.model_dump_json(), timeout=10)
-    assert response.status_code == HTTPStatus.OK
+    assert response.status_code == HTTPStatus.BAD_REQUEST
     body_dict = json.loads(response.text)
-    assert body_dict['id'] == product_id
+    assert body_dict['error'] == 'product already exists'
 
 
 def test_handler_bad_request_invalid_body(api_gw_url_slash_product: str, product_id: str):

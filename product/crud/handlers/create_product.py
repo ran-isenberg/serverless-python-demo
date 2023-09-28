@@ -3,23 +3,20 @@ from typing import Any, Dict
 
 from aws_lambda_env_modeler import get_environment_variables, init_environment_variables
 from aws_lambda_powertools.metrics import MetricUnit
-from aws_lambda_powertools.utilities.idempotency import idempotent
 from aws_lambda_powertools.utilities.parser import ValidationError, parse
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from product.crud.domain_logic.handle_create_request import handle_create_request
 from product.crud.handlers.schemas.env_vars import CreateVars
 from product.crud.handlers.utils.http_responses import build_response
-from product.crud.handlers.utils.idempotency import IDEMPOTENCY_CONFIG, IDEMPOTENCY_LAYER
 from product.crud.handlers.utils.observability import logger, metrics, tracer
-from product.crud.schemas.exceptions import InternalServerException
+from product.crud.schemas.exceptions import InternalServerException, ProductAlreadyExistsException
 from product.crud.schemas.input import CreateProductRequest
 from product.crud.schemas.output import CreateProductOutput
 
 
 @init_environment_variables(model=CreateVars)
 @metrics.log_metrics
-@idempotent(persistence_store=IDEMPOTENCY_LAYER, config=IDEMPOTENCY_CONFIG)
 @tracer.capture_lambda_handler(capture_response=False)
 def create_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
     logger.set_correlation_id(context.aws_request_id)
@@ -43,9 +40,12 @@ def create_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, A
             product_price=create_input.body.price,
             table_name=env_vars.TABLE_NAME,
         )
-    except InternalServerException:  # pragma: no cover
+    except InternalServerException:
         logger.exception('finished handling create product request with internal error')
         return build_response(http_status=HTTPStatus.INTERNAL_SERVER_ERROR, body={})
+    except ProductAlreadyExistsException:  # pragma: no cover
+        logger.exception('finished handling create product request with bad request')
+        return build_response(http_status=HTTPStatus.BAD_REQUEST, body={'error': 'product already exists'})
 
     logger.info('finished handling create product request, product created')
     return build_response(http_status=HTTPStatus.OK, body=response.model_dump())
