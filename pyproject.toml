@@ -74,3 +74,6 @@ skip = [
 
 [tool.yapfignore]
 ignore_patterns = [".git", ".venv", ".build", "cdk.out", "node_modules"]
+
+[tool.pytest.ini_options]
+testpaths = "tests"
