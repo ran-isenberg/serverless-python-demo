@@ -1,3 +1,11 @@
 {
-  "app": "poetry run python app.py"
+  "app": "poetry run python app.py",
+  "watch": {
+    "include": "product/**",
+    "exclude": [
+      "product/**/*.pyc",
+      "product/**/__pycache__"
+    ]
+  },
+  "build": "make build"
 }
