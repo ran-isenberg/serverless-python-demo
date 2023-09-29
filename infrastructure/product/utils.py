@@ -1,4 +1,4 @@
-import os
+import getpass
 from pathlib import Path
 
 from git import Repo
@@ -8,7 +8,7 @@ import infrastructure.product.constants as constants
 
 def get_username() -> str:
     try:
-        return os.getlogin().replace('.', '-')
+        return getpass.getuser().replace('.', '-')
     except Exception:
         return 'github'
 
