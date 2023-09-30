@@ -54,7 +54,7 @@ class StreamProcessorConstruct(Construct):
             id=constants.STREAM_PROCESSOR_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.stream_processor.handlers.product_stream.process_stream',
+            handler='product.stream_processor.handlers.process_stream.process_stream',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
