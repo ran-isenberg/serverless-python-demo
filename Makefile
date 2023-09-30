@@ -68,3 +68,6 @@ docs:
 
 lint-docs:
 	docker run -v ${PWD}:/markdown 06kellyjac/markdownlint-cli --fix "docs"
+
+watch:
+	npx cdk watch
