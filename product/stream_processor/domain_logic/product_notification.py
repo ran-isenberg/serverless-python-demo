@@ -6,7 +6,5 @@ from product.models.products.product import ProductNotification
 EventHandler = TypeVar('EventHandler')
 
 
-def notify_product_updates(
-    update: list[ProductNotification], event_handler: EventHandler | None = None
-):
+def notify_product_updates(update: list[ProductNotification], event_handler: EventHandler | None = None):
     return update
