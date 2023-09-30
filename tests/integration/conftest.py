@@ -18,7 +18,7 @@ def init():
     os.environ[POWER_TOOLS_LOG_LEVEL] = 'DEBUG'
     os.environ['REST_API'] = 'https://www.ranthebuilder.cloud/api'
     os.environ['ROLE_ARN'] = 'arn:partition:service:region:account-id:resource-type:resource-id'
-    os.environ['AWS_DEFAULT_REGION'] = 'us-east-1'  # used for appconfig mocked boto calls
+    os.environ['AWS_DEFAULT_REGION'] = os.environ.get('AWS_DEFAULT_REGION', 'us-east-1')  # used for appconfig mocked boto calls
     os.environ['TABLE_NAME'] = get_stack_output(TABLE_NAME_OUTPUT)
     os.environ['IDEMPOTENCY_TABLE_NAME'] = get_stack_output(IDEMPOTENCY_TABLE_NAME_OUTPUT)
 
