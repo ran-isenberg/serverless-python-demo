@@ -1,5 +1,5 @@
 from tests.unit.stream_processor.data_builder import generate_dynamodb_stream_events
-from product.stream_processor.handlers.stream_handler import process_stream
+from product.stream_processor.handlers.product_stream import process_stream
 from tests.utils import generate_context
 import uuid
 
