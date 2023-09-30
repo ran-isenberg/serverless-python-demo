@@ -7,6 +7,6 @@ EventHandler = TypeVar('EventHandler')
 
 
 def notify_product_updates(
-    update: list[ProductNotification], event_handler: EventHandler
+    update: list[ProductNotification], event_handler: EventHandler | None = None
 ):
-    ...
+    return update
