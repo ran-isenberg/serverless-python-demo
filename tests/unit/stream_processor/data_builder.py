@@ -2,6 +2,9 @@
 import random
 import time
 from typing import Any
+from uuid import uuid4
+
+from product.models.products.product import ProductNotification
 
 
 def generate_dynamodb_stream_events(product_id: str = '8c18c85a-0f10-4b73-b54a-07ab0d381018',) -> dict[str, Any]:
@@ -81,3 +84,11 @@ def generate_dynamodb_stream_events(product_id: str = '8c18c85a-0f10-4b73-b54a-0
             },
         ]
     }
+
+
+def generate_product_notifications(product_id: str = '') -> list[ProductNotification]:
+    product_id = product_id or f'{uuid4()}'
+    return [
+        ProductNotification(product_id=product_id, status=random.choice(['ADDED', 'REMOVED', 'UPDATED'])),
+        ProductNotification(product_id=product_id, status=random.choice(['ADDED', 'REMOVED', 'UPDATED'])),
+    ]
