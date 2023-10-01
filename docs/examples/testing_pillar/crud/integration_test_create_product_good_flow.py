@@ -16,7 +16,7 @@ def call_create_product_handler(body: Dict[str, Any]) -> Dict[str, Any]:
 def test_handler_200_ok(mocker, table_name: str) -> None:
     body = generate_create_product_request_body()
     product_id = generate_product_id()
-    response = call_create_product_handler(generate_api_gw_event(
+    response = create_product(generate_api_gw_event(
         body=body.model_dump(),
         path_params={'product': product_id},
     ))
