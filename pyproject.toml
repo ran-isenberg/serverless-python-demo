@@ -55,6 +55,9 @@ types-requests = "*"
 toml = "*"
 
 
+[tool.poetry.group.dev.dependencies]
+mypy-boto3-events = "^1.28.46"
+
 [tool.isort]
 py_version = 311
 multi_line_output = 3
