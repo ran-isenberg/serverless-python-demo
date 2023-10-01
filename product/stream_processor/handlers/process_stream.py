@@ -26,10 +26,10 @@ def process_stream(
 
         match record.event_name:
             case record.event_name.INSERT:  # type: ignore[union-attr]
-                product_updates.append(ProductNotification(product_id=product_id, change_status='ADDED'))
+                product_updates.append(ProductNotification(product_id=product_id, status='ADDED'))
             case record.event_name.MODIFY:  # type: ignore[union-attr]
-                product_updates.append(ProductNotification(product_id=product_id, change_status='UPDATED'))
+                product_updates.append(ProductNotification(product_id=product_id, status='UPDATED'))
             case record.event_name.REMOVE:  # type: ignore[union-attr]
-                product_updates.append(ProductNotification(product_id=product_id, change_status='REMOVED'))
+                product_updates.append(ProductNotification(product_id=product_id, status='REMOVED'))
 
     return notify_product_updates(update=product_updates, event_handler=event_handler)

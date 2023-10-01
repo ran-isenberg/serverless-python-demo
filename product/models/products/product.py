@@ -17,5 +17,5 @@ class Product(BaseModel):
 
 class ProductNotification(BaseModel):
     product_id: ProductId
-    change_status: Literal['ADDED', 'REMOVED', 'UPDATED']
+    status: Literal['ADDED', 'REMOVED', 'UPDATED']
     created_at: datetime = Field(default_factory=datetime.utcnow)
