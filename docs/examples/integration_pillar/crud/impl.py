@@ -3,8 +3,7 @@ from cachetools import TTLCache, cached
 from mypy_boto3_dynamodb.service_resource import Table
 
 from product.crud.dal.db_handler import DalHandler
-from product.crud.dal.schemas.db import Product
-from product.crud.handlers.utils.observability import logger
+from product.crud.dal.schemas.db import Product, ProductEntries
 
 
 class DynamoDalHandler(DalHandler):
@@ -18,15 +17,16 @@ class DynamoDalHandler(DalHandler):
         return dynamodb.Table(table_name)
 
     def create_product(self, product: Product) -> None:
-        logger.info('trying to create a product', extra={'product_id': product.id})
         table: Table = self._get_db_handler(self.table_name)
         table.put_item(Item=product.model_dump())
-        logger.info('finished create product', extra={'product_id': product.id})
 
     def get_product(self, product_id: str) -> Product:
-        logger.info('trying to get a product', extra={'product_id': product_id})
         table: Table = self._get_db_handler(self.table_name)
         response = table.get_item(Key={'id': product_id})
-        db_entry = Product.model_validate(response.get('Item', {}))
-        logger.info('got item successfully', extra={'product_id': product_id})
-        return db_entry
+        return Product.model_validate(response.get('Item', {}))
+
+    def list_products(self) -> list[Product]:
+        table: Table = self._get_db_handler(self.table_name)
+        response = table.scan(ConsistentRead=True)
+        db_entries = ProductEntries.model_validate(response)
+        return db_entries.Items
