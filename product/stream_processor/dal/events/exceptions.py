@@ -1,0 +1,2 @@
+class ProductNotificationDeliveryError(Exception):
+    pass
