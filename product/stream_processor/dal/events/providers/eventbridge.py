@@ -22,6 +22,8 @@ class EventBridge(EventProvider):
 
     def send(self, payload: list[Event]) -> EventReceipt:
         events = self.build_put_events_request(payload)
+
+        # NOTE: we need a generator that will slice up to 10 event entries
         result = self.client.put_events(Entries=events)
 
         successful_requests, unsuccessful_requests = self._collect_receipts(result)
