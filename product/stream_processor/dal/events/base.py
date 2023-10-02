@@ -20,5 +20,5 @@ class EventHandler(ABC, Generic[T]):
         ...
 
     @abstractmethod
-    def emit(self, payload: list[T], metadata: dict[str, Any] | None = None) -> EventReceipt:
+    def emit(self, payload: Sequence[T], metadata: dict[str, Any] | None = None) -> EventReceipt:
         ...
