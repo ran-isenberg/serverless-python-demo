@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, Literal
+from typing import Annotated, Literal, ClassVar
 
 from pydantic import BaseModel, Field, PositiveInt
 from pydantic.functional_validators import AfterValidator
@@ -19,3 +19,9 @@ class ProductNotification(BaseModel):
     product_id: ProductId
     status: Literal['ADDED', 'REMOVED', 'UPDATED']
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+    # NOTE: consider whether this is the best place.
+    # at best, keeping it close to the model it's easier to detect schema or breaking changes
+    # these are not serialized when using dict(), model_dump(), or model_dump_json()
+    event_name: ClassVar[str] = 'PRODUCT_CHANGE_NOTIFICATION'
+    event_version: ClassVar[str] = 'v1'

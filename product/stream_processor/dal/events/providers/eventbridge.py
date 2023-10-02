@@ -1,10 +1,12 @@
-import json
-from typing import TYPE_CHECKING, Any, Optional
+import os
+from typing import TYPE_CHECKING, Optional
 
 import boto3
 
-from product.stream_processor.dal.events.base import EventProvider, T
+from product.constants import XRAY_TRACE_ID_ENV
+from product.stream_processor.dal.events.base import EventProvider
 from product.stream_processor.dal.events.exceptions import ProductNotificationDeliveryError
+from product.stream_processor.dal.events.models.input import Event
 from product.stream_processor.dal.events.models.output import EventReceipt, EventReceiptSuccessfulNotification, EventReceiptUnsuccessfulNotification
 
 if TYPE_CHECKING:
@@ -19,16 +21,20 @@ class EventBridge(EventProvider):
         self.client = client or boto3.client('events')
 
     # NOTE: missing input model that always expect a standard event like data + metadata
-    def send(self, payload: T) -> EventReceipt:
-        event: 'PutEventsRequestEntryTypeDef' = {
-            'Source': 'myorg.myservice',
-            'DetailType': 'event_type.version',
-            'Detail': json.dumps(payload),
-            'EventBusName': self.bus_name,
-            'TraceHeader': '',
-        }
+    def send(self, payload: list[Event]) -> EventReceipt:
+        events: list['PutEventsRequestEntryTypeDef'] = []
 
-        result = self.client.put_events(Entries=[event])
+        # NOTE: 'Time' field is not included to be able to measure end-to-end latency later (time - created_at)
+        for event in payload:
+            events.append({
+                'Source': event.metadata.event_source,
+                'DetailType': f'{event.metadata.event_name}.{event.metadata.event_version}',
+                'Detail': event.model_dump_json(),
+                'EventBusName': self.bus_name,
+                'TraceHeader': os.environ.get(XRAY_TRACE_ID_ENV, ''),
+            })
+
+        result = self.client.put_events(Entries=events)
 
         successful_requests, unsuccessful_requests = self._collect_receipts(result)
         has_failed_entries = result['FailedEntryCount'] >= 0

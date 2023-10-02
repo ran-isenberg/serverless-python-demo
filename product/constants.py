@@ -1,0 +1,1 @@
+XRAY_TRACE_ID_ENV: str = '_X_AMZN_TRACE_ID'
