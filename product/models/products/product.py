@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, Literal, ClassVar
+from typing import Annotated, ClassVar, Literal
 
 from pydantic import BaseModel, Field, PositiveInt
 from pydantic.functional_validators import AfterValidator
@@ -25,3 +25,4 @@ class ProductNotification(BaseModel):
     # these are not serialized when using dict(), model_dump(), or model_dump_json()
     event_name: ClassVar[str] = 'PRODUCT_CHANGE_NOTIFICATION'
     event_version: ClassVar[str] = 'v1'
+    event_source: ClassVar[str] = 'myorg.product.product_notification'
