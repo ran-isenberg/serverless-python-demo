@@ -1,12 +1,8 @@
-from datetime import datetime
-from typing import ClassVar
-
 import pytest
 from pydantic import BaseModel
 
 from product.constants import XRAY_TRACE_ID_ENV
-from product.stream_processor.dal.events.base import build_events_from_models, convert_model_to_event_name
-from product.stream_processor.dal.events.models.input import Event, EventMetadata
+from product.stream_processor.dal.events.base import build_events_from_models
 from product.stream_processor.dal.events.providers.eventbridge import EventBridge
 
 

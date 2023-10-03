@@ -1,10 +1,10 @@
-from typing import Any, Generator, TypedDict, TypeVar
-
-import pytest
+from typing import Any, Generator, TypeVar, Sequence
 
 from product.models.products.product import ProductChangeNotification
+from product.stream_processor.dal.events.base import EventProvider, build_events_from_models
 from product.stream_processor.dal.events.event_handler import ProductChangeNotificationHandler
-from tests.unit.stream_processor.data_builder import generate_dynamodb_stream_events, generate_product_notifications
+from product.stream_processor.dal.events.models.input import Event
+from product.stream_processor.dal.events.models.output import EventReceipt, EventReceiptSuccessfulNotification
 from pytest_socket import disable_socket
 
 
@@ -17,42 +17,35 @@ T = TypeVar('T')
 Fixture = Generator[T, None, None]
 
 
-class FakePublishedEvent(TypedDict):
-    event: ProductChangeNotification
-    metadata: dict[str, Any]
+# Fakes are in-memory implementations of our interface, serving the following purposes:
+# -- Remove the need for mocks that need to be aware of scope and return types
+# -- Make it easier to assert data structures that would be hard otherwise to introspect
+# -- Simple reference for an EventHandler and EventProvider
+
+class FakeProvider(EventProvider):
+    def send(self, payload: Sequence[Event]) -> EventReceipt:
+        notifications = [EventReceiptSuccessfulNotification(receipt_id='test') for _ in payload]
+        return EventReceipt(successful_notifications=notifications)
 
 
 class FakeEventHandler(ProductChangeNotificationHandler):
 
-    def __init__(self):
-        self.published_events: list[FakePublishedEvent] = []
+    def __init__(self, provider: EventProvider = FakeProvider(), event_source: str = 'fake') -> None:
+        super().__init__(provider=provider, event_source=event_source)
+        self.published_payloads: list[ProductChangeNotificationHandler] = []
 
-    def emit(self, payload: list[ProductChangeNotification], metadata: dict[str, Any] | None = None):
+    def emit(self, payload: list[ProductChangeNotification], metadata: dict[str, Any] | None = None,
+             correlation_id: str = '') -> EventReceipt:
         metadata = metadata or {}
-        for product in payload:
-            self.published_events.append({'event': product, 'metadata': metadata})
+        event_payload = build_events_from_models(models=payload, metadata=metadata, correlation_id=correlation_id,
+                                                 event_source='fake')
+        receipt = self.provider.send(payload=event_payload)
 
-    @property
-    def published_notifications(self) -> list[ProductChangeNotification]:
-        return [notification['event'] for notification in self.published_events]
+        self.published_payloads.extend(payload)
+        return receipt
 
     def __len__(self):
-        return len(self.published_events)
+        return len(self.published_payloads)
 
     def __contains__(self, item: ProductChangeNotification):
-        return item in self.published_notifications
-
-
-@pytest.fixture
-def dynamodb_stream_events() -> Fixture[dict[str, Any]]:
-    yield generate_dynamodb_stream_events()
-
-
-@pytest.fixture
-def event_store() -> Fixture[FakeEventHandler]:
-    yield FakeEventHandler()
-
-
-@pytest.fixture
-def product_notifications() -> Fixture[list[ProductChangeNotification]]:
-    yield generate_product_notifications()
+        return item in self.published_payloads

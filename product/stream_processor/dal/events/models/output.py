@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class EventReceiptSuccessfulNotification(BaseModel):
@@ -13,4 +13,4 @@ class EventReceiptUnsuccessfulNotification(BaseModel):
 
 class EventReceipt(BaseModel):
     successful_notifications: list[EventReceiptSuccessfulNotification]
-    unsuccessful_notifications: list[EventReceiptUnsuccessfulNotification]
+    unsuccessful_notifications: list[EventReceiptUnsuccessfulNotification] = Field(default_factory=list)
