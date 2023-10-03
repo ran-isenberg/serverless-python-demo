@@ -10,8 +10,6 @@ class ProductChangeNotificationHandler(EventHandler):
     def __init__(self, provider: EventProvider, event_source: str) -> None:
         super().__init__(provider=provider, event_source=event_source)
 
-    def emit(self, payload: list[ProductChangeNotification], metadata: dict[str, Any] | None = None,
-             correlation_id: str = '') -> EventReceipt:
-        event_payload = build_events_from_models(models=payload, metadata=metadata, correlation_id=correlation_id,
-                                                 event_source=self.event_source)
+    def emit(self, payload: list[ProductChangeNotification], metadata: dict[str, Any] | None = None, correlation_id: str = '') -> EventReceipt:
+        event_payload = build_events_from_models(models=payload, metadata=metadata, correlation_id=correlation_id, event_source=self.event_source)
         return self.provider.send(payload=event_payload)

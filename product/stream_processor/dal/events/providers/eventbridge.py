@@ -2,12 +2,13 @@ import os
 from typing import TYPE_CHECKING, Optional
 
 import boto3
+import botocore.exceptions
 
 from product.constants import XRAY_TRACE_ID_ENV
 from product.stream_processor.dal.events.base import EventProvider
 from product.stream_processor.dal.events.exceptions import ProductNotificationDeliveryError
 from product.stream_processor.dal.events.models.input import Event
-from product.stream_processor.dal.events.models.output import EventReceipt, EventReceiptSuccessfulNotification, EventReceiptUnsuccessfulNotification
+from product.stream_processor.dal.events.models.output import EventReceipt, EventReceiptFail, EventReceiptSuccess
 
 if TYPE_CHECKING:
     from mypy_boto3_events import EventBridgeClient
@@ -24,43 +25,55 @@ class EventBridge(EventProvider):
         events = self.build_put_events_request(payload)
 
         # NOTE: we need a generator that will slice up to 10 event entries
-        result = self.client.put_events(Entries=events)
+        try:
+            result = self.client.put_events(Entries=events)
+        except botocore.exceptions.ClientError as exc:
+            error_message = exc.response['Error']['Message']
 
-        successful_requests, unsuccessful_requests = self._collect_receipts(result)
-        return EventReceipt(successful_notifications=successful_requests, unsuccessful_notifications=unsuccessful_requests)
+            receipt = EventReceiptFail(receipt_id='', error='error_message', details=exc.response['ResponseMetadata'])
+            raise ProductNotificationDeliveryError(f'Failed to deliver all events: {error_message}', receipts=[receipt]) from exc
+
+        success, failed = self._collect_receipts(result)
+        return EventReceipt(success=success, failed=failed)
 
     def build_put_events_request(self, payload: list[Event]) -> list['PutEventsRequestEntryTypeDef']:
         events: list['PutEventsRequestEntryTypeDef'] = []
 
         # 'Time' field is not included to be able to measure end-to-end latency later (time - created_at)
         for event in payload:
-            events.append({
+            trace_id = os.environ.get(XRAY_TRACE_ID_ENV)
+            event_request = {
                 'Source': event.metadata.event_source,
                 'DetailType': event.metadata.event_name,
                 'Detail': event.model_dump_json(),
                 'EventBusName': self.bus_name,
-                'TraceHeader': os.environ.get(XRAY_TRACE_ID_ENV, ''),
-            })
+            }
+
+            if trace_id:
+                event_request['TraceHeader'] = trace_id
+
+            events.append(event_request)
 
         return events
 
     @staticmethod
-    def _collect_receipts(
-            result: 'PutEventsResponseTypeDef') -> tuple[list[EventReceiptSuccessfulNotification], list[EventReceiptUnsuccessfulNotification]]:
-        successful_requests: list[EventReceiptSuccessfulNotification] = []
-        unsuccessful_requests: list[EventReceiptUnsuccessfulNotification] = []
+    def _collect_receipts(result: 'PutEventsResponseTypeDef') -> tuple[list[EventReceiptSuccess], list[EventReceiptFail]]:
+        successes: list[EventReceiptSuccess] = []
+        fails: list[EventReceiptFail] = []
 
         for receipt in result['Entries']:
-            if receipt['ErrorMessage']:
-                unsuccessful_requests.append(
-                    EventReceiptUnsuccessfulNotification(receipt_id=receipt['EventId'], error=receipt['ErrorMessage'],
-                                                         details={'error_code': receipt['ErrorCode']}))
+            error_message = receipt.get('ErrorMessage')
+            event_id = receipt.get('EventId', '')
+
+            if error_message:
+                error_code = receipt.get('ErrorCode')
+                fails.append(EventReceiptFail(receipt_id=event_id, error=error_message, details={'error_code': error_code}))
             else:
-                successful_requests.append(EventReceiptSuccessfulNotification(receipt_id=receipt['EventId']))
+                successes.append(EventReceiptSuccess(receipt_id=event_id))
 
         # NOTE: Improve this error by correlating which entry failed to send.
         # We will fail regardless, but it'll be useful for logging and correlation later on.
-        if result['FailedEntryCount'] >= 0:
-            raise ProductNotificationDeliveryError(f'Failed to deliver {len(unsuccessful_requests)} events')
+        if result['FailedEntryCount'] > 0:
+            raise ProductNotificationDeliveryError(f'Failed to deliver {len(fails)} events', receipts=fails)
 
-        return successful_requests, unsuccessful_requests
+        return successes, fails

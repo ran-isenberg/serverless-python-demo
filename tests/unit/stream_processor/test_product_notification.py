@@ -12,5 +12,5 @@ def test_product_notifications_are_emitted():
     receipt = notify_product_updates(update=product_notifications, event_handler=event_store)
 
     # THEN the fake event handler should emit these product notifications
-    assert len(receipt.successful_notifications) == len(product_notifications)
+    assert len(receipt.success) == len(product_notifications)
     assert all(notification in event_store for notification in product_notifications)

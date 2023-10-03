@@ -4,7 +4,7 @@ from typing import Any, Generic, Sequence, TypeVar
 from uuid import uuid4
 
 from product.stream_processor.dal.events.constants import DEFAULT_EVENT_VERSION
-from product.stream_processor.dal.events.models.input import Event, AnyModel, EventMetadata
+from product.stream_processor.dal.events.models.input import AnyModel, Event, EventMetadata
 from product.stream_processor.dal.events.models.output import EventReceipt
 
 T = TypeVar('T')
@@ -31,6 +31,7 @@ class EventProvider(ABC):
 
 
 class EventHandler(ABC, Generic[T]):
+
     def __init__(self, provider: EventProvider, event_source: str) -> None:
         self.provider = provider
         self.event_source = event_source
@@ -58,15 +59,7 @@ def build_events_from_models(models: Sequence[AnyModel], event_source: str, meta
 
         events.append(
             Event(
-                data=model,
-                metadata=EventMetadata(
-                    event_name=event_name,
-                    event_source=event_source,
-                    event_version=event_version,
-                    correlation_id=correlation_id,
-                    **metadata
-                )
-            )
-        )
+                data=model, metadata=EventMetadata(event_name=event_name, event_source=event_source, event_version=event_version,
+                                                   correlation_id=correlation_id, **metadata)))
 
     return events
