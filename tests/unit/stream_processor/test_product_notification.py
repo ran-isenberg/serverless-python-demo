@@ -1,9 +1,9 @@
-from product.models.products.product import ProductNotification
+from product.models.products.product import ProductChangeNotification
 from product.stream_processor.domain_logic.product_notification import notify_product_updates
 from tests.unit.stream_processor.conftest import FakeEventHandler
 
 
-def test_product_notifications_are_emitted(product_notifications: list[ProductNotification], event_store: FakeEventHandler):
+def test_product_notifications_are_emitted(product_notifications: list[ProductChangeNotification], event_store: FakeEventHandler):
     # GIVEN a list of Product Notifications and a fake event handler
     # WHEN the product notifications are processed
     notify_product_updates(update=product_notifications, event_handler=event_store)

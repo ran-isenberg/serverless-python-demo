@@ -15,14 +15,9 @@ class Product(BaseModel):
     price: PositiveInt
 
 
-class ProductNotification(BaseModel):
+class ProductChangeNotification(BaseModel):
     product_id: ProductId
     status: Literal['ADDED', 'REMOVED', 'UPDATED']
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    # NOTE: consider whether this is the best place.
-    # at best, keeping it close to the model it's easier to detect schema or breaking changes
-    # these are not serialized when using dict(), model_dump(), or model_dump_json()
-    event_name: ClassVar[str] = 'PRODUCT_CHANGE_NOTIFICATION'
-    event_version: ClassVar[str] = 'v1'
-    event_source: ClassVar[str] = 'myorg.product.product_notification'
+    __version__: str = 'V1'
