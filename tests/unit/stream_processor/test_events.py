@@ -20,12 +20,11 @@ def test_model_to_standard_event():
     event = build_events_from_models(models=[notification], event_source=event_source)[0]
 
     # THEN the event should contain our notification in `.data`, all metadata under `.metadata`
-    # infer the event version from the model, convert PascalCase to SNAKE_CASE_UPPER
+    # infer the event version from the model, event name infers model name from PascalCase to SNAKE_CASE_UPPER
     assert event.data == notification
     assert event.metadata.event_source == event_source
     assert event.metadata.event_version == notification.__version__
-    assert event.metadata.event_name == convert_model_to_event_name(
-        notification.__class__.__name__)  # SampleNotification -> SAMPLE_NOTIFICATION
+    assert event.metadata.event_name == convert_model_to_event_name(notification.__class__.__name__)
     assert event.metadata.correlation_id != ''
     assert event.metadata.created_at != ''
 
