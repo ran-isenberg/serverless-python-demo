@@ -5,6 +5,13 @@ import pytest
 from product.models.products.product import ProductNotification
 from product.stream_processor.dal.events.event_handler import ProductNotificationHandler
 from tests.unit.stream_processor.data_builder import generate_dynamodb_stream_events, generate_product_notifications
+from pytest_socket import disable_socket
+
+
+def pytest_runtest_setup():
+    """Disable Unix and TCP sockets for Data masking tests"""
+    disable_socket()
+
 
 T = TypeVar('T')
 Fixture = Generator[T, None, None]
