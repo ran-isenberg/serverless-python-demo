@@ -36,7 +36,7 @@ class EventBridge(EventProvider):
         for event in payload:
             events.append({
                 'Source': event.metadata.event_source,
-                'DetailType': f'{event.metadata.event_name}.{event.metadata.event_version}',
+                'DetailType': event.metadata.event_name,
                 'Detail': event.model_dump_json(),
                 'EventBusName': self.bus_name,
                 'TraceHeader': os.environ.get(XRAY_TRACE_ID_ENV, ''),

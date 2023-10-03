@@ -1,29 +1,17 @@
 from typing import Any
 from uuid import uuid4
 
-from product.models.products.product import ProductNotification
+from product.models.products.product import ProductChangeNotification
 from product.stream_processor.dal.events.base import EventHandler, EventProvider
 from product.stream_processor.dal.events.models.input import Event, EventMetadata
 from product.stream_processor.dal.events.models.output import EventReceipt
 
 
-class ProductNotificationHandler(EventHandler):
+class ProductChangeNotificationHandler(EventHandler):
 
-    def __init__(self, provider: EventProvider) -> None:
-        self.provider = provider
+    def __init__(self, provider: EventProvider, event_source: str) -> None:
+        super().__init__(provider=provider, event_source=event_source)
 
-    def emit(self, payload: list[ProductNotification], metadata: dict[str, Any] | None = None) -> EventReceipt:
-        metadata = metadata or {}
-        correlation_id = f'{uuid4()}'  # we want the same correlation ID for the batch; use logger correlation ID later
-
-        # NOTE: this will be generic for all events later, we can easily make it reusable
-        # also consider a method to build event from payload
-        event_payload = [
-            Event(
-                data=notification.to_dict(),
-                metadata=EventMetadata(event_type=notification.event_name, event_source=notification.event_source,
-                                       event_version=notification.event_version, correlation_id=correlation_id, **metadata))
-            for notification in payload
-        ]
-
+    def emit(self, payload: list[ProductChangeNotification], metadata: dict[str, Any] | None = None, correlation_id: str = '') -> EventReceipt:
+        event_payload = self.build_event_from_models(models=payload, metadata=metadata, correlation_id=correlation_id)
         return self.provider.send(payload=event_payload)

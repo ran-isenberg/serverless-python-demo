@@ -5,69 +5,53 @@ import pytest
 from pydantic import BaseModel
 
 from product.constants import XRAY_TRACE_ID_ENV
+from product.stream_processor.dal.events.base import build_events_from_models, convert_model_to_event_name
 from product.stream_processor.dal.events.models.input import Event, EventMetadata
 from product.stream_processor.dal.events.providers.eventbridge import EventBridge
 
 
 def test_eventbridge_build_put_events_from_event_payload():
-    # GIVEN
+    # GIVEN a list of events from a SampleNotification model
     class SampleNotification(BaseModel):
         message: str
 
-        event_source: ClassVar[str] = 'test'
-        event_name: ClassVar[str] = 'sample'
-        event_version: ClassVar[str] = 'v1'
+        __version__ = 'V1'
 
-    event_bus_name = 'sample_bus'
     notification = SampleNotification(message='test')
+    events = build_events_from_models(models=[notification], event_source='test')
 
-    event = Event(
-        data=notification,
-        metadata=EventMetadata(
-            event_name=SampleNotification.event_name, event_source=SampleNotification.event_source,
-            event_version=SampleNotification.event_version, correlation_id='test'
-        )
-    )
+    # WHEN EventBridge provider builds a PutEvents request
+    event_provider = EventBridge(bus_name='test_bus')
+    request = event_provider.build_put_events_request(payload=events)
 
-    # WHEN
-    event_provider = EventBridge(bus_name=event_bus_name)
-    request = event_provider.build_put_events_request(payload=[event])
+    # THEN EventBridge PutEvents request should match our metadata and model data
+    published_event = request[0]
+    event = events[0]
 
-    # THEN
-    entry = request[0]
-    assert entry['Source'] == event.metadata.event_source
-    assert entry['Detail'] == event.model_dump_json()
-    assert entry['DetailType'] == f'{event.metadata.event_name}.{event.metadata.event_version}'
-    assert entry['EventBusName'] == event_bus_name
+    assert published_event['Source'] == event.metadata.event_source
+    assert published_event['Detail'] == event.model_dump_json()
+    assert published_event['DetailType'] == event.metadata.event_name
+    assert published_event['EventBusName'] == event_provider.bus_name
 
 
 def test_eventbridge_build_put_events_from_event_payload_include_trace_header(monkeypatch: pytest.MonkeyPatch):
-    # GIVEN
+    # GIVEN X-Ray Trace ID is available in the environment
     trace_id = '90835161-3067-47ba-8126-fda76dfdb0b0'
     monkeypatch.setenv(XRAY_TRACE_ID_ENV, trace_id)
 
     class SampleNotification(BaseModel):
         message: str
 
-        event_source: ClassVar[str] = 'test'
-        event_name: ClassVar[str] = 'sample'
-        event_version: ClassVar[str] = 'v1'
+        __version__ = 'v1'
 
     event_bus_name = 'sample_bus'
     notification = SampleNotification(message='test')
-
-    event = Event(
-        data=notification,
-        metadata=EventMetadata(
-            event_name=SampleNotification.event_name, event_source=SampleNotification.event_source,
-            event_version=SampleNotification.event_version, correlation_id='test'
-        )
-    )
-
-    # WHEN
+    events = build_events_from_models(models=[notification], event_source='test')
     event_provider = EventBridge(bus_name=event_bus_name)
-    request = event_provider.build_put_events_request(payload=[event])
 
-    # THEN
+    # WHEN EventBridge provider builds a PutEvents request
+    request = event_provider.build_put_events_request(payload=events)
+
+    # THEN PutEvents request should include 'TraceHeader' with the available X-Ray Trace ID
     entry = request[0]
     assert entry['TraceHeader'] == trace_id
