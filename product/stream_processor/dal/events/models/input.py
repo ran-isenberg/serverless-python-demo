@@ -1,11 +1,9 @@
 from datetime import datetime
 from typing import TypeVar
 
-from aws_lambda_powertools import Logger
 from pydantic import BaseModel, ConfigDict, Field
 
 AnyModel = TypeVar('AnyModel', bound=BaseModel)
-logger = Logger()
 
 
 class EventMetadata(BaseModel):

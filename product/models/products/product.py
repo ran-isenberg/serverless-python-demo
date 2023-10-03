@@ -20,4 +20,4 @@ class ProductChangeNotification(BaseModel):
     status: Literal['ADDED', 'REMOVED', 'UPDATED']
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    __version__: str = 'V1'
+    __version__: str = 'v1'
