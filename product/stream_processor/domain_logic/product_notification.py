@@ -23,10 +23,9 @@ def notify_product_updates(update: list[ProductChangeNotification], event_handle
     ---------------------
     `EVENT_BUS` : Event Bus to notify product change notifications
 
-    Examples
-    --------
+    # Examples
 
-    **Sending a newly added product notification**
+    Sending a newly added product notification
 
     ```python
     from product.stream_processor.domain_logic.product_notification import notify_product_updates
