@@ -10,8 +10,9 @@ from product.stream_processor.integrations.events.models.input import AnyModel, 
 T = TypeVar('T')
 """Generic type for a list of events"""
 
-_exclude_underscores = r'(?!^)(?<!_)'
-_pascal_case = r'[A-Z][a-z]+'
+# full regex: ((?!^)(?<!_)[A-Z][a-z]+|(?<=[a-z0-9])[A-Z])
+_exclude_underscores = r'(?!^)(?<!_)'  # _ProductNotification
+_pascal_case = r'[A-Z][a-z]+'  # ProductNotification
 _followed_by_lower_case_or_digit = r'(?<=[a-z0-9])[A-Z])'  # V1ProductNotification
 _or = r'|'
 _pascal_to_snake_pattern = re.compile(rf'({_exclude_underscores}{_pascal_case}{_or}{_followed_by_lower_case_or_digit}')
@@ -21,6 +22,8 @@ def convert_model_to_event_name(model_name: str) -> str:
     """Derives a standard event name from the name of the model.
 
     It uses snake_case in uppercase letters, e.g., `ProductNotification` -> `PRODUCT_NOTIFICATION`.
+
+    It also keeps numbers and acronyms that are typically abbreviation for something intact, e.g.: "ProductHTTP" -> "PRODUCT_HTTP"
 
     Parameters
     ----------

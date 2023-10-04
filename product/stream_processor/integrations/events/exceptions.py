@@ -2,6 +2,7 @@ from product.stream_processor.integrations.events.models.output import EventRece
 
 
 class NotificationDeliveryError(Exception):
+
     def __init__(self, message: str, receipts: list[EventReceiptFail]):
         """Exception raised when a notification delivery fails.
 
@@ -19,5 +20,6 @@ class NotificationDeliveryError(Exception):
 
 class ProductChangeNotificationDeliveryError(NotificationDeliveryError):
     """Raised when one or all product change notification deliveries fail."""
+
     def __init__(self, message: str, receipts: list[EventReceiptFail]):
         super().__init__(message, receipts)

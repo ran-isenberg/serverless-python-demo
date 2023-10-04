@@ -6,13 +6,6 @@ from product.stream_processor.integrations.events.models.output import EventRece
 
 T = TypeVar('T')
 
-# negative look ahead (?|char). Don't try to match the start of the string and any underscore that follows e.g., `_<name>` and `__<name>`
-
-# full regex: ((?!^)(?<!_)[A-Z][a-z]+|(?<=[a-z0-9])[A-Z])
-# ProductNotification -> Product_Notification
-# ProductNotificationV2 -> Product_Notification_V2
-# ProductHTTP -> Product_HTTP
-
 
 class EventProvider(ABC):
 

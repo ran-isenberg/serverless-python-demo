@@ -9,6 +9,7 @@ from product.models.products.validators import validate_product_id
 ProductId = Annotated[str, Field(min_length=36, max_length=36), AfterValidator(validate_product_id)]
 """Unique Product ID, represented and validated as a UUID string."""
 
+
 class Product(BaseModel):
     """Data representation for a product.
 
