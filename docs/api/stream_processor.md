@@ -27,3 +27,7 @@ These are integrations with external services. As of now, we only use one integr
 
 ::: product.stream_processor.integrations.events.functions
 ::: product.stream_processor.integrations.events.constants
+
+### Exceptions
+
+::: product.stream_processor.integrations.events.exceptions

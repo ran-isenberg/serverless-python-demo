@@ -7,7 +7,7 @@ import botocore.exceptions
 from product.constants import XRAY_TRACE_ID_ENV
 from product.stream_processor.integrations.events.base import EventProvider
 from product.stream_processor.integrations.events.constants import EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
-from product.stream_processor.integrations.events.exceptions import ProductNotificationDeliveryError
+from product.stream_processor.integrations.events.exceptions import ProductChangeNotificationDeliveryError
 from product.stream_processor.integrations.events.functions import chunk_from_list
 from product.stream_processor.integrations.events.models.input import Event
 from product.stream_processor.integrations.events.models.output import EventReceipt, EventReceiptFail, EventReceiptSuccess
@@ -38,7 +38,7 @@ class EventBridge(EventProvider):
                 error_message = exc.response['Error']['Message']
 
                 receipt = EventReceiptFail(receipt_id='', error='error_message', details=exc.response['ResponseMetadata'])
-                raise ProductNotificationDeliveryError(f'Failed to deliver all events: {error_message}', receipts=[receipt]) from exc
+                raise ProductChangeNotificationDeliveryError(f'Failed to deliver all events: {error_message}', receipts=[receipt]) from exc
 
         return EventReceipt(success=success, failed=failed)
 
@@ -82,6 +82,6 @@ class EventBridge(EventProvider):
         # NOTE: Improve this error by correlating which entry failed to send.
         # We will fail regardless, but it'll be useful for logging and correlation later on.
         if result['FailedEntryCount'] > 0:
-            raise ProductNotificationDeliveryError(f'Failed to deliver {len(fails)} events', receipts=fails)
+            raise ProductChangeNotificationDeliveryError(f'Failed to deliver {len(fails)} events', receipts=fails)
 
         return successes, fails
