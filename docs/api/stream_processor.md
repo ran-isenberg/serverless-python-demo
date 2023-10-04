@@ -23,6 +23,12 @@ These are integrations with external services. As of now, we only use one integr
 
 ::: product.stream_processor.integrations.events.event_handler
 
+### Events
+
+::: product.stream_processor.integrations.events.models.input
+
+::: product.stream_processor.integrations.events.models.output
+
 #### Providers
 
 ::: product.stream_processor.integrations.events.providers.eventbridge
