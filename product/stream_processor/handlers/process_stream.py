@@ -7,6 +7,7 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 from product.models.products.product import ProductChangeNotification
 from product.stream_processor.domain_logic.product_notification import notify_product_updates
 from product.stream_processor.integrations.events.event_handler import ProductChangeNotificationHandler
+from product.stream_processor.integrations.events.models.output import EventReceipt
 
 logger = Logger()
 
@@ -16,7 +17,37 @@ def process_stream(
     event: dict[str, Any],
     context: LambdaContext,
     event_handler: ProductChangeNotificationHandler | None = None,
-) -> list[ProductChangeNotification]:
+) -> EventReceipt:
+    """Process batch of Amazon DynamoDB Stream containing product changes.
+
+    Parameters
+    ----------
+    event : dict[str, Any]
+        DynamoDB Stream event.
+
+        See [sample](https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html#events-sample-dynamodb)
+    context : LambdaContext
+        Lambda Context object.
+
+        It is used to enrich our structured logging via Powertools for AWS Lambda.
+
+        See [sample](https://docs.aws.amazon.com/lambda/latest/dg/python-context.html)
+    event_handler : ProductChangeNotificationHandler | None, optional
+        Event Handler to use to notify product changes, by default `ProductChangeNotificationHandler`
+
+    Returns
+    -------
+    EventReceipt
+        Receipts for unsuccessfully and successfully published events.
+
+    Raises
+    ------
+
+    ProductNotificationDeliveryError
+        Partial or total failures when sending notification. It allows the stream to stop at the exact same sequence number.
+
+        This means sending notifications are at least once.
+    """
     # Until we create our handler product stream change input
     stream_records = DynamoDBStreamEvent(event)
 
