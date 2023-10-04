@@ -50,7 +50,7 @@ class EventBridge(EventProvider):
 
             for event in chunk:
                 # 'Time' field is not included to be able to measure end-to-end latency later (time - created_at)
-                event_request = {
+                event_request: 'PutEventsRequestEntryTypeDef' = {
                     'Source': event.metadata.event_source,
                     'DetailType': event.metadata.event_name,
                     'Detail': event.model_dump_json(),
