@@ -20,6 +20,7 @@ def process_stream(
 ) -> EventReceipt:
     """Process batch of Amazon DynamoDB Stream containing product changes.
 
+
     Parameters
     ----------
     event : dict[str, Any]
@@ -34,6 +35,13 @@ def process_stream(
         See [sample](https://docs.aws.amazon.com/lambda/latest/dg/python-context.html)
     event_handler : ProductChangeNotificationHandler | None, optional
         Event Handler to use to notify product changes, by default `ProductChangeNotificationHandler`
+
+    Integrations
+    ------------
+
+    # Domain
+
+    * `notify_product_updates` to notify `ProductChangeNotification` changes
 
     Returns
     -------
