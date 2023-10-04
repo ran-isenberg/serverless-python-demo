@@ -2,7 +2,6 @@ from typing import Any
 
 from product.models.products.product import ProductChangeNotification
 from product.stream_processor.integrations.events.base import EventHandler, EventProvider
-from product.stream_processor.integrations.events.functions import build_events_from_models
 from product.stream_processor.integrations.events.models.output import EventReceipt
 
 
@@ -37,5 +36,4 @@ class ProductChangeNotificationHandler(EventHandler):
         EventReceipt
             Receipts for unsuccessfully and successfully published events.
         """
-        event_payload = build_events_from_models(models=payload, metadata=metadata, correlation_id=correlation_id, event_source=self.event_source)
-        return self.provider.send(payload=event_payload)
+        return super().emit(payload, metadata, correlation_id)

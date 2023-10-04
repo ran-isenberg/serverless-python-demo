@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar
 
+from product.stream_processor.integrations.events.functions import build_events_from_models
 from product.stream_processor.integrations.events.models.input import Event
 from product.stream_processor.integrations.events.models.output import EventReceipt
 
@@ -65,4 +66,7 @@ class EventHandler(ABC, Generic[T]):
         EventReceipt
             Receipts for unsuccessfully and successfully published events.
         """
-        ...
+        event_payload = build_events_from_models(
+            models=payload, metadata=metadata, correlation_id=correlation_id,
+            event_source=self.event_source)  # type: ignore[type-var] # T will be defined by its implementation; see ProductChangeNotificationHandler
+        return self.provider.send(payload=event_payload)
