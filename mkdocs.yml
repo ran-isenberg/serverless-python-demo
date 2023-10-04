@@ -6,6 +6,7 @@ edit_uri: edit/main/docs
 
 nav:
   - Homepage:
+      - index.md
       - Decision log: decision_log.md
       - API reference:
           - Stream Processor: api/stream_processor.md
