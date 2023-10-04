@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import TypeVar
+from typing import TypeVar, Generic
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -16,6 +16,6 @@ class EventMetadata(BaseModel):
     model_config = ConfigDict(extra='allow')
 
 
-class Event(BaseModel):
+class Event(BaseModel, Generic[AnyModel]):
     data: AnyModel
     metadata: EventMetadata
