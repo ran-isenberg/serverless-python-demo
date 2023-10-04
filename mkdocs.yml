@@ -5,11 +5,11 @@ repo_url: https://github.com/ran-isenberg/serverless-python-demo
 edit_uri: edit/main/docs
 
 nav:
-  - Homepage:
-      - Decision log: decision_log.md
-      - API reference:
-          - Stream Processor: api/stream_processor.md
-          - Product models: api/product_models.md
+  - Homepage: index.md
+  - Decision log: decision_log.md
+  - API reference:
+      - Stream Processor: api/stream_processor.md
+      - Product models: api/product_models.md
 
 theme:
   name: material
@@ -34,7 +34,6 @@ theme:
     - navigation.instant
     - navigation.indexes
     - navigation.tracking
-    - navigation.tabs
     - content.code.annotate
     - content.code.copy
   icon:
