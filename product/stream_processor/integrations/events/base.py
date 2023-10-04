@@ -8,9 +8,27 @@ T = TypeVar('T')
 
 
 class EventProvider(ABC):
+    """ABC for an Event Provider that send events to a destination."""
 
     @abstractmethod
     def send(self, payload: list[Event]) -> EventReceipt:
+        """Sends list of events to an Event Provider.
+
+        Parameters
+        ----------
+        payload : list[Event]
+            List of events to send.
+
+        Returns
+        -------
+        EventReceipt
+            Receipts for unsuccessfully and successfully published events.
+
+        Raises
+        ------
+        NotificationDeliveryError
+            When one or more events could not be delivered.
+        """
         ...
 
 
