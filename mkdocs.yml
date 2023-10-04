@@ -92,6 +92,7 @@ plugins:
             show_signature_annotations: false
             show_docstring_attributes: false
             show_root_heading: false
+            members_order: source
 
 extra_css:
   - stylesheets/extra.css
