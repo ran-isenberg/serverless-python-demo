@@ -35,9 +35,34 @@ class EventProvider(ABC):
 class EventHandler(ABC, Generic[T]):
 
     def __init__(self, provider: EventProvider, event_source: str) -> None:
+        """ABC to handle event manipulation from a model, and publishing through a provider.
+
+        Parameters
+        ----------
+        provider : EventProvider
+            Event Provider to publish events through.
+        event_source : str
+            Event source name, e.g., 'myorg.service.feature'
+        """
         self.provider = provider
         self.event_source = event_source
 
     @abstractmethod
     def emit(self, payload: list[T], metadata: dict[str, Any] | None = None, correlation_id='') -> EventReceipt:
+        """Emits product change notifications using registered provider, along with additional metadata or specific correlation ID.
+
+        Parameters
+        ----------
+        payload : list[T]
+            List of product change notifications models to be sent.
+        metadata : dict[str, Any] | None, optional
+            Additional metadata to be injected into the event before sending, by default None
+        correlation_id : str, optional
+            Correlation ID to inject in event metadata. We generate one if not provided.
+
+        Returns
+        -------
+        EventReceipt
+            Receipts for unsuccessfully and successfully published events.
+        """
         ...

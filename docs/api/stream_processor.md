@@ -23,6 +23,10 @@ These are integrations with external services. As of now, we only use one integr
 
 ::: product.stream_processor.integrations.events.event_handler
 
+#### Interfaces
+
+::: product.stream_processor.integrations.events.base
+
 ### Utility functions
 
 ::: product.stream_processor.integrations.events.functions
