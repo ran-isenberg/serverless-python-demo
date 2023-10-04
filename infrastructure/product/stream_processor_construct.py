@@ -17,14 +17,14 @@ class StreamProcessorConstruct(Construct):
         super().__init__(scope, id_)
         bus_name = f'{id_}{constants.EVENT_BUS_NAME}'
         self.event_bus = events.EventBus(self, bus_name, event_bus_name=bus_name)
-        self.role = self._build_lambda_role(dynamodb_table, self.event_bus)
+        self.role = self._build_lambda_role(db=dynamodb_table, bus=self.event_bus)
 
         self.lambda_function = self._build_stream_processor_lambda(self.role, lambda_layer, dynamodb_table)
 
     def _build_lambda_role(self, db: dynamodb.Table, bus: events.EventBus) -> iam.Role:
         return iam.Role(
             self,
-            constants.STREAM_PROC_SERVICE_ROLE_ARN,
+            id=constants.STREAM_PROCESSOR_LAMBDA_SERVICE_ROLE_ARN,
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
             inline_policies={
                 'streams':
@@ -51,21 +51,21 @@ class StreamProcessorConstruct(Construct):
     def _build_stream_processor_lambda(self, role: iam.Role, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table) -> _lambda.Function:
         lambda_function = _lambda.Function(
             self,
-            constants.STREAM_PROC_LAMBDA,
+            id=constants.STREAM_PROCESSOR_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.stream_processor.handlers.stream_handler.handle_events',
+            handler='product.stream_processor.handlers.process_stream.process_stream',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
             },
             tracing=_lambda.Tracing.ACTIVE,
             retry_attempts=0,
-            timeout=Duration.seconds(constants.API_HANDLER_LAMBDA_TIMEOUT),
-            memory_size=constants.API_HANDLER_LAMBDA_MEMORY_SIZE,
+            timeout=Duration.seconds(constants.STREAM_PROCESSOR_LAMBDA_TIMEOUT),
+            memory_size=constants.STREAM_PROCESSOR_LAMBDA_MEMORY_SIZE,
             layers=[lambda_layer],
             role=role,
-            log_retention=RetentionDays.ONE_DAY,
+            log_retention=RetentionDays.FIVE_DAYS,
         )
         # Add DynamoDB Stream as an event source for the Lambda function
         lambda_function.add_event_source(DynamoEventSource(dynamodb_table, starting_position=_lambda.StartingPosition.LATEST))

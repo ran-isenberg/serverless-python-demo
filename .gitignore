@@ -252,3 +252,4 @@ lambda_requirements.txt
 # Misc
 
 node_modules
+.idea

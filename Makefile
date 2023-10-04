@@ -14,6 +14,10 @@ format:
 	poetry run isort .
 	poetry run yapf -d -vv --style=./.style -r .
 
+format-fix:
+	poetry run isort .
+	poetry run yapf -vv --style=./.style -r --in-place .
+
 lint: format
 	@echo "Running flake8"
 	poetry run flake8 product/* infrastructure/* tests/* docs/examples/*
@@ -68,3 +72,6 @@ docs:
 
 lint-docs:
 	docker run -v ${PWD}:/markdown 06kellyjac/markdownlint-cli --fix "docs"
+
+watch:
+	npx cdk watch

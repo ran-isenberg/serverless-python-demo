@@ -1,4 +1,4 @@
-import os
+import getpass
 from pathlib import Path
 
 from git import Repo
@@ -8,7 +8,7 @@ import infrastructure.product.constants as constants
 
 def get_username() -> str:
     try:
-        return os.getlogin().replace('.', '-')
+        return getpass.getuser().replace('.', '-')
     except Exception:
         return 'github'
 
@@ -17,7 +17,7 @@ def get_stack_name() -> str:
     repo = Repo(Path.cwd())
     username = get_username()
     try:
-        branch_name = f'{repo.active_branch}'.replace('/', '-')
+        branch_name = f'{repo.active_branch}'.replace('/', '-').replace('_', '-')
         return f'{username}-{branch_name}-{constants.SERVICE_NAME}'
     except TypeError:
         # we're running in detached mode (HEAD)
