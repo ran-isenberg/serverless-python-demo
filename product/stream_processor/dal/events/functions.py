@@ -24,7 +24,7 @@ def build_events_from_models(models: Sequence[AnyModel], event_source: str, meta
     metadata = metadata or {}
     correlation_id = correlation_id or f'{uuid4()}'
 
-    events = []
+    events: list[Event] = []
 
     for model in models:
         event_name = convert_model_to_event_name(model_name=model.__class__.__name__)
