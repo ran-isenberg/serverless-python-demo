@@ -1,5 +1,5 @@
 import re
-from typing import Sequence, Any, Generator, TypeVar
+from typing import Any, Generator, Sequence, TypeVar
 from uuid import uuid4
 
 from product.stream_processor.dal.events.constants import DEFAULT_EVENT_VERSION
@@ -32,9 +32,8 @@ def build_events_from_models(models: Sequence[AnyModel], event_source: str, meta
 
         events.append(
             Event(
-                data=model,
-                metadata=EventMetadata(event_name=event_name, event_source=event_source, event_version=event_version,
-                                       correlation_id=correlation_id, **metadata)))
+                data=model, metadata=EventMetadata(event_name=event_name, event_source=event_source, event_version=event_version,
+                                                   correlation_id=correlation_id, **metadata)))
 
     return events
 

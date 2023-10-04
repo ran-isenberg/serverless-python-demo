@@ -5,10 +5,11 @@ from product.stream_processor.dal.events.event_handler import ProductChangeNotif
 from product.stream_processor.dal.events.providers.eventbridge import EventBridge
 
 EVENT_BUS = os.environ.get('EVENT_BUS', '')
+EVENT_SOURCE = 'myorg.product.product_notification'
 
 
 def notify_product_updates(update: list[ProductChangeNotification], event_handler: ProductChangeNotificationHandler | None = None):
     if event_handler is None:
-        event_handler = ProductChangeNotificationHandler(provider=EventBridge(EVENT_BUS))
+        event_handler = ProductChangeNotificationHandler(provider=EventBridge(EVENT_BUS), event_source=EVENT_SOURCE)
 
     return event_handler.emit(payload=update)

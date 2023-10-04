@@ -6,9 +6,9 @@ import botocore.exceptions
 
 from product.constants import XRAY_TRACE_ID_ENV
 from product.stream_processor.dal.events.base import EventProvider
-from product.stream_processor.dal.events.functions import chunk_from_list
 from product.stream_processor.dal.events.constants import EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
 from product.stream_processor.dal.events.exceptions import ProductNotificationDeliveryError
+from product.stream_processor.dal.events.functions import chunk_from_list
 from product.stream_processor.dal.events.models.input import Event
 from product.stream_processor.dal.events.models.output import EventReceipt, EventReceiptFail, EventReceiptSuccess
 
