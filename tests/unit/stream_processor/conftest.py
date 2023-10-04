@@ -37,8 +37,7 @@ class FakeEventHandler(ProductChangeNotificationHandler):
         super().__init__(provider=provider, event_source=event_source)
         self.published_payloads: list[ProductChangeNotification] = []
 
-    def emit(self, payload: list[ProductChangeNotification], metadata: dict[str, Any] | None = None,
-             correlation_id='') -> EventReceipt:
+    def emit(self, payload: list[ProductChangeNotification], metadata: dict[str, Any] | None = None, correlation_id='') -> EventReceipt:
         metadata = metadata or {}
         event_payload = build_events_from_models(models=payload, metadata=metadata, correlation_id=correlation_id, event_source='fake')
         receipt = self.provider.send(payload=event_payload)

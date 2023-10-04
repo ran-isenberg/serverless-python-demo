@@ -88,4 +88,4 @@ def test_build_events_from_models():
     event = build_events_from_models(models=[notification], event_source='sample')
 
     # THEN we get a list of Events
-    assert type(event[0]) == Event
+    assert type(event[0]) is Event
