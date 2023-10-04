@@ -1,6 +1,6 @@
 import re
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Sequence, TypeVar
+from typing import Any, Generator, Generic, Sequence, TypeVar
 from uuid import uuid4
 
 from product.stream_processor.dal.events.constants import DEFAULT_EVENT_VERSION
@@ -63,3 +63,9 @@ def build_events_from_models(models: Sequence[AnyModel], event_source: str, meta
                                                    correlation_id=correlation_id, **metadata)))
 
     return events
+
+
+def chunk_from_list(events: list[T], max_items: int) -> Generator[list[T], None, None]:
+    for idx in range(0, len(events), max_items):  # start, stop, step
+        # slice the first 10 items, then the next 10 items starting from the index
+        yield from [events[idx:idx + max_items]]

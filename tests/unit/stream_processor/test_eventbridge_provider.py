@@ -3,11 +3,11 @@ from uuid import uuid4
 import boto3
 import pytest
 from botocore import stub
-from botocore.exceptions import ClientError
 from pydantic import BaseModel
 
 from product.constants import XRAY_TRACE_ID_ENV
 from product.stream_processor.dal.events.base import build_events_from_models
+from product.stream_processor.dal.events.constants import EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
 from product.stream_processor.dal.events.exceptions import ProductNotificationDeliveryError
 from product.stream_processor.dal.events.providers.eventbridge import EventBridge
 
@@ -24,16 +24,16 @@ def test_eventbridge_build_put_events_from_event_payload():
 
     # WHEN EventBridge provider builds a PutEvents request
     event_provider = EventBridge(bus_name='test_bus')
-    request = event_provider.build_put_events_request(payload=events)
+    requests = event_provider.build_put_events_requests(payload=events)
 
     # THEN EventBridge PutEvents request should match our metadata and model data
-    published_event = request[0]
+    request = next(requests)[0]
     event = events[0]
 
-    assert published_event['Source'] == event.metadata.event_source
-    assert published_event['Detail'] == event.model_dump_json()
-    assert published_event['DetailType'] == event.metadata.event_name
-    assert published_event['EventBusName'] == event_provider.bus_name
+    assert request['Source'] == event.metadata.event_source
+    assert request['Detail'] == event.model_dump_json()
+    assert request['DetailType'] == event.metadata.event_name
+    assert request['EventBusName'] == event_provider.bus_name
 
 
 def test_eventbridge_build_put_events_from_event_payload_include_trace_header(monkeypatch: pytest.MonkeyPatch):
@@ -52,11 +52,33 @@ def test_eventbridge_build_put_events_from_event_payload_include_trace_header(mo
     event_provider = EventBridge(bus_name=event_bus_name)
 
     # WHEN EventBridge provider builds a PutEvents request
-    request = event_provider.build_put_events_request(payload=events)
+    requests = event_provider.build_put_events_requests(payload=events)
 
     # THEN PutEvents request should include 'TraceHeader' with the available X-Ray Trace ID
-    entry = request[0]
+    entry = next(requests)[0]
     assert entry['TraceHeader'] == trace_id
+
+
+def test_eventbridge_build_put_events_respect_max_entries_limit():
+    # GIVEN an even number of events to be sent to EventBridge PutEvents API that are higher than 10 (limit)
+    class SampleNotification(BaseModel):
+        message: str
+
+    number_of_events = 20
+
+    notifications = [SampleNotification(message='test') for _ in range(number_of_events)]
+    events = build_events_from_models(models=notifications, event_source='test')
+
+    # WHEN EventBridge provider builds a PutEvents request
+    requests = EventBridge(bus_name='test_bus').build_put_events_requests(payload=events)
+
+    # THEN we should have a generator with two batches of the maximum permitted entry (EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY)
+    first_batch = next(requests)
+    second_batch = next(requests)
+
+    assert len(first_batch) == EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
+    assert len(second_batch) == EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
+    assert len(list(requests)) == 0
 
 
 def test_eventbridge_put_events_with_stubber():

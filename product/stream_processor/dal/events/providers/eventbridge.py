@@ -1,11 +1,12 @@
 import os
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, Generator, Optional
 
 import boto3
 import botocore.exceptions
 
 from product.constants import XRAY_TRACE_ID_ENV
-from product.stream_processor.dal.events.base import EventProvider
+from product.stream_processor.dal.events.base import EventProvider, chunk_from_list
+from product.stream_processor.dal.events.constants import EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
 from product.stream_processor.dal.events.exceptions import ProductNotificationDeliveryError
 from product.stream_processor.dal.events.models.input import Event
 from product.stream_processor.dal.events.models.output import EventReceipt, EventReceiptFail, EventReceiptSuccess
@@ -22,39 +23,45 @@ class EventBridge(EventProvider):
         self.client = client or boto3.client('events')
 
     def send(self, payload: list[Event]) -> EventReceipt:
-        events = self.build_put_events_request(payload)
+        success: list[EventReceiptSuccess] = []
+        failed: list[EventReceiptFail] = []
+        events = self.build_put_events_requests(payload)
 
-        # NOTE: we need a generator that will slice up to 10 event entries
-        try:
-            result = self.client.put_events(Entries=events)
-        except botocore.exceptions.ClientError as exc:
-            error_message = exc.response['Error']['Message']
+        for batch in events:
+            try:
+                result = self.client.put_events(Entries=batch)
+                ok, not_ok = self._collect_receipts(result)
+                success.extend(ok)
+                failed.extend(not_ok)
+            except botocore.exceptions.ClientError as exc:
+                error_message = exc.response['Error']['Message']
 
-            receipt = EventReceiptFail(receipt_id='', error='error_message', details=exc.response['ResponseMetadata'])
-            raise ProductNotificationDeliveryError(f'Failed to deliver all events: {error_message}', receipts=[receipt]) from exc
+                receipt = EventReceiptFail(receipt_id='', error='error_message', details=exc.response['ResponseMetadata'])
+                raise ProductNotificationDeliveryError(f'Failed to deliver all events: {error_message}', receipts=[receipt]) from exc
 
-        success, failed = self._collect_receipts(result)
         return EventReceipt(success=success, failed=failed)
 
-    def build_put_events_request(self, payload: list[Event]) -> list['PutEventsRequestEntryTypeDef']:
-        events: list['PutEventsRequestEntryTypeDef'] = []
+    def build_put_events_requests(self, payload: list[Event]) -> Generator[list['PutEventsRequestEntryTypeDef'], None, None]:
+        trace_id = os.environ.get(XRAY_TRACE_ID_ENV)
 
-        # 'Time' field is not included to be able to measure end-to-end latency later (time - created_at)
-        for event in payload:
-            trace_id = os.environ.get(XRAY_TRACE_ID_ENV)
-            event_request = {
-                'Source': event.metadata.event_source,
-                'DetailType': event.metadata.event_name,
-                'Detail': event.model_dump_json(),
-                'EventBusName': self.bus_name,
-            }
+        for chunk in chunk_from_list(events=payload, max_items=EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY):
+            events: list['PutEventsRequestEntryTypeDef'] = []
 
-            if trace_id:
-                event_request['TraceHeader'] = trace_id
+            for event in chunk:
+                # 'Time' field is not included to be able to measure end-to-end latency later (time - created_at)
+                event_request = {
+                    'Source': event.metadata.event_source,
+                    'DetailType': event.metadata.event_name,
+                    'Detail': event.model_dump_json(),
+                    'EventBusName': self.bus_name,
+                }
 
-            events.append(event_request)
+                if trace_id:
+                    event_request['TraceHeader'] = trace_id
 
-        return events
+                events.append(event_request)
+
+            yield events
 
     @staticmethod
     def _collect_receipts(result: 'PutEventsResponseTypeDef') -> tuple[list[EventReceiptSuccess], list[EventReceiptFail]]:
