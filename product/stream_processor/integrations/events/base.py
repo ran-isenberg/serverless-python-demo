@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar
 
-from product.stream_processor.dal.events.models.input import Event
-from product.stream_processor.dal.events.models.output import EventReceipt
+from product.stream_processor.integrations.events.models.input import Event
+from product.stream_processor.integrations.events.models.output import EventReceipt
 
 T = TypeVar('T')
 

@@ -6,10 +6,10 @@ from botocore import stub
 from pydantic import BaseModel
 
 from product.constants import XRAY_TRACE_ID_ENV
-from product.stream_processor.dal.events.constants import EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
-from product.stream_processor.dal.events.exceptions import ProductNotificationDeliveryError
-from product.stream_processor.dal.events.functions import build_events_from_models
-from product.stream_processor.dal.events.providers.eventbridge import EventBridge
+from product.stream_processor.integrations.events.constants import EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
+from product.stream_processor.integrations.events.exceptions import ProductNotificationDeliveryError
+from product.stream_processor.integrations.events.functions import build_events_from_models
+from product.stream_processor.integrations.events.providers.eventbridge import EventBridge
 
 
 def test_eventbridge_build_put_events_from_event_payload():

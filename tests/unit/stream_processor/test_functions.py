@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
-from product.stream_processor.dal.events.functions import build_events_from_models, chunk_from_list, convert_model_to_event_name
-from product.stream_processor.dal.events.models.input import Event
+from product.stream_processor.integrations.events.functions import build_events_from_models, chunk_from_list, convert_model_to_event_name
+from product.stream_processor.integrations.events.models.input import Event
 
 
 def test_chunk_from_list_returns_empty_list_when_list_is_empty():

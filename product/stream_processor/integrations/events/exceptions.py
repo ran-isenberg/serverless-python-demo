@@ -1,4 +1,4 @@
-from product.stream_processor.dal.events.models.output import EventReceiptFail
+from product.stream_processor.integrations.events.models.output import EventReceiptFail
 
 
 class ProductNotificationDeliveryError(Exception):

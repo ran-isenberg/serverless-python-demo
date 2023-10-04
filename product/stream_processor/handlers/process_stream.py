@@ -5,8 +5,8 @@ from aws_lambda_powertools.utilities.data_classes.dynamo_db_stream_event import 
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from product.models.products.product import ProductChangeNotification
-from product.stream_processor.dal.events.event_handler import ProductChangeNotificationHandler
 from product.stream_processor.domain_logic.product_notification import notify_product_updates
+from product.stream_processor.integrations.events.event_handler import ProductChangeNotificationHandler
 
 logger = Logger()
 

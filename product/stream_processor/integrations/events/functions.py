@@ -2,8 +2,8 @@ import re
 from typing import Any, Generator, Sequence, TypeVar
 from uuid import uuid4
 
-from product.stream_processor.dal.events.constants import DEFAULT_EVENT_VERSION
-from product.stream_processor.dal.events.models.input import AnyModel, Event, EventMetadata
+from product.stream_processor.integrations.events.constants import DEFAULT_EVENT_VERSION
+from product.stream_processor.integrations.events.models.input import AnyModel, Event, EventMetadata
 
 T = TypeVar('T')
 

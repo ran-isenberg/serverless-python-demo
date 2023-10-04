@@ -2,8 +2,8 @@ from uuid import uuid4
 
 from pydantic import BaseModel
 
-from product.stream_processor.dal.events.constants import DEFAULT_EVENT_VERSION
-from product.stream_processor.dal.events.functions import build_events_from_models, convert_model_to_event_name
+from product.stream_processor.integrations.events.constants import DEFAULT_EVENT_VERSION
+from product.stream_processor.integrations.events.functions import build_events_from_models, convert_model_to_event_name
 
 
 def test_model_to_standard_event():

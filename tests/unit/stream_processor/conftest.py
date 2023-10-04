@@ -3,11 +3,11 @@ from typing import Any, Generator, Sequence, TypeVar
 from pytest_socket import disable_socket
 
 from product.models.products.product import ProductChangeNotification
-from product.stream_processor.dal.events.base import EventProvider
-from product.stream_processor.dal.events.event_handler import ProductChangeNotificationHandler
-from product.stream_processor.dal.events.functions import build_events_from_models
-from product.stream_processor.dal.events.models.input import Event
-from product.stream_processor.dal.events.models.output import EventReceipt, EventReceiptSuccess
+from product.stream_processor.integrations.events.base import EventProvider
+from product.stream_processor.integrations.events.event_handler import ProductChangeNotificationHandler
+from product.stream_processor.integrations.events.functions import build_events_from_models
+from product.stream_processor.integrations.events.models.input import Event
+from product.stream_processor.integrations.events.models.output import EventReceipt, EventReceiptSuccess
 
 
 def pytest_runtest_setup():

@@ -1,9 +1,9 @@
 from typing import Any
 
 from product.models.products.product import ProductChangeNotification
-from product.stream_processor.dal.events.base import EventHandler, EventProvider
-from product.stream_processor.dal.events.functions import build_events_from_models
-from product.stream_processor.dal.events.models.output import EventReceipt
+from product.stream_processor.integrations.events.base import EventHandler, EventProvider
+from product.stream_processor.integrations.events.functions import build_events_from_models
+from product.stream_processor.integrations.events.models.output import EventReceipt
 
 
 class ProductChangeNotificationHandler(EventHandler):

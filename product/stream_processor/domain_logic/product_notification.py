@@ -1,8 +1,8 @@
 import os
 
 from product.models.products.product import ProductChangeNotification
-from product.stream_processor.dal.events.event_handler import ProductChangeNotificationHandler
-from product.stream_processor.dal.events.providers.eventbridge import EventBridge
+from product.stream_processor.integrations.events.event_handler import ProductChangeNotificationHandler
+from product.stream_processor.integrations.events.providers.eventbridge import EventBridge
 
 EVENT_BUS = os.environ.get('EVENT_BUS', '')
 EVENT_SOURCE = 'myorg.product.product_notification'
