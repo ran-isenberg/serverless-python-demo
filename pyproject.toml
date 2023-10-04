@@ -81,3 +81,11 @@ ignore_patterns = [".git", ".venv", ".build", "cdk.out", "node_modules"]
 
 [tool.pytest.ini_options]
 testpaths = "tests"
+
+[tool.mypy]
+plugins = "pydantic.mypy"
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
