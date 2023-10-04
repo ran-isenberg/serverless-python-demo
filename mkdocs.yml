@@ -1,0 +1,94 @@
+site_name: Serverless Python Demo OPN305
+site_description: Serverless Python Demo for re:Invent OPN305 session
+site_author: Ran Isenberg and Heitor Lessa
+repo_url: https://github.com/ran-isenberg/serverless-python-demo
+edit_uri: edit/main/docs
+
+nav:
+  - Homepage:
+      - Decision log: decision_log.md
+      - API reference:
+          - Stream Processor: api/stream_processor.md
+
+theme:
+  name: material
+  font:
+    text: Ubuntu
+  palette:
+    - scheme: default
+      primary: deep purple
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
+  features:
+    - header.autohide
+    - navigation.sections
+    - navigation.top
+    - navigation.instant
+    - navigation.indexes
+    - navigation.tracking
+    - navigation.tabs
+    - content.code.annotate
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+markdown_extensions:
+  - admonition
+  - abbr
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      linenums: true
+  - pymdownx.details
+  - pymdownx.snippets:
+      base_path: "."
+      check_paths: true
+      restrict_base_path: false
+  - meta
+  - toc:
+      permalink: true
+      toc_depth: 4
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+copyright: Copyright &copy; 2023 Ran Isenberg and Heitor Lessa
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: numpy
+            docstring_section_style: spacy
+            show_source: true
+            heading_level: 3
+            allow_inspection: true
+            group_by_category: true
+            show_category_heading: true
+            show_bases: true
+            show_docstring_examples: true
+
+extra_css:
+  - stylesheets/extra.css
+
+watch:
+  - product
+  - docs

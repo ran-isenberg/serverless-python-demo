@@ -58,6 +58,8 @@ toml = "*"
 [tool.poetry.group.dev.dependencies]
 mypy-boto3-events = "^1.28.46"
 pytest-socket = "^0.6.0"
+mkdocstrings = "^0.23.0"
+mkdocstrings-python = "^1.7.1"
 
 [tool.isort]
 py_version = 311
