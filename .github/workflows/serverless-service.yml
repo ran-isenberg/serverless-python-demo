@@ -125,3 +125,27 @@ jobs:
       - name: Destroy stack
         if: always()
         run: make destroy
+
+  publish_github_pages:
+    runs-on: ubuntu-latest
+    needs: [tests]
+    permissions:
+      contents: write # for docs push
+    if: contains('refs/heads/main', github.ref)
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
+      - name: Set up Python
+        uses: actions/setup-python@61a6322f88396a6271a6ee3565807d608ecaddd1 # v4.7.0
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Set up Node
+        uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+      - name: Install dependencies
+        run: make dev
+      - name: Generate docs
+        run: |
+          poetry run mkdocs gh-deploy --force

@@ -25,7 +25,7 @@ class ServiceStack(Stack):
 
         self.stream_processor = StreamProcessorConstruct(
             self,
-            id_=constants.STREAM_PROCESSOR_CONSTRUCT_NAME,
+            id_=get_construct_name(constants.STREAM_PROCESSOR_CONSTRUCT_NAME),
             lambda_layer=self.shared_layer,
             dynamodb_table=self.api.api_db.db,
         )
