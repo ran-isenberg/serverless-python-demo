@@ -15,8 +15,8 @@ def create_product(event, context) -> Dict[str, Any]:
     try:
         create_input: CreateProductRequest = parse(event=event, model=CreateProductRequest)
         logger.info('got create product request', extra={'product': create_input.model_dump()})
-    except (ValidationError, TypeError) as exc:
-        logger.exception('failed to parse input', extra={'exception': str(exc)})
+    except (ValidationError, TypeError):
+        logger.exception('failed to parse input')
         return build_response(http_status=HTTPStatus.BAD_REQUEST, body={})
 
     try:
