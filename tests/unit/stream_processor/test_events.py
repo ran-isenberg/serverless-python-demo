@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from pydantic import BaseModel
 
-from product.stream_processor.dal.events.base import build_events_from_models, convert_model_to_event_name
+from product.stream_processor.dal.events.functions import convert_model_to_event_name, build_events_from_models
 from product.stream_processor.dal.events.constants import DEFAULT_EVENT_VERSION
 
 
