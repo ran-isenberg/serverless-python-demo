@@ -82,14 +82,16 @@ plugins:
             show_source: true
             heading_level: 4
             allow_inspection: true
-            group_by_category: true
-            show_category_heading: true
-            show_bases: true
+            group_by_category: true # Attributes, Functions, Classes etc.
+            show_category_heading: true # Attributes, Functions, Classes etc.
+            show_bases: true # show inheritance
             show_docstring_examples: true
-            show_if_no_docstring: true
+            show_if_no_docstring: true # show Pydantic models and global attrs
             merge_init_into_class: true # avoid Class params + __init__ params
             separate_signature: false
             show_signature_annotations: false
+            show_docstring_attributes: false
+            show_root_heading: false
 
 extra_css:
   - stylesheets/extra.css
