@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 from botocore.stub import Stubber
 
-from product.crud.dal.dynamo_dal_handler import DynamoDalHandler
-from product.crud.handlers.create_product import create_product
+from product.crud.handlers.handle_create_product import handle_create_product
+from product.crud.integration.dynamo_dal_handler import DynamoDalHandler
 from tests.crud_utils import generate_api_gw_event, generate_create_product_request_body, generate_product_id
 from tests.utils import generate_context
 
@@ -15,7 +15,7 @@ def test_internal_server_error(table_name: str) -> None:
     stubber.add_client_error(method='put_item', service_error_code='ValidationException')
     stubber.activate()
     body = generate_create_product_request_body()
-    response = create_product(
+    response = handle_create_product(
         event=generate_api_gw_event(
             body=body.model_dump(),
             path_params={'product': generate_product_id()},

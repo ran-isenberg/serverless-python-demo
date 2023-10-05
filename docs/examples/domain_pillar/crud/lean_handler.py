@@ -4,14 +4,14 @@ from typing import Any, Dict
 
 from aws_lambda_powertools.utilities.parser import ValidationError, parse
 
-from product.crud.domain_logic.handle_create_request import handle_create_request
+from product.crud.domain_logic.create_product import create_product
 from product.crud.handlers.utils.http_responses import build_response
 from product.crud.handlers.utils.observability import logger
 from product.crud.schemas.input import CreateProductRequest
 from product.crud.schemas.output import CreateProductOutput
 
 
-def create_product(event, context) -> Dict[str, Any]:
+def handle_create_product(event, context) -> Dict[str, Any]:
     try:
         create_input: CreateProductRequest = parse(event=event, model=CreateProductRequest)
         logger.info('got create product request', extra={'product': create_input.model_dump()})
@@ -20,7 +20,7 @@ def create_product(event, context) -> Dict[str, Any]:
         return build_response(http_status=HTTPStatus.BAD_REQUEST, body={})
 
     try:
-        response: CreateProductOutput = handle_create_request(
+        response: CreateProductOutput = create_product(
             product_id=create_input.pathParameters.product,
             product_name=create_input.body.name,
             product_price=create_input.body.price,

@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 import requests
 
-from product.crud.dal.schemas.db import Product
+from product.crud.integration.schemas.db import Product
 
 
 def test_handler_204_success_delete(api_gw_url_slash_product: str, add_product_entry_to_db: Product) -> None:

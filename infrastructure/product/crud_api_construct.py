@@ -134,7 +134,7 @@ class CrudApiConstruct(Construct):
             constants.CREATE_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.crud.handlers.create_product.create_product',
+            handler='product.crud.handlers.handle_create_product.handle_create_product',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
@@ -164,7 +164,7 @@ class CrudApiConstruct(Construct):
             constants.DELETE_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.crud.handlers.delete_product.delete_product',
+            handler='product.crud.handlers.handle_delete_product.handle_delete_product',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
@@ -193,7 +193,7 @@ class CrudApiConstruct(Construct):
             constants.GET_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.crud.handlers.get_product.get_product',
+            handler='product.crud.handlers.handle_get_product.handle_get_product',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
@@ -222,7 +222,7 @@ class CrudApiConstruct(Construct):
             constants.LIST_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.crud.handlers.list_products.list_products',
+            handler='product.crud.handlers.handle_list_products.handle_list_products',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger

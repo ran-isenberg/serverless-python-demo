@@ -2,8 +2,8 @@ import boto3
 from cachetools import TTLCache, cached
 from mypy_boto3_dynamodb.service_resource import Table
 
-from product.crud.dal.db_handler import DalHandler
-from product.crud.dal.schemas.db import Product, ProductEntries
+from product.crud.integration.db_handler import DalHandler
+from product.crud.integration.schemas.db import Product, ProductEntries
 
 
 class DynamoDalHandler(DalHandler):
