@@ -3,7 +3,7 @@ from typing import Any, Generator, Sequence, TypeVar
 from pytest_socket import disable_socket
 
 from product.models.products.product import ProductChangeNotification
-from product.stream_processor.integrations.events.base import EventProvider
+from product.stream_processor.integrations.events.base import BaseEventProvider
 from product.stream_processor.integrations.events.event_handler import ProductChangeNotificationHandler
 from product.stream_processor.integrations.events.functions import build_events_from_models
 from product.stream_processor.integrations.events.models.input import Event
@@ -24,7 +24,7 @@ Fixture = Generator[T, None, None]
 # -- Simple reference for an EventHandler and EventProvider
 
 
-class FakeProvider(EventProvider):
+class FakeProvider(BaseEventProvider):
 
     def send(self, payload: Sequence[Event]) -> EventReceipt:
         notifications = [EventReceiptSuccess(receipt_id='test') for _ in payload]
@@ -33,7 +33,7 @@ class FakeProvider(EventProvider):
 
 class FakeEventHandler(ProductChangeNotificationHandler):
 
-    def __init__(self, provider: EventProvider = FakeProvider(), event_source: str = 'fake') -> None:
+    def __init__(self, provider: BaseEventProvider = FakeProvider(), event_source: str = 'fake') -> None:
         super().__init__(provider=provider, event_source=event_source)
         self.published_payloads: list[ProductChangeNotification] = []
 

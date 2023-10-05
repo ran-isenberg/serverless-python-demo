@@ -8,7 +8,7 @@ from product.stream_processor.integrations.events.models.output import EventRece
 T = TypeVar('T')
 
 
-class EventProvider(ABC):
+class BaseEventProvider(ABC):
     """ABC for an Event Provider that send events to a destination."""
 
     @abstractmethod
@@ -35,12 +35,12 @@ class EventProvider(ABC):
 
 class EventHandler(ABC, Generic[T]):
 
-    def __init__(self, provider: EventProvider, event_source: str) -> None:
+    def __init__(self, provider: BaseEventProvider, event_source: str) -> None:
         """ABC to handle event manipulation from a model, and publishing through a provider.
 
         Parameters
         ----------
-        provider : EventProvider
+        provider : BaseEventProvider
             Event Provider to publish events through.
         event_source : str
             Event source name, e.g., 'myorg.service.feature'

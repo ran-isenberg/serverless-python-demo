@@ -5,7 +5,7 @@ import boto3
 import botocore.exceptions
 
 from product.constants import XRAY_TRACE_ID_ENV
-from product.stream_processor.integrations.events.base import EventProvider
+from product.stream_processor.integrations.events.base import BaseEventProvider
 from product.stream_processor.integrations.events.constants import EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
 from product.stream_processor.integrations.events.exceptions import ProductChangeNotificationDeliveryError
 from product.stream_processor.integrations.events.functions import chunk_from_list
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from mypy_boto3_events.type_defs import PutEventsRequestEntryTypeDef, PutEventsResponseTypeDef
 
 
-class EventBridge(EventProvider):
+class EventBridge(BaseEventProvider):
 
     def __init__(self, bus_name: str, client: Optional['EventBridgeClient'] = None):
         """Amazon EventBridge provider using PutEvents API.

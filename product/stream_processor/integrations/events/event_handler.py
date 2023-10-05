@@ -1,18 +1,18 @@
 from typing import Any
 
 from product.models.products.product import ProductChangeNotification
-from product.stream_processor.integrations.events.base import EventHandler, EventProvider
+from product.stream_processor.integrations.events.base import EventHandler, BaseEventProvider
 from product.stream_processor.integrations.events.models.output import EventReceipt
 
 
 class ProductChangeNotificationHandler(EventHandler):
 
-    def __init__(self, provider: EventProvider, event_source: str) -> None:
+    def __init__(self, provider: BaseEventProvider, event_source: str) -> None:
         """Event Handler for ProductChangeNotification.
 
         Parameters
         ----------
-        provider : EventProvider
+        provider : BaseEventProvider
             An event provider to send events to.
         event_source : str
             Event source to inject in event metadata, following 'myorg.service_name.feature_name'
