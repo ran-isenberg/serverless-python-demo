@@ -1,8 +1,8 @@
+from typing import Annotated
 from uuid import UUID
 
 from pydantic import Field
 from pydantic.functional_validators import AfterValidator
-from typing_extensions import Annotated
 
 
 def validate_uuid(v: str) -> str:

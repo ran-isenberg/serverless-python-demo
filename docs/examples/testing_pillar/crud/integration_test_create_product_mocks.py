@@ -15,10 +15,12 @@ def test_internal_server_error(table_name: str) -> None:
     stubber.add_client_error(method='put_item', service_error_code='ValidationException')
     stubber.activate()
     body = generate_create_product_request_body()
+    product_id = generate_product_id()
     response = handle_create_product(
         event=generate_api_gw_event(
             body=body.model_dump(),
-            path_params={'product': generate_product_id()},
+            path_params={'product': product_id},
+            product_id=product_id,
         ),
         context=generate_context(),
     )

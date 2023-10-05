@@ -25,7 +25,7 @@ class DynamoDalHandler(DalHandler):
     # cache dynamodb connection data for no longer than 5 minutes
     @cached(cache=TTLCache(maxsize=1, ttl=300))
     def _get_db_handler(self, table_name: str) -> Table:
-        logger.debug('opening connection to dynamodb table', extra={'table_name': table_name})
+        logger.debug('opening connection to dynamodb table', table_name=table_name)
         dynamodb: DynamoDBServiceResource = boto3.resource('dynamodb')
         return dynamodb.Table(table_name)
 
@@ -37,7 +37,7 @@ class DynamoDalHandler(DalHandler):
     # )
     @tracer.capture_method(capture_response=False)
     def create_product(self, product: Product) -> None:
-        logger.info('trying to create a product', extra={'product_id': product.id})
+        logger.info('trying to create a product')
         try:
             table: Table = self._get_db_handler(self.table_name)
             table.put_item(Item=product.model_dump(), ConditionExpression='attribute_not_exists(id)')
@@ -54,11 +54,11 @@ class DynamoDalHandler(DalHandler):
             logger.exception(error_msg)
             raise InternalServerException(error_msg) from exc
 
-        logger.info('finished create product', extra={'product_id': product.id})
+        logger.info('finished create product')
 
     @tracer.capture_method(capture_response=False)
     def get_product(self, product_id: str) -> Product:
-        logger.info('trying to get a product', extra={'product_id': product_id})
+        logger.info('trying to get a product')
         try:
             table: Table = self._get_db_handler(self.table_name)
             response = table.get_item(
@@ -67,7 +67,7 @@ class DynamoDalHandler(DalHandler):
             )
             if response.get('Item') is None:  # pragma: no cover (covered in integration test)
                 error_str = 'product is not found in table'
-                logger.info(error_str, extra={'product_id': product_id})  # not a service error
+                logger.info(error_str, product_id=product_id)  # not a service error
                 raise ProductNotFoundException(error_str)
         except ClientError as exc:  # pragma: no cover (covered in integration test)
             error_msg = 'failed to get product from db'
@@ -83,12 +83,12 @@ class DynamoDalHandler(DalHandler):
             logger.exception(error_msg)
             raise InternalServerException(error_msg) from exc
 
-        logger.info('got item successfully', extra={'product_id': product_id})
+        logger.info('got item successfully')
         return db_entry
 
     @tracer.capture_method(capture_response=False)
     def delete_product(self, product_id: str) -> None:
-        logger.info('trying to delete a product', extra={'product_id': product_id})
+        logger.info('trying to delete a product')
         try:
             table: Table = self._get_db_handler(self.table_name)
             table.delete_item(Key={'id': product_id})
@@ -97,7 +97,7 @@ class DynamoDalHandler(DalHandler):
             logger.exception(error_msg)
             raise InternalServerException(error_msg) from exc
 
-        logger.info('deleted product successfully', extra={'product_id': product_id})
+        logger.info('deleted product successfully')
 
     @tracer.capture_method(capture_response=False)
     def list_products(self) -> List[Product]:

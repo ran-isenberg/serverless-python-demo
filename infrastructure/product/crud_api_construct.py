@@ -134,7 +134,7 @@ class CrudApiConstruct(Construct):
             constants.CREATE_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.crud.handlers.handle_create_product.handle_create_product',
+            handler='product.crud.handlers.handle_create_product.lambda_handler',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger

@@ -19,6 +19,7 @@ def test_handler_200_ok(mocker, table_name: str) -> None:
     response = handle_create_product(generate_api_gw_event(
         body=body.model_dump(),
         path_params={'product': product_id},
+        product_id=product_id,
     ))
     # assert response
     assert response['statusCode'] == HTTPStatus.OK

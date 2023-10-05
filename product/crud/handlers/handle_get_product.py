@@ -22,14 +22,15 @@ def handle_get_product(event: Dict[str, Any], context: LambdaContext) -> Dict[st
     logger.set_correlation_id(context.aws_request_id)
 
     env_vars: GetVars = get_environment_variables(model=GetVars)
-    logger.debug('environment variables', extra=env_vars.model_dump())
+    logger.debug('environment variables', env_vars=env_vars.model_dump())
 
     try:
         # we want to extract and parse the HTTP body from the api gw envelope
         get_input: GetProductRequest = parse(event=event, model=GetProductRequest)
-        logger.info('got a get product request', extra={'product': get_input.model_dump()})
-    except (ValidationError, TypeError) as exc:  # pragma: no cover
-        logger.exception('event failed input validation', extra={'error': str(exc)})
+        logger.append_keys(product_id=get_input.pathParameters.product)
+        logger.info('got a get product request', product=get_input.model_dump())
+    except (ValidationError, TypeError):  # pragma: no cover
+        logger.exception('event failed input validation')
         return build_response(http_status=HTTPStatus.BAD_REQUEST, body={})
 
     metrics.add_metric(name='GetProductEvents', unit=MetricUnit.Count, value=1)

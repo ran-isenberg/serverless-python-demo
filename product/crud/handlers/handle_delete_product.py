@@ -20,14 +20,16 @@ from product.crud.schemas.input import DeleteProductRequest
 def handle_delete_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
     logger.set_correlation_id(context.aws_request_id)
     env_vars: DeleteVars = get_environment_variables(model=DeleteVars)
-    logger.debug('environment variables', extra=env_vars.model_dump())
+    logger.debug('environment variables', env_vars=env_vars.model_dump())
 
     try:
         # we want to extract and parse the HTTP body from the api gw envelope
         delete_input: DeleteProductRequest = parse(event=event, model=DeleteProductRequest)
-        logger.info('got a delete product request', extra={'product': delete_input.model_dump()})
-    except (ValidationError, TypeError) as exc:  # pragma: no cover
-        logger.exception('event failed input validation', extra={'error': str(exc)})
+        logger.append_keys(product_id=delete_input.pathParameters.product)
+        logger.info('got a delete product request', product=delete_input.model_dump())
+
+    except (ValidationError, TypeError):  # pragma: no cover
+        logger.exception('event failed input validation')
         return build_response(http_status=HTTPStatus.BAD_REQUEST, body={})
 
     metrics.add_metric(name='DeleteProductEvents', unit=MetricUnit.Count, value=1)
