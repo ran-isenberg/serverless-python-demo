@@ -22,8 +22,9 @@ def handle_create_product(product_id: str) -> dict[str, Any]:
 
     # we want to extract and parse the HTTP body from the api gw envelope
     create_input: CreateProductInput = CreateProductInput.model_validate_json(app.current_event.body or '')
+    logger.append_keys(product_id=product_id)
 
-    logger.info('got a valid create product request', product=create_input.model_dump(), product_id=product_id)
+    logger.info('got a valid create product request', product=create_input.model_dump())
     metrics.add_metric(name='CreateProductEvents', unit=MetricUnit.Count, value=1)
 
     response: CreateProductOutput = create_product(

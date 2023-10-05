@@ -25,7 +25,9 @@ def handle_delete_product(event: Dict[str, Any], context: LambdaContext) -> Dict
     try:
         # we want to extract and parse the HTTP body from the api gw envelope
         delete_input: DeleteProductRequest = parse(event=event, model=DeleteProductRequest)
+        logger.append_keys(product_id=delete_input.pathParameters.product)
         logger.info('got a delete product request', product=delete_input.model_dump())
+
     except (ValidationError, TypeError):  # pragma: no cover
         logger.exception('event failed input validation')
         return build_response(http_status=HTTPStatus.BAD_REQUEST, body={})

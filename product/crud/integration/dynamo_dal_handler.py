@@ -37,7 +37,7 @@ class DynamoDalHandler(DalHandler):
     # )
     @tracer.capture_method(capture_response=False)
     def create_product(self, product: Product) -> None:
-        logger.info('trying to create a product', product_id=product.id)
+        logger.info('trying to create a product')
         try:
             table: Table = self._get_db_handler(self.table_name)
             table.put_item(Item=product.model_dump(), ConditionExpression='attribute_not_exists(id)')
@@ -54,11 +54,11 @@ class DynamoDalHandler(DalHandler):
             logger.exception(error_msg)
             raise InternalServerException(error_msg) from exc
 
-        logger.info('finished create product', product_id=product.id)
+        logger.info('finished create product')
 
     @tracer.capture_method(capture_response=False)
     def get_product(self, product_id: str) -> Product:
-        logger.info('trying to get a product', product_id=product_id)
+        logger.info('trying to get a product')
         try:
             table: Table = self._get_db_handler(self.table_name)
             response = table.get_item(
@@ -83,12 +83,12 @@ class DynamoDalHandler(DalHandler):
             logger.exception(error_msg)
             raise InternalServerException(error_msg) from exc
 
-        logger.info('got item successfully', product_id=product_id)
+        logger.info('got item successfully')
         return db_entry
 
     @tracer.capture_method(capture_response=False)
     def delete_product(self, product_id: str) -> None:
-        logger.info('trying to delete a product', product_id=product_id)
+        logger.info('trying to delete a product')
         try:
             table: Table = self._get_db_handler(self.table_name)
             table.delete_item(Key={'id': product_id})
@@ -97,7 +97,7 @@ class DynamoDalHandler(DalHandler):
             logger.exception(error_msg)
             raise InternalServerException(error_msg) from exc
 
-        logger.info('deleted product successfully', product_id=product_id)
+        logger.info('deleted product successfully')
 
     @tracer.capture_method(capture_response=False)
     def list_products(self) -> List[Product]:

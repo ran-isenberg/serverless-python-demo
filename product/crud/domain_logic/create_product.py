@@ -7,11 +7,11 @@ from product.crud.schemas.output import CreateProductOutput
 
 @tracer.capture_method(capture_response=False)
 def create_product(product_id: str, product_name: str, product_price: int, table_name: str) -> CreateProductOutput:
-    logger.info('handling create product request', product_id=product_id)
+    logger.info('handling create product request')
 
     dal_handler: DalHandler = get_dal_handler(table_name)
     product = Product(id=product_id, name=product_name, price=product_price)
     dal_handler.create_product(product=product)
     # convert from db entry to output, they won't always be the same
-    logger.info('created product successfully', product_id=product_id)
+    logger.info('created product successfully')
     return CreateProductOutput(id=product.id)

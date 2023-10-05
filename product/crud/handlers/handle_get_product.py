@@ -27,6 +27,7 @@ def handle_get_product(event: Dict[str, Any], context: LambdaContext) -> Dict[st
     try:
         # we want to extract and parse the HTTP body from the api gw envelope
         get_input: GetProductRequest = parse(event=event, model=GetProductRequest)
+        logger.append_keys(product_id=get_input.pathParameters.product)
         logger.info('got a get product request', product=get_input.model_dump())
     except (ValidationError, TypeError):  # pragma: no cover
         logger.exception('event failed input validation')

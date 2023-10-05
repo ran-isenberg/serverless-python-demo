@@ -25,7 +25,7 @@ def handle_list_products(event: Dict[str, Any], context: LambdaContext) -> Dict[
     metrics.add_metric(name='ListProductsEvents', unit=MetricUnit.Count, value=1)
 
     try:
-        response: ListProductsOutput = list_products(table_name=env_vars.TABLE_NAME,)
+        response: ListProductsOutput = list_products(table_name=env_vars.TABLE_NAME)
     except InternalServerException:  # pragma: no cover
         logger.exception('finished handling list products request with internal error')
         return build_response(http_status=HTTPStatus.INTERNAL_SERVER_ERROR, body={})
