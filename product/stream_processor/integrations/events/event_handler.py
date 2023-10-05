@@ -6,6 +6,7 @@ from product.stream_processor.integrations.events.base import BaseEventHandler, 
 from product.stream_processor.integrations.events.constants import DEFAULT_EVENT_VERSION
 from product.stream_processor.integrations.events.models.input import AnyModel, Event, EventMetadata
 from product.stream_processor.integrations.events.models.output import EventReceipt
+from product.stream_processor.integrations.events.providers.eventbridge import EventBridge
 
 _exclude_underscores = r'(?!^)(?<!_)'  # _ProductNotification
 _pascal_case = r'[A-Z][a-z]+'  # ProductNotification
@@ -16,17 +17,20 @@ _pascal_to_snake_pattern = re.compile(rf'({_exclude_underscores}{_pascal_case}{_
 
 class EventHandler(BaseEventHandler[AnyModel]):
 
-    def __init__(self, provider: BaseEventProvider, event_source: str) -> None:
+    def __init__(self, event_source: str, event_bus: str, provider: BaseEventProvider | None = None) -> None:
         """Event Handler for emitting events with a given provider.
 
         Parameters
         ----------
-        provider : BaseEventProvider
-            An event provider to send events to.
         event_source : str
             Event source to inject in event metadata, following 'myorg.service_name.feature_name'
+        event_bus: str
+            Event bus to send events to
+        provider : BaseEventProvider
+            An event provider to send events to, by default EventBridge if omitted.
         """
-        super().__init__(provider=provider, event_source=event_source)
+        self.provider = provider or EventBridge(bus_name=event_bus)
+        super().__init__(event_source=event_source, event_bus=event_bus, provider=self.provider)
 
     def emit(self, payload: list[AnyModel], metadata: dict[str, Any] | None = None, correlation_id='') -> EventReceipt:
         """Converts and emits a list of models into standard events with extra metadata and correlation ID.

@@ -34,15 +34,18 @@ class BaseEventProvider(ABC):
 
 class BaseEventHandler(ABC, Generic[T]):
 
-    def __init__(self, provider: BaseEventProvider, event_source: str) -> None:
+    @abstractmethod
+    def __init__(self, event_source: str, event_bus: str, provider: BaseEventProvider) -> None:
         """ABC to handle event manipulation from a model, and publishing through a provider.
 
         Parameters
         ----------
-        provider : BaseEventProvider
-            Event Provider to publish events through.
         event_source : str
             Event source name, e.g., 'myorg.service.feature'
+        event_bus: str
+            Event bus to send events to
+        provider : BaseEventProvider
+            Event Provider to publish events through.
         """
         self.provider = provider
         self.event_source = event_source
