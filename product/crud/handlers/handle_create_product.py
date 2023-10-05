@@ -21,7 +21,7 @@ def handle_create_product(product_id: str) -> dict[str, Any]:
     logger.debug('environment variables', extra=env_vars.model_dump())
 
     # we want to extract and parse the HTTP body from the api gw envelope
-    payload = app.current_event.body if app.current_event.body is not None else ''
+    payload = app.current_event.body or ''
     create_input: CreateProductInput = CreateProductInput.model_validate_json(payload)
 
     logger.info('got a valid create product request', extra={'product': create_input.model_dump(), 'product_id': product_id})
