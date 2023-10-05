@@ -33,7 +33,7 @@ class BaseEventProvider(ABC):
         ...
 
 
-class EventHandler(ABC, Generic[T]):
+class BaseEventHandler(ABC, Generic[T]):
 
     def __init__(self, provider: BaseEventProvider, event_source: str) -> None:
         """ABC to handle event manipulation from a model, and publishing through a provider.

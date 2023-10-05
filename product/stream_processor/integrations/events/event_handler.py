@@ -1,11 +1,11 @@
 from typing import Any
 
 from product.models.products.product import ProductChangeNotification
-from product.stream_processor.integrations.events.base import EventHandler, BaseEventProvider
+from product.stream_processor.integrations.events.base import BaseEventHandler, BaseEventProvider
 from product.stream_processor.integrations.events.models.output import EventReceipt
 
 
-class ProductChangeNotificationHandler(EventHandler):
+class ProductChangeNotificationHandler(BaseEventHandler):
 
     def __init__(self, provider: BaseEventProvider, event_source: str) -> None:
         """Event Handler for ProductChangeNotification.
