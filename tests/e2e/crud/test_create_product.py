@@ -26,5 +26,5 @@ def test_handler_bad_request_invalid_body(api_gw_url_slash_product: str, product
     # when creating a product with invalid body payload, missing parameter name, get back HTTP BAD_REQUEST
     body_str = json.dumps({'price': 5})
     url_with_product_id = f'{api_gw_url_slash_product}/{product_id}'
-    response = requests.put(url=url_with_product_id, data=body_str)
+    response = requests.put(url=url_with_product_id, data=body_str, timeout=10)
     assert response.status_code == HTTPStatus.BAD_REQUEST

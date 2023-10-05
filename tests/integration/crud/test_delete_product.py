@@ -24,7 +24,7 @@ def add_product_entry_to_db(table_name: str) -> Generator[Product, None, None]:
 
 def test_handler_204_success_delete(add_product_entry_to_db: Product):
     product_id = add_product_entry_to_db.id
-    event = generate_api_gw_event(path_params={'product': product_id})
+    event = generate_api_gw_event(product_id=product_id, path_params={'product': product_id})
     response = handle_delete_product(event, generate_context())
     # assert response
     assert response['statusCode'] == HTTPStatus.NO_CONTENT
@@ -37,7 +37,8 @@ def test_internal_server_error(table_name):
 
     with Stubber(table.meta.client) as stubber:
         stubber.add_client_error(method='delete_item', service_error_code='ValidationException')
-        event = generate_api_gw_event(path_params={'product': generate_product_id()})
+        product_id = generate_product_id()
+        event = generate_api_gw_event(product_id=product_id, path_params={'product': product_id})
         response = handle_delete_product(event, generate_context())
 
     assert response['statusCode'] == HTTPStatus.INTERNAL_SERVER_ERROR
@@ -45,7 +46,8 @@ def test_internal_server_error(table_name):
 
 def test_handler_bad_request_invalid_path_params():
     # when calling the API with incorrect path params, you get an HTTP bad request error code
-    event = generate_api_gw_event(path_params={'dummy': generate_product_id()})
+    product_id = generate_product_id()
+    event = generate_api_gw_event(product_id=product_id, path_params={'dummy': product_id})
     response = handle_delete_product(event, generate_context())
     assert response['statusCode'] == HTTPStatus.BAD_REQUEST
     body_dict = json.loads(response['body'])
