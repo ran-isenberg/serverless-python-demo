@@ -31,9 +31,9 @@ class CreateProductRequest(APIGatewayProxyEventModel):
 def create_product(event, context) -> Dict[str, Any]:
     try:
         create_input: CreateProductRequest = parse(event=event, model=CreateProductRequest)
-        logger.info('got create product request', extra={'product': create_input.model_dump()})
-    except (ValidationError, TypeError) as exc:
-        logger.exception('failed to parse input', extra={'exception': str(exc)})
+        logger.info('got create product request', product=create_input.model_dump())
+    except (ValidationError, TypeError):
+        logger.exception('failed to parse input')
         return build_response(http_status=HTTPStatus.BAD_REQUEST, body={})
 
     try:
@@ -44,8 +44,8 @@ def create_product(event, context) -> Dict[str, Any]:
             'id': create_input.pathParameters.product,
             'price': create_input.body.price,
         })
-    except ClientError as exc:
-        logger.exception('failed to create product', extra={'exception': str(exc)})
+    except ClientError:
+        logger.exception('failed to create product')
         return build_response(http_status=HTTPStatus.INTERNAL_SERVER_ERROR, body={})
 
     return build_response(http_status=HTTPStatus.OK, body={

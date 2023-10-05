@@ -20,7 +20,7 @@ def handle_list_products(event: Dict[str, Any], context: LambdaContext) -> Dict[
     logger.set_correlation_id(context.aws_request_id)
 
     env_vars: ListVars = get_environment_variables(model=ListVars)
-    logger.debug('environment variables', extra=env_vars.model_dump())
+    logger.debug('environment variables', env_vars=env_vars.model_dump())
 
     metrics.add_metric(name='ListProductsEvents', unit=MetricUnit.Count, value=1)
 

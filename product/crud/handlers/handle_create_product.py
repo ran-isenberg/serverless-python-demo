@@ -18,13 +18,12 @@ from product.crud.schemas.output import CreateProductOutput
 @app.route(PRODUCT_PATH, method=HTTPMethod.PUT)
 def handle_create_product(product_id: str) -> dict[str, Any]:
     env_vars: CreateVars = get_environment_variables(model=CreateVars)
-    logger.debug('environment variables', extra=env_vars.model_dump())
+    logger.debug('environment variables', env_vars=env_vars.model_dump())
 
     # we want to extract and parse the HTTP body from the api gw envelope
-    payload = app.current_event.body or ''
-    create_input: CreateProductInput = CreateProductInput.model_validate_json(payload)
+    create_input: CreateProductInput = CreateProductInput.model_validate_json(app.current_event.body or '')
 
-    logger.info('got a valid create product request', extra={'product': create_input.model_dump(), 'product_id': product_id})
+    logger.info('got a valid create product request', product=create_input.model_dump(), product_id=product_id)
     metrics.add_metric(name='CreateProductEvents', unit=MetricUnit.Count, value=1)
 
     response: CreateProductOutput = create_product(
@@ -34,7 +33,7 @@ def handle_create_product(product_id: str) -> dict[str, Any]:
         table_name=env_vars.TABLE_NAME,
     )
 
-    logger.info('finished handling create product request, product created', extra={'product': create_input.model_dump(), 'product_id': product_id})
+    logger.info('finished handling create product request, product created', product=create_input.model_dump(), product_id=product_id)
     return response.model_dump()
 
 
