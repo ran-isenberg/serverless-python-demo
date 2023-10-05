@@ -4,19 +4,19 @@ from typing import Any, Dict
 
 import boto3
 
-from product.crud.handlers.create_product import create_product
+from product.crud.handlers.handle_create_product import handle_create_product
 from tests.crud_utils import generate_api_gw_event, generate_create_product_request_body, generate_product_id
 from tests.utils import generate_context
 
 
 def call_create_product_handler(body: Dict[str, Any]) -> Dict[str, Any]:
-    return create_product(body, generate_context())
+    return handle_create_product(body, generate_context())
 
 
 def test_handler_200_ok(mocker, table_name: str) -> None:
     body = generate_create_product_request_body()
     product_id = generate_product_id()
-    response = create_product(generate_api_gw_event(
+    response = handle_create_product(generate_api_gw_event(
         body=body.model_dump(),
         path_params={'product': product_id},
     ))

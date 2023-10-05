@@ -1,7 +1,7 @@
-from product.crud.dal import get_dal_handler
-from product.crud.dal.db_handler import DalHandler
-from product.crud.dal.schemas.db import Product
 from product.crud.handlers.utils.observability import logger
+from product.crud.integration import get_dal_handler
+from product.crud.integration.db_handler import DalHandler
+from product.crud.integration.schemas.db import Product
 from product.crud.schemas.output import CreateProductOutput
 
 
