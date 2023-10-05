@@ -58,6 +58,7 @@ class BaseEventHandler(ABC, Generic[T]):
         ----------
         payload : list[T]
             List of models to convert and publish as an Event.
+            List of models to convert and publish as an Event.
         metadata : dict[str, Any] | None, optional
             Additional metadata to be injected into the event before sending, by default None
         correlation_id : str, optional

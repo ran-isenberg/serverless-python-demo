@@ -36,6 +36,7 @@ def notify_product_updates(update: list[ProductChangeNotification], event_handle
     # Events
 
     * `EventHandler` uses `EventBridge` provider to convert and publish `ProductChangeNotification` models into events.
+    * `EventHandler` uses `EventBridge` provider to convert and publish `ProductChangeNotification` models into events.
 
     Returns
     -------
