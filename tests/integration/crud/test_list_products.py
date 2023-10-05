@@ -11,25 +11,31 @@ from tests.utils import generate_context
 
 
 def test_handler_200_ok(add_product_entry_to_db: Product):
-    # when adding one product to the table and listing it, one item is returned
+    # GIVEN a product entry in the database
     event = generate_api_gw_list_products_event()
+
+    # WHEN listing all products
     response = handle_list_products(event, generate_context())
-    # assert response
+
+    # THEN the response should return OK (HTTP 200)
+    # AND contain exactly one product, which matches the added product entry
     assert response['statusCode'] == HTTPStatus.OK
     response_entry = ListProductsOutput.model_validate_json(response['body'])
     products = response_entry.products
-    # we cleared the table so only one product
     assert len(products) == 1
-    # assert we got the item we expect
     assert products[0].model_dump() == add_product_entry_to_db.model_dump()
 
 
 def test_handler_empty_list(table_name: str):
-    # when listing an empty table, an empty list of products is returned
+    # GIVEN an empty product table
     clear_table(table_name)
+
+    # WHEN listing all products
     event = generate_api_gw_list_products_event()
     response = handle_list_products(event, generate_context())
-    # assert response
+
+    # THEN the response should return OK (HTTP 200)
+    # AND the product list should be empty
     assert response['statusCode'] == HTTPStatus.OK
     response_entry = ListProductsOutput.model_validate_json(response['body'])
     products = response_entry.products
@@ -37,13 +43,15 @@ def test_handler_empty_list(table_name: str):
 
 
 def test_internal_server_error(table_name):
-    # when a DynamoDB exception is raised, internal server error is returned
+    # GIVEN a DynamoDB exception scenario
     db_handler: DynamoDalHandler = DynamoDalHandler(table_name)
     table = db_handler._get_db_handler(table_name)
 
     with Stubber(table.meta.client) as stubber:
+        # WHEN attempting to list products while the DynamoDB exception is triggered
         stubber.add_client_error(method='scan', service_error_code='ValidationException')
         event = generate_api_gw_list_products_event()
         response = handle_list_products(event, generate_context())
 
+    # THEN the response should indicate an internal server error (HTTP 500)
     assert response['statusCode'] == HTTPStatus.INTERNAL_SERVER_ERROR
