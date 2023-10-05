@@ -6,6 +6,7 @@ from botocore.stub import Stubber
 
 from product.crud.handlers.handle_create_product import lambda_handler
 from product.crud.integration.dynamo_dal_handler import DynamoDalHandler
+from product.crud.integration.schemas.db import Product
 from tests.crud_utils import generate_api_gw_event, generate_create_product_request_body, generate_product_id
 from tests.utils import generate_context
 
@@ -29,6 +30,19 @@ def test_handler_200_ok(table_name: str):
     assert response['Item']['name'] == body.name
     assert response['Item']['price'] == body.price
     assert response['Item']['id'] == product_id
+
+
+def test_handler_bad_request_product_already_exists(add_product_entry_to_db: Product):
+    # when sending a create product on a product that already exists
+    product_id = add_product_entry_to_db.id
+    response = lambda_handler(
+        event=generate_api_gw_event(product_id=product_id, body=add_product_entry_to_db.model_dump(), path_params={'product': product_id}),
+        context=generate_context(),
+    )
+    # we expect to get a bad request with a 'product already exists' error
+    assert response['statusCode'] == HTTPStatus.BAD_REQUEST
+    body_dict = json.loads(response['body'])
+    assert body_dict['error'] == 'product already exists'
 
 
 def test_internal_server_error(table_name: str):
