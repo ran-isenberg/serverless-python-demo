@@ -1,14 +1,13 @@
 from abc import ABC, abstractmethod
 from typing import Any, Generic, TypeVar
 
-from product.stream_processor.integrations.events.functions import build_events_from_models
 from product.stream_processor.integrations.events.models.input import Event
 from product.stream_processor.integrations.events.models.output import EventReceipt
 
 T = TypeVar('T')
 
 
-class EventProvider(ABC):
+class BaseEventProvider(ABC):
     """ABC for an Event Provider that send events to a destination."""
 
     @abstractmethod
@@ -33,14 +32,14 @@ class EventProvider(ABC):
         ...
 
 
-class EventHandler(ABC, Generic[T]):
+class BaseEventHandler(ABC, Generic[T]):
 
-    def __init__(self, provider: EventProvider, event_source: str) -> None:
+    def __init__(self, provider: BaseEventProvider, event_source: str) -> None:
         """ABC to handle event manipulation from a model, and publishing through a provider.
 
         Parameters
         ----------
-        provider : EventProvider
+        provider : BaseEventProvider
             Event Provider to publish events through.
         event_source : str
             Event source name, e.g., 'myorg.service.feature'
@@ -50,12 +49,12 @@ class EventHandler(ABC, Generic[T]):
 
     @abstractmethod
     def emit(self, payload: list[T], metadata: dict[str, Any] | None = None, correlation_id='') -> EventReceipt:
-        """Emits product change notifications using registered provider, along with additional metadata or specific correlation ID.
+        """Emits events using registered provider, along with additional metadata or specific correlation ID.
 
         Parameters
         ----------
         payload : list[T]
-            List of product change notifications models to be sent.
+            List of models to convert and publish as an Event.
         metadata : dict[str, Any] | None, optional
             Additional metadata to be injected into the event before sending, by default None
         correlation_id : str, optional
@@ -66,7 +65,4 @@ class EventHandler(ABC, Generic[T]):
         EventReceipt
             Receipts for unsuccessfully and successfully published events.
         """
-        event_payload = build_events_from_models(
-            models=payload, metadata=metadata, correlation_id=correlation_id,
-            event_source=self.event_source)  # type: ignore[type-var] # T will be defined by its implementation; see ProductChangeNotificationHandler
-        return self.provider.send(payload=event_payload)
+        ...

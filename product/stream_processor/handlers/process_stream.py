@@ -6,7 +6,7 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from product.models.products.product import ProductChangeNotification
 from product.stream_processor.domain_logic.product_notification import notify_product_updates
-from product.stream_processor.integrations.events.event_handler import ProductChangeNotificationHandler
+from product.stream_processor.integrations.events.event_handler import EventHandler
 from product.stream_processor.integrations.events.models.output import EventReceipt
 
 logger = Logger()
@@ -16,7 +16,7 @@ logger = Logger()
 def process_stream(
     event: dict[str, Any],
     context: LambdaContext,
-    event_handler: ProductChangeNotificationHandler | None = None,
+    event_handler: EventHandler | None = None,
 ) -> EventReceipt:
     """Process batch of Amazon DynamoDB Stream containing product changes.
 
@@ -33,8 +33,8 @@ def process_stream(
         It is used to enrich our structured logging via Powertools for AWS Lambda.
 
         See [sample](https://docs.aws.amazon.com/lambda/latest/dg/python-context.html)
-    event_handler : ProductChangeNotificationHandler | None, optional
-        Event Handler to use to notify product changes, by default `ProductChangeNotificationHandler`
+    event_handler : EventHandler | None, optional
+        Event Handler to use to notify product changes, by default `EventHandler`
 
     Integrations
     ------------

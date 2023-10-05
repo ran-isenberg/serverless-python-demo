@@ -7,8 +7,8 @@ from pydantic import BaseModel
 
 from product.constants import XRAY_TRACE_ID_ENV
 from product.stream_processor.integrations.events.constants import EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
+from product.stream_processor.integrations.events.event_handler import EventHandler
 from product.stream_processor.integrations.events.exceptions import ProductChangeNotificationDeliveryError
-from product.stream_processor.integrations.events.functions import build_events_from_models
 from product.stream_processor.integrations.events.providers.eventbridge import EventBridge
 
 
@@ -20,7 +20,7 @@ def test_eventbridge_build_put_events_from_event_payload():
         __version__ = 'V1'
 
     notification = SampleNotification(message='test')
-    events = build_events_from_models(models=[notification], event_source='test')
+    events = EventHandler.build_events_from_models(models=[notification], event_source='test')
 
     # WHEN EventBridge provider builds a PutEvents request
     event_provider = EventBridge(bus_name='test_bus')
@@ -48,7 +48,7 @@ def test_eventbridge_build_put_events_from_event_payload_include_trace_header(mo
 
     event_bus_name = 'sample_bus'
     notification = SampleNotification(message='test')
-    events = build_events_from_models(models=[notification], event_source='test')
+    events = EventHandler.build_events_from_models(models=[notification], event_source='test')
     event_provider = EventBridge(bus_name=event_bus_name)
 
     # WHEN EventBridge provider builds a PutEvents request
@@ -67,7 +67,7 @@ def test_eventbridge_build_put_events_respect_max_entries_limit():
     number_of_events = 20
 
     notifications = [SampleNotification(message='test') for _ in range(number_of_events)]
-    events = build_events_from_models(models=notifications, event_source='test')
+    events = EventHandler.build_events_from_models(models=notifications, event_source='test')
 
     # WHEN EventBridge provider builds a PutEvents request
     requests = EventBridge(bus_name='test_bus').build_put_events_requests(payload=events)
@@ -90,7 +90,7 @@ def test_eventbridge_put_events_with_stubber():
     event_source = 'test'
 
     notification = SampleNotification(message='testing')
-    events = build_events_from_models(models=[notification], event_source=event_source)
+    events = EventHandler.build_events_from_models(models=[notification], event_source=event_source)
     event = events[0]
 
     put_events_request = {
@@ -134,7 +134,7 @@ def test_eventbridge_put_events_with_stubber_partial_failure():
     event_source = 'test'
 
     notification = SampleNotification(message='testing')
-    events = build_events_from_models(models=[notification], event_source=event_source)
+    events = EventHandler.build_events_from_models(models=[notification], event_source=event_source)
     event = events[0]
 
     expected_failure_count = 1
@@ -188,7 +188,7 @@ def test_eventbridge_put_events_with_stubber_service_failure():
     event_source = 'test'
 
     notification = SampleNotification(message='testing')
-    events = build_events_from_models(models=[notification], event_source=event_source)
+    events = EventHandler.build_events_from_models(models=[notification], event_source=event_source)
 
     # WHEN EventBridge receives a stubbed client with at least one FailedEntryCount
     client = boto3.client('events')
