@@ -28,9 +28,11 @@ class FakeProvider(BaseEventProvider):
 
 class FakeEventHandler(BaseEventHandler[AnyModel]):
 
-    def __init__(self, provider: BaseEventProvider = FakeProvider(), event_source: str = 'fake') -> None:
-        super().__init__(provider=provider, event_source=event_source)
+    def __init__(self, event_source: str = 'fake', event_bus: str = 'fake_bus', provider: BaseEventProvider | None = None) -> None:
+        self.provider = provider or FakeProvider()
         self.published_payloads: list[AnyModel] = []
+
+        super().__init__(event_source=event_source, event_bus=event_bus, provider=self.provider)
 
     def emit(self, payload: list[AnyModel], metadata: dict[str, Any] | None = None, correlation_id='') -> EventReceipt:
         metadata = metadata or {}
