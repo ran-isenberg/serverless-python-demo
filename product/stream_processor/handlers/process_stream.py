@@ -1,3 +1,4 @@
+import os
 from typing import Any
 
 from aws_lambda_powertools import Logger
@@ -6,17 +7,22 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from product.models.products.product import ProductChangeNotification
 from product.stream_processor.domain_logic.product_notification import notify_product_updates
+from product.stream_processor.integrations.events.base import BaseEventHandler
 from product.stream_processor.integrations.events.event_handler import EventHandler
 from product.stream_processor.integrations.events.models.output import EventReceipt
 
 logger = Logger()
+
+# NOTE: these will move to environment variables. Event source format could even use a pydantic validation!
+EVENT_BUS = os.environ.get('EVENT_BUS', '')
+EVENT_SOURCE = 'myorg.product.product_notification'
 
 
 @logger.inject_lambda_context(log_event=True)
 def process_stream(
     event: dict[str, Any],
     context: LambdaContext,
-    event_handler: EventHandler | None = None,
+    event_handler: BaseEventHandler | None = None,
 ) -> EventReceipt:
     """Process batch of Amazon DynamoDB Stream containing product changes.
 
@@ -33,8 +39,8 @@ def process_stream(
         It is used to enrich our structured logging via Powertools for AWS Lambda.
 
         See [sample](https://docs.aws.amazon.com/lambda/latest/dg/python-context.html)
-    event_handler : EventHandler | None, optional
-        Event Handler to use to notify product changes, by default `EventHandler`
+    event_handler : BaseEventHandler | None, optional
+        Event Handler to use to notify product changes, by default `EventHandler` with EventBridge as a provider
 
     Integrations
     ------------
@@ -65,9 +71,10 @@ def process_stream(
         match record.event_name:
             case record.event_name.INSERT:  # type: ignore[union-attr]
                 product_updates.append(ProductChangeNotification(product_id=product_id, status='ADDED'))
-            case record.event_name.MODIFY:  # type: ignore[union-attr]
-                product_updates.append(ProductChangeNotification(product_id=product_id, status='UPDATED'))
             case record.event_name.REMOVE:  # type: ignore[union-attr]
                 product_updates.append(ProductChangeNotification(product_id=product_id, status='REMOVED'))
+
+    if event_handler is None:
+        event_handler = EventHandler(event_source=EVENT_SOURCE, event_bus=EVENT_BUS)
 
     return notify_product_updates(update=product_updates, event_handler=event_handler)
