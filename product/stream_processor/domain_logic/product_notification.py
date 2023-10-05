@@ -5,6 +5,7 @@ from product.stream_processor.integrations.events.event_handler import ProductCh
 from product.stream_processor.integrations.events.models.output import EventReceipt
 from product.stream_processor.integrations.events.providers.eventbridge import EventBridge
 
+# NOTE: these will move to environment variables. Event source format could even use a pydantic validation!
 EVENT_BUS = os.environ.get('EVENT_BUS', '')
 EVENT_SOURCE = 'myorg.product.product_notification'
 

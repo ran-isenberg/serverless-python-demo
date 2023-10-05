@@ -7,9 +7,9 @@ from mypy_boto3_dynamodb import DynamoDBServiceResource
 from mypy_boto3_dynamodb.service_resource import Table
 from pydantic import ValidationError
 
-from product.crud.dal.db_handler import DalHandler
-from product.crud.dal.schemas.db import Product, ProductEntries
 from product.crud.handlers.utils.observability import logger, tracer
+from product.crud.integration.db_handler import DalHandler
+from product.crud.integration.schemas.db import Product, ProductEntries
 from product.crud.schemas.exceptions import InternalServerException, ProductAlreadyExistsException, ProductNotFoundException
 
 # from product.crud.dal.idempotency import IDEMPOTENCY_CONFIG, IDEMPOTENCY_LAYER

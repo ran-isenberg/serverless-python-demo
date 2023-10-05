@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 import requests
 
-from product.crud.dal.schemas.db import Product
+from product.crud.integration.schemas.db import Product
 from product.crud.schemas.output import ListProductsOutput
 
 

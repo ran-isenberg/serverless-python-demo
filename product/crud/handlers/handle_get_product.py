@@ -6,7 +6,7 @@ from aws_lambda_powertools.metrics import MetricUnit
 from aws_lambda_powertools.utilities.parser import ValidationError, parse
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
-from product.crud.domain_logic.handle_get_request import handle_get_request
+from product.crud.domain_logic.get_product import get_product
 from product.crud.handlers.schemas.env_vars import GetVars
 from product.crud.handlers.utils.http_responses import build_response
 from product.crud.handlers.utils.observability import logger, metrics, tracer
@@ -18,7 +18,7 @@ from product.crud.schemas.output import GetProductOutput
 @init_environment_variables(model=GetVars)
 @metrics.log_metrics
 @tracer.capture_lambda_handler(capture_response=False)
-def get_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
+def handle_get_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
     logger.set_correlation_id(context.aws_request_id)
 
     env_vars: GetVars = get_environment_variables(model=GetVars)
@@ -34,7 +34,7 @@ def get_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]
 
     metrics.add_metric(name='GetProductEvents', unit=MetricUnit.Count, value=1)
     try:
-        response: GetProductOutput = handle_get_request(
+        response: GetProductOutput = get_product(
             product_id=get_input.pathParameters.product,
             table_name=env_vars.TABLE_NAME,
         )

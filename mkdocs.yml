@@ -5,11 +5,12 @@ repo_url: https://github.com/ran-isenberg/serverless-python-demo
 edit_uri: edit/main/docs
 
 nav:
-  - Homepage: index.md
-  - Decision log: decision_log.md
-  - API reference:
-      - Stream Processor: api/stream_processor.md
-      - Product models: api/product_models.md
+  - Homepage:
+      - index.md
+      - Decision log: decision_log.md
+      - API reference:
+          - Stream Processor: api/stream_processor.md
+          - Product models: api/product_models.md
 
 theme:
   name: material
@@ -34,6 +35,7 @@ theme:
     - navigation.instant
     - navigation.indexes
     - navigation.tracking
+    - navigation.tabs
     - content.code.annotate
     - content.code.copy
   icon:
@@ -81,14 +83,17 @@ plugins:
             show_source: true
             heading_level: 4
             allow_inspection: true
-            group_by_category: true
-            show_category_heading: true
-            show_bases: true
+            group_by_category: true # Attributes, Functions, Classes etc.
+            show_category_heading: true # Attributes, Functions, Classes etc.
+            show_bases: true # show inheritance
             show_docstring_examples: true
-            show_if_no_docstring: true
+            show_if_no_docstring: true # show Pydantic models and global attrs
             merge_init_into_class: true # avoid Class params + __init__ params
             separate_signature: false
             show_signature_annotations: false
+            show_docstring_attributes: false
+            show_root_heading: false
+            members_order: source
 
 extra_css:
   - stylesheets/extra.css

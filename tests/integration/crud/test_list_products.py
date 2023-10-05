@@ -5,9 +5,9 @@ import boto3
 import pytest
 from botocore.stub import Stubber
 
-from product.crud.dal.dynamo_dal_handler import DynamoDalHandler
-from product.crud.dal.schemas.db import Product
-from product.crud.handlers.list_products import list_products
+from product.crud.handlers.handle_list_products import handle_list_products
+from product.crud.integration.dynamo_dal_handler import DynamoDalHandler
+from product.crud.integration.schemas.db import Product
 from product.crud.schemas.output import ListProductsOutput
 from tests.crud_utils import clear_table, generate_api_gw_event, generate_product_id
 from tests.utils import generate_context
@@ -26,7 +26,7 @@ def add_product_entry_to_db(table_name: str) -> Generator[Product, None, None]:
 def test_handler_200_ok(add_product_entry_to_db: Product):
     # when adding one product to the table and listing it, one item is returned
     event = generate_api_gw_event()
-    response = list_products(event, generate_context())
+    response = handle_list_products(event, generate_context())
     # assert response
     assert response['statusCode'] == HTTPStatus.OK
     response_entry = ListProductsOutput.model_validate_json(response['body'])
@@ -41,7 +41,7 @@ def test_handler_empty_list(table_name: str):
     # when listing an empty table, an empty list of products is returned
     clear_table(table_name)
     event = generate_api_gw_event()
-    response = list_products(event, generate_context())
+    response = handle_list_products(event, generate_context())
     # assert response
     assert response['statusCode'] == HTTPStatus.OK
     response_entry = ListProductsOutput.model_validate_json(response['body'])
@@ -57,6 +57,6 @@ def test_internal_server_error(table_name):
     with Stubber(table.meta.client) as stubber:
         stubber.add_client_error(method='scan', service_error_code='ValidationException')
         event = generate_api_gw_event()
-        response = list_products(event, generate_context())
+        response = handle_list_products(event, generate_context())
 
     assert response['statusCode'] == HTTPStatus.INTERNAL_SERVER_ERROR

@@ -1,7 +1,7 @@
 import boto3
 
-from product.crud.dal.schemas.db import Product
 from product.crud.handlers.utils.observability import logger
+from product.crud.integration.schemas.db import Product
 from product.crud.schemas.output import CreateProductOutput
 
 

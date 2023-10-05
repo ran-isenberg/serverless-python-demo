@@ -1,7 +1,7 @@
 from functools import lru_cache
 
-from product.crud.dal.db_handler import DalHandler
-from product.crud.dal.dynamo_dal_handler import DynamoDalHandler
+from product.crud.integration.db_handler import DalHandler
+from product.crud.integration.dynamo_dal_handler import DynamoDalHandler
 
 
 @lru_cache

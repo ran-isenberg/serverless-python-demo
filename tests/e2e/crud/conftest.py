@@ -3,7 +3,7 @@ from typing import Generator
 import pytest
 
 from infrastructure.product.constants import APIGATEWAY, PRODUCT_RESOURCE, PRODUCTS_RESOURCE, TABLE_NAME_OUTPUT
-from product.crud.dal.schemas.db import Product
+from product.crud.integration.schemas.db import Product
 from tests.crud_utils import clear_table, generate_product_id
 from tests.e2e.crud.utils import create_product, delete_product
 from tests.utils import get_stack_output

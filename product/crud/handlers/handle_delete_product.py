@@ -6,7 +6,7 @@ from aws_lambda_powertools.metrics import MetricUnit
 from aws_lambda_powertools.utilities.parser import ValidationError, parse
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
-from product.crud.domain_logic.handle_delete_request import handle_delete_request
+from product.crud.domain_logic.delete_product import delete_product
 from product.crud.handlers.schemas.env_vars import DeleteVars
 from product.crud.handlers.utils.http_responses import build_response
 from product.crud.handlers.utils.observability import logger, metrics, tracer
@@ -17,7 +17,7 @@ from product.crud.schemas.input import DeleteProductRequest
 @init_environment_variables(model=DeleteVars)
 @metrics.log_metrics
 @tracer.capture_lambda_handler(capture_response=False)
-def delete_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
+def handle_delete_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, Any]:
     logger.set_correlation_id(context.aws_request_id)
     env_vars: DeleteVars = get_environment_variables(model=DeleteVars)
     logger.debug('environment variables', extra=env_vars.model_dump())
@@ -33,7 +33,7 @@ def delete_product(event: Dict[str, Any], context: LambdaContext) -> Dict[str, A
     metrics.add_metric(name='DeleteProductEvents', unit=MetricUnit.Count, value=1)
 
     try:
-        handle_delete_request(
+        delete_product(
             product_id=delete_input.pathParameters.product,
             table_name=env_vars.TABLE_NAME,
         )
