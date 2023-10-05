@@ -50,8 +50,7 @@ def process_stream(
 
     Raises
     ------
-
-    ProductNotificationDeliveryError
+    ProductChangeNotificationDeliveryError
         Partial or total failures when sending notification. It allows the stream to stop at the exact same sequence number.
 
         This means sending notifications are at least once.

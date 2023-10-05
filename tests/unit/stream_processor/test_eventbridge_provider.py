@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 from product.constants import XRAY_TRACE_ID_ENV
 from product.stream_processor.integrations.events.constants import EVENTBRIDGE_PROVIDER_MAX_EVENTS_ENTRY
-from product.stream_processor.integrations.events.exceptions import ProductNotificationDeliveryError
+from product.stream_processor.integrations.events.exceptions import ProductChangeNotificationDeliveryError
 from product.stream_processor.integrations.events.functions import build_events_from_models
 from product.stream_processor.integrations.events.providers.eventbridge import EventBridge
 
@@ -169,7 +169,7 @@ def test_eventbridge_put_events_with_stubber_partial_failure():
 
     event_provider = EventBridge(bus_name=event_bus_name, client=client)
 
-    with pytest.raises(ProductNotificationDeliveryError) as exc:
+    with pytest.raises(ProductChangeNotificationDeliveryError) as exc:
         event_provider.send(payload=events)
 
     # THEN we should receive a ProductNotificationDeliveryError along with its receipts
@@ -198,7 +198,7 @@ def test_eventbridge_put_events_with_stubber_service_failure():
 
     event_provider = EventBridge(bus_name=event_bus_name, client=client)
 
-    with pytest.raises(ProductNotificationDeliveryError) as exc:
+    with pytest.raises(ProductChangeNotificationDeliveryError) as exc:
         event_provider.send(payload=events)
 
     # THEN we should receive a ProductNotificationDeliveryError along with its receipts
