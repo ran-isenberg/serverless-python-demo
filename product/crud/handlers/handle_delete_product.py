@@ -13,7 +13,7 @@ from product.crud.handlers.utils.rest_api_resolver import app
 from product.crud.schemas.input import DeleteProductRequest
 
 
-@app.route(PRODUCT_PATH, method=HTTPMethod.DELETE)
+@app.delete(PRODUCT_PATH)
 def handle_delete_product(product_id: str) -> tuple[None, HTTPStatus]:
     env_vars: DeleteVars = get_environment_variables(model=DeleteVars)
     logger.debug('environment variables', env_vars=env_vars.model_dump())
