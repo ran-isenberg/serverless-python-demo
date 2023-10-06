@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 from botocore.stub import Stubber
 
-from product.crud.handlers.handle_list_products import handle_list_products
-from product.crud.integration.dynamo_dal_handler import DynamoDalHandler
+from product.crud.handlers.handle_list_products import lambda_handler
+from product.crud.integration.dynamo_db_handler import DynamoDbHandler
 from product.crud.integration.schemas.db import Product
 from product.crud.schemas.output import ListProductsOutput
 from tests.crud_utils import clear_table, generate_api_gw_list_products_event
@@ -15,7 +15,7 @@ def test_handler_200_ok(add_product_entry_to_db: Product):
     event = generate_api_gw_list_products_event()
 
     # WHEN listing all products
-    response = handle_list_products(event, generate_context())
+    response = lambda_handler(event, generate_context())
 
     # THEN the response should return OK (HTTP 200)
     # AND contain exactly one product, which matches the added product entry
@@ -32,7 +32,7 @@ def test_handler_empty_list(table_name: str):
 
     # WHEN listing all products
     event = generate_api_gw_list_products_event()
-    response = handle_list_products(event, generate_context())
+    response = lambda_handler(event, generate_context())
 
     # THEN the response should return OK (HTTP 200)
     # AND the product list should be empty
@@ -44,14 +44,14 @@ def test_handler_empty_list(table_name: str):
 
 def test_internal_server_error(table_name):
     # GIVEN a DynamoDB exception scenario
-    db_handler: DynamoDalHandler = DynamoDalHandler(table_name)
+    db_handler: DynamoDbHandler = DynamoDbHandler(table_name)
     table = db_handler._get_db_handler(table_name)
 
     with Stubber(table.meta.client) as stubber:
         # WHEN attempting to list products while the DynamoDB exception is triggered
         stubber.add_client_error(method='scan', service_error_code='ValidationException')
         event = generate_api_gw_list_products_event()
-        response = handle_list_products(event, generate_context())
+        response = lambda_handler(event, generate_context())
 
     # THEN the response should indicate an internal server error (HTTP 500)
     assert response['statusCode'] == HTTPStatus.INTERNAL_SERVER_ERROR

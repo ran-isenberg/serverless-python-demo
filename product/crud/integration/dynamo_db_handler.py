@@ -8,7 +8,7 @@ from mypy_boto3_dynamodb.service_resource import Table
 from pydantic import ValidationError
 
 from product.crud.handlers.utils.observability import logger, tracer
-from product.crud.integration.db_handler import DalHandler
+from product.crud.integration.db_handler import DbHandler
 from product.crud.integration.schemas.db import Product, ProductEntries
 from product.crud.schemas.exceptions import InternalServerException, ProductAlreadyExistsException, ProductNotFoundException
 
@@ -17,7 +17,7 @@ from product.crud.schemas.exceptions import InternalServerException, ProductAlre
 # from aws_lambda_powertools.utilities.idempotency import idempotent_function
 
 
-class DynamoDalHandler(DalHandler):
+class DynamoDbHandler(DbHandler):
 
     def __init__(self, table_name: str):
         self.table_name = table_name

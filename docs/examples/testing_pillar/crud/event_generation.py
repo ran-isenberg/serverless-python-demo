@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 def generate_api_gw_event(
     body: Optional[Dict[str, Any]] = None,
     path_params: Optional[Dict[str, Any]] = None,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     return {
         'version': '1.0',
         'resource': '/api/product',

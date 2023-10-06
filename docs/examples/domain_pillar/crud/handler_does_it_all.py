@@ -1,6 +1,7 @@
+import json
 import os
 from http import HTTPStatus
-from typing import Annotated, Any, Dict
+from typing import Annotated, Any
 
 import boto3
 from aws_lambda_powertools.utilities.parser import ValidationError, parse
@@ -8,7 +9,6 @@ from aws_lambda_powertools.utilities.parser.models import APIGatewayProxyEventMo
 from botocore.exceptions import ClientError
 from pydantic import BaseModel, Field, Json, PositiveInt
 
-from product.crud.handlers.utils.http_responses import build_response
 from product.crud.handlers.utils.observability import logger
 
 ProductId = Annotated[str, Field(min_length=36, max_length=36)]
@@ -28,13 +28,13 @@ class CreateProductRequest(APIGatewayProxyEventModel):
     pathParameters: PathParams  # type: ignore
 
 
-def create_product(event, context) -> Dict[str, Any]:
+def create_product(event, context) -> dict[str, Any]:
     try:
         create_input: CreateProductRequest = parse(event=event, model=CreateProductRequest)
         logger.info('got create product request', product=create_input.model_dump())
     except (ValidationError, TypeError):
         logger.exception('failed to parse input')
-        return build_response(http_status=HTTPStatus.BAD_REQUEST, body={})
+        return {'statusCode': HTTPStatus.BAD_REQUEST, 'headers': {'Content-Type': 'application/json'}, 'body': ''}
 
     try:
         dynamodb = boto3.resource('dynamodb')
@@ -46,8 +46,12 @@ def create_product(event, context) -> Dict[str, Any]:
         })
     except ClientError:
         logger.exception('failed to create product')
-        return build_response(http_status=HTTPStatus.INTERNAL_SERVER_ERROR, body={})
+        return {'statusCode': HTTPStatus.INTERNAL_SERVER_ERROR, 'headers': {'Content-Type': 'application/json'}, 'body': ''}
 
-    return build_response(http_status=HTTPStatus.OK, body={
-        'id': create_input.pathParameters.product,
-    })
+    return {
+        'statusCode': HTTPStatus.OK,
+        'headers': {
+            'Content-Type': 'application/json'
+        },
+        'body': json.dumps({'id': create_input.pathParameters.product})
+    }
