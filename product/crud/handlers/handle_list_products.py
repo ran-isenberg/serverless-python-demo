@@ -14,7 +14,7 @@ from product.crud.handlers.utils.rest_api_resolver import app
 from product.crud.schemas.output import ListProductsOutput
 
 
-@app.route(PRODUCTS_PATH, method=HTTPMethod.GET)
+@app.get(PRODUCTS_PATH)
 def handle_list_products() -> dict[str, Any]:
     env_vars: ListVars = get_environment_variables(model=ListVars)
     logger.debug('environment variables', env_vars=env_vars.model_dump())
