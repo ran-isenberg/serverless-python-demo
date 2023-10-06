@@ -1,7 +1,7 @@
 import pytest
 from aws_lambda_powertools.utilities.parser import ValidationError
 
-from product.crud.schemas.input import CreateProductInput
+from product.crud.schemas.input import CreateProductBody
 
 
 def test_invalid_name():
@@ -9,7 +9,7 @@ def test_invalid_name():
     # WHEN creating a product input
     # THEN a validation error should be raised
     with pytest.raises(ValidationError):
-        CreateProductInput(name='', price=4)
+        CreateProductBody(name='', price=4)
 
 
 def test_invalid_name_too_long():
@@ -17,7 +17,7 @@ def test_invalid_name_too_long():
     # WHEN creating a product input
     # THEN a validation error should be raised
     with pytest.raises(ValidationError):
-        CreateProductInput(name='1234567890112123423232323232323', price=4)
+        CreateProductBody(name='1234567890112123423232323232323', price=4)
 
 
 def test_missing_mandatory_fields():
@@ -25,7 +25,7 @@ def test_missing_mandatory_fields():
     # WHEN creating a product input
     # THEN a validation error should be raised
     with pytest.raises(ValidationError):
-        CreateProductInput(name='a')
+        CreateProductBody(name='a')
 
 
 def test_invalid_price():
@@ -33,7 +33,7 @@ def test_invalid_price():
     # WHEN creating a product input
     # THEN a validation error should be raised
     with pytest.raises(ValidationError):
-        CreateProductInput(name='a', price=-1)
+        CreateProductBody(name='a', price=-1)
 
 
 def test_invalid_price_type():
@@ -41,11 +41,11 @@ def test_invalid_price_type():
     # WHEN creating a product input
     # THEN a validation error should be raised
     with pytest.raises(ValidationError):
-        CreateProductInput(name='a', price='a')
+        CreateProductBody(name='a', price='a')
 
 
 def test_valid_input():
     # GIVEN valid input data (name and price)
     # WHEN creating a product input
     # THEN no error should be raised and the instance should be created successfully
-    CreateProductInput(name='a', price=4)
+    CreateProductBody(name='a', price=4)

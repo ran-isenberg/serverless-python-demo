@@ -21,7 +21,7 @@ def handle_create_product(product_id: str) -> dict[str, Any]:
     logger.debug('environment variables', env_vars=env_vars.model_dump())
 
     # we want to extract and parse the HTTP body from the api gw envelope
-    create_input: CreateProductInput = CreateProductInput.model_validate_json(app.current_event.body or '')
+    create_input: CreateProductInput = CreateProductInput.model_validate(app.current_event.raw_event)
     logger.append_keys(product_id=product_id)
 
     logger.info('got a valid create product request', product=create_input.model_dump())
@@ -29,8 +29,8 @@ def handle_create_product(product_id: str) -> dict[str, Any]:
 
     response: CreateProductOutput = create_product(
         product_id=product_id,
-        product_name=create_input.name,
-        product_price=create_input.price,
+        product_name=create_input.body.name,
+        product_price=create_input.body.price,
         table_name=env_vars.TABLE_NAME,
     )
 

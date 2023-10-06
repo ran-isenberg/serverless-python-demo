@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 import boto3
 
-from product.crud.schemas.input import CreateProductInput
+from product.crud.schemas.input import CreateProductBody
 from tests.utils import generate_random_integer, generate_random_string
 
 
@@ -172,12 +172,12 @@ def generate_product_id() -> str:
     return str(uuid.uuid4())
 
 
-def generate_create_product_request_body(name: str = '', price: int = 0) -> CreateProductInput:
+def generate_create_product_request_body(name: str = '', price: int = 0) -> CreateProductBody:
     if not price:
         price = generate_random_integer()
     if not name:
         name = generate_random_string()
-    return CreateProductInput(name=name, price=price)
+    return CreateProductBody(name=name, price=price)
 
 
 def clear_table(table_name: str) -> None:

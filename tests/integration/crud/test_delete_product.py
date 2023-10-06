@@ -1,3 +1,4 @@
+import json
 from http import HTTPMethod, HTTPStatus
 
 from botocore.stub import Stubber
@@ -47,3 +48,19 @@ def test_handler_bad_request_invalid_path_params():
 
     # THEN the response should indicate invalid path parameters (HTTP Not Found)
     assert response['statusCode'] == HTTPStatus.NOT_FOUND
+
+
+def test_handler_bad_request_invalid_product_id():
+    # GIVEN an invalid product creation request with an invalid product id
+    product_id = 'aaaaaa'
+    # WHEN the lambda handler processes the request
+    response = lambda_handler(
+        event=generate_product_api_gw_event(http_method=HTTPMethod.DELETE, product_id=product_id, path_params={'product': product_id}),
+        context=generate_context(),
+    )
+
+    # THEN the response should indicate bad request due to invalid input (HTTP 400 Bad Request)
+    # AND contain an appropriate error message
+    assert response['statusCode'] == HTTPStatus.BAD_REQUEST
+    body_dict = json.loads(response['body'])
+    assert body_dict['error'] == 'invalid input'

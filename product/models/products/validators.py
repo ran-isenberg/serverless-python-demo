@@ -21,6 +21,6 @@ def validate_product_id(product_id: str) -> str:
     """
     try:
         UUID(product_id, version=4)
-    except Exception as exc:
+    except Exception as exc:  # pragma: no cover
         raise ValueError(str(exc)) from exc
     return product_id
