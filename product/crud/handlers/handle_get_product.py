@@ -15,7 +15,7 @@ from product.crud.schemas.input import GetProductRequest
 from product.crud.schemas.output import GetProductOutput
 
 
-@app.route(PRODUCT_PATH, method=HTTPMethod.GET)
+@app.get(PRODUCT_PATH)
 def handle_get_product(product_id: str) -> dict[str, Any]:
     env_vars: GetVars = get_environment_variables(model=GetVars)
     logger.debug('environment variables', env_vars=env_vars.model_dump())
