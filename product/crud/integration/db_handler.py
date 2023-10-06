@@ -13,7 +13,7 @@ class _SingletonMeta(ABCMeta):
         return cls._instances[cls]
 
 
-class DalHandler(ABC, metaclass=_SingletonMeta):
+class DbHandler(ABC, metaclass=_SingletonMeta):
 
     @abstractmethod
     def create_product(self, product: Product) -> None:

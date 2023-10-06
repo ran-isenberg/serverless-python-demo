@@ -164,7 +164,7 @@ class CrudApiConstruct(Construct):
             constants.DELETE_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.crud.handlers.handle_delete_product.handle_delete_product',
+            handler='product.crud.handlers.handle_delete_product.lambda_handler',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
@@ -193,7 +193,7 @@ class CrudApiConstruct(Construct):
             constants.GET_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.crud.handlers.handle_get_product.handle_get_product',
+            handler='product.crud.handlers.handle_get_product.lambda_handler',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
@@ -222,7 +222,7 @@ class CrudApiConstruct(Construct):
             constants.LIST_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.crud.handlers.handle_list_products.handle_list_products',
+            handler='product.crud.handlers.handle_list_products.lambda_handler',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger

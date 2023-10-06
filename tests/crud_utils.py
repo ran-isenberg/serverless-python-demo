@@ -1,5 +1,6 @@
 import json
 import uuid
+from http import HTTPMethod
 from typing import Any, Dict, Optional
 
 import boto3
@@ -10,17 +11,18 @@ from tests.utils import generate_random_integer, generate_random_string
 
 # example taken from AWS Lambda Powertools test files
 # https://github.com/awslabs/aws-lambda-powertools-python/blob/develop/tests/events/apiGatewayProxyEvent.json
-def generate_api_gw_event(
+def generate_product_api_gw_event(
     product_id: str,
+    http_method: HTTPMethod,
     body: Optional[Dict[str, Any]] = None,
     path_params: Optional[Dict[str, Any]] = None,
     path: Optional[str] = '/api/product/',
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     return {
         'version': '1.0',
         'resource': f'{path}{product_id}',
         'path': f'{path}{product_id}',
-        'httpMethod': 'PUT',
+        'httpMethod': http_method.value,
         'headers': {
             'Header1': 'value1',
             'Header2': 'value2'
@@ -47,7 +49,7 @@ def generate_api_gw_event(
             'domainName': 'id.execute-api.us-east-1.amazonaws.com',
             'domainPrefix': 'id',
             'extendedRequestId': 'request-id',
-            'httpMethod': 'PUT',
+            'httpMethod': http_method.value,
             'identity': {
                 'accessKey': None,
                 'accountId': None,
@@ -93,7 +95,7 @@ def generate_api_gw_event(
 def generate_api_gw_list_products_event(
     path_params: Optional[Dict[str, Any]] = None,
     path: Optional[str] = '/api/products/',
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     return {
         'version': '1.0',
         'resource': f'{path}',

@@ -5,9 +5,19 @@ from aws_lambda_powertools.event_handler import APIGatewayRestResolver, Response
 from pydantic import ValidationError
 
 from product.crud.handlers.utils.observability import logger
-from product.crud.schemas.exceptions import InternalServerException, ProductAlreadyExistsException
+from product.crud.schemas.exceptions import InternalServerException, ProductAlreadyExistsException, ProductNotFoundException
 
 app = APIGatewayRestResolver()
+
+
+@app.exception_handler(ProductNotFoundException)
+def handle_product_not_found_exception(ex: ProductNotFoundException):  # receives exception raised
+    logger.exception('finished handling request with an error, product was not found')
+    return Response(
+        status_code=HTTPStatus.NOT_FOUND,
+        content_type=content_types.APPLICATION_JSON,
+        body=json.dumps({'error': 'product was not found'}),
+    )
 
 
 @app.exception_handler(ValidationError)
