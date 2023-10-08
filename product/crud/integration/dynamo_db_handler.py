@@ -12,10 +12,6 @@ from product.crud.integration.db_handler import DbHandler
 from product.crud.integration.schemas.db import Product, ProductEntries
 from product.crud.schemas.exceptions import InternalServerException, ProductAlreadyExistsException, ProductNotFoundException
 
-# from product.crud.dal.idempotency import IDEMPOTENCY_CONFIG, IDEMPOTENCY_LAYER
-# from aws_lambda_powertools.utilities.idempotency.serialization.pydantic import PydanticSerializer
-# from aws_lambda_powertools.utilities.idempotency import idempotent_function
-
 
 class DynamoDbHandler(DbHandler):
 
@@ -29,12 +25,6 @@ class DynamoDbHandler(DbHandler):
         dynamodb: DynamoDBServiceResource = boto3.resource('dynamodb')
         return dynamodb.Table(table_name)
 
-    # @idempotent_function(
-    #    data_keyword_argument='product',
-    #    config=IDEMPOTENCY_CONFIG,
-    #    persistence_store=IDEMPOTENCY_LAYER,
-    #    output_serializer=PydanticSerializer,
-    # )
     @tracer.capture_method(capture_response=False)
     def create_product(self, product: Product) -> None:
         logger.info('trying to create a product')

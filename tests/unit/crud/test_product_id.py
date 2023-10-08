@@ -1,6 +1,6 @@
 import pytest
 
-from product.crud.schemas.shared_types import validate_uuid
+from product.models.products.validators import validate_product_id
 
 
 # Invalid ids
@@ -16,14 +16,14 @@ from product.crud.schemas.shared_types import validate_uuid
     ])
 def test_invalid_id(invalid_id):
     # GIVEN an invalid id
-    # WHEN attempting to validate it using validate_uuid
+    # WHEN attempting to validate it using validate_product_id
     # THEN a ValueError should be raised
     with pytest.raises(ValueError):
-        validate_uuid(invalid_id)
+        validate_product_id(invalid_id)
 
 
 def test_valid_id(product_id):
     # GIVEN a valid id
-    # WHEN attempting to validate it using validate_uuid
+    # WHEN attempting to validate it using validate_product_id
     # THEN it should be validated without errors
-    validate_uuid(product_id)
+    validate_product_id(product_id)

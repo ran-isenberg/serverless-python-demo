@@ -2,7 +2,7 @@ from typing import Annotated, List
 
 from pydantic import BaseModel, Field, PositiveInt
 
-from product.crud.schemas.shared_types import ProductId
+from product.models.products.product import ProductId
 
 
 class CreateProductOutput(BaseModel):

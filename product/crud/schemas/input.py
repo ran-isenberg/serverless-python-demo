@@ -3,7 +3,7 @@ from typing import Annotated
 from aws_lambda_powertools.utilities.parser.models import APIGatewayProxyEventModel
 from pydantic import BaseModel, Field, Json, PositiveInt
 
-from product.crud.schemas.shared_types import ProductId
+from product.models.products.product import ProductId
 
 
 class CreateProductBody(BaseModel):
