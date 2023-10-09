@@ -13,6 +13,7 @@ from product.crud.handlers.utils.observability import logger, metrics, tracer
 from product.crud.handlers.utils.rest_api_resolver import app
 from product.crud.schemas.input import CreateProductInput
 from product.crud.schemas.output import CreateProductOutput
+from product.models.products.product import Product
 
 
 @app.route(PRODUCT_PATH, method=HTTPMethod.PUT)
@@ -28,9 +29,11 @@ def handle_create_product(product_id: str) -> dict[str, Any]:
     metrics.add_metric(name='CreateProductEvents', unit=MetricUnit.Count, value=1)
 
     response: CreateProductOutput = create_product(
-        product_id=product_id,
-        product_name=create_input.body.name,
-        product_price=create_input.body.price,
+        product=Product(
+            id=product_id,
+            name=create_input.body.name,
+            price=create_input.body.price,
+        ),
         table_name=env_vars.TABLE_NAME,
     )
 

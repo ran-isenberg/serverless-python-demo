@@ -1,4 +1,4 @@
-from http import HTTPMethod, HTTPStatus
+from http import HTTPStatus
 
 from aws_lambda_env_modeler import get_environment_variables, init_environment_variables
 from aws_lambda_powertools.logging import correlation_paths

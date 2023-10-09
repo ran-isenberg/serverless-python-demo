@@ -4,20 +4,26 @@ from http import HTTPMethod, HTTPStatus
 import boto3
 from botocore.stub import Stubber
 
-from product.crud.handlers.handle_create_product import lambda_handler
 from product.crud.integration.dynamo_db_handler import DynamoDbHandler
 from product.crud.integration.schemas.db import Product
 from tests.crud_utils import generate_create_product_request_body, generate_product_api_gw_event, generate_product_id
 from tests.utils import generate_context
 
 
-def test_handler_200_ok(table_name: str):
+def call_handler(event, context):
+    from product.crud.handlers.handle_create_product import lambda_handler
+    return lambda_handler(event, context)
+
+
+def test_handler_200_ok(monkeypatch, table_name: str):
+    # Set POWERTOOLS_IDEMPOTENCY_DISABLED before calling decorated functions
+    monkeypatch.setenv('POWERTOOLS_IDEMPOTENCY_DISABLED', 1)
     # GIVEN a product creation request
     body = generate_create_product_request_body()
     product_id = generate_product_id()
 
     # WHEN the lambda handler processes the request
-    response = lambda_handler(
+    response = call_handler(
         event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(),
                                             path_params={'product': product_id}),
         context=generate_context(),
@@ -42,7 +48,7 @@ def test_handler_bad_request_product_already_exists(add_product_entry_to_db: Pro
     product_id = add_product_entry_to_db.id
 
     # WHEN attempting to create a product with the same ID
-    response = lambda_handler(
+    response = call_handler(
         event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body=add_product_entry_to_db.model_dump(),
                                             path_params={'product': product_id}),
         context=generate_context(),
@@ -66,7 +72,7 @@ def test_internal_server_error(table_name: str):
         product_id = generate_product_id()
 
         # WHEN attempting to create a product while the DynamoDB exception is triggered
-        response = lambda_handler(
+        response = call_handler(
             event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(),
                                                 path_params={'product': product_id}),
             context=generate_context(),
@@ -84,7 +90,7 @@ def test_handler_bad_request_invalid_body_input():
     product_id = generate_product_id()
 
     # WHEN the lambda handler processes the request
-    response = lambda_handler(
+    response = call_handler(
         event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body={'price': 5},
                                             path_params={'product': product_id}),
         context=generate_context(),
@@ -102,7 +108,7 @@ def test_handler_bad_request_invalid_product_id():
     product_id = 'aaaaaa'
     body = generate_create_product_request_body()
     # WHEN the lambda handler processes the request
-    response = lambda_handler(
+    response = call_handler(
         event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(),
                                             path_params={'product': product_id}),
         context=generate_context(),
@@ -121,7 +127,7 @@ def test_handler_bad_request_invalid_path_params():
     product_id = generate_product_id()
 
     # WHEN the lambda handler processes the request
-    response = lambda_handler(
+    response = call_handler(
         event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(),
                                             path_params={'dummy': product_id}, path='dummy'),
         context=generate_context(),

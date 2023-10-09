@@ -1,4 +1,3 @@
-from http import HTTPMethod
 from typing import Any
 
 from aws_lambda_env_modeler import get_environment_variables, init_environment_variables
