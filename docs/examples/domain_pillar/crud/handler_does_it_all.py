@@ -4,12 +4,9 @@ from http import HTTPStatus
 from typing import Annotated, Any
 
 import boto3
-from aws_lambda_powertools.utilities.parser import ValidationError, parse
+from aws_lambda_powertools.utilities.parser import parse
 from aws_lambda_powertools.utilities.parser.models import APIGatewayProxyEventModel
-from botocore.exceptions import ClientError
 from pydantic import BaseModel, Field, Json, PositiveInt
-
-from product.crud.handlers.utils.observability import logger
 
 ProductId = Annotated[str, Field(min_length=36, max_length=36)]
 
@@ -29,24 +26,15 @@ class CreateProductRequest(APIGatewayProxyEventModel):
 
 
 def create_product(event, context) -> dict[str, Any]:
-    try:
-        create_input: CreateProductRequest = parse(event=event, model=CreateProductRequest)
-        logger.info('got create product request', product=create_input.model_dump())
-    except (ValidationError, TypeError):
-        logger.exception('failed to parse input')
-        return {'statusCode': HTTPStatus.BAD_REQUEST, 'headers': {'Content-Type': 'application/json'}, 'body': ''}
+    create_input: CreateProductRequest = parse(event=event, model=CreateProductRequest)
 
-    try:
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table(os.getenv('TABLE_NAME', ''))
-        table.put_item(Item={
-            'name': create_input.body.name,
-            'id': create_input.pathParameters.product,
-            'price': create_input.body.price,
-        })
-    except ClientError:
-        logger.exception('failed to create product')
-        return {'statusCode': HTTPStatus.INTERNAL_SERVER_ERROR, 'headers': {'Content-Type': 'application/json'}, 'body': ''}
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table(os.getenv('TABLE_NAME', ''))
+    table.put_item(Item={
+        'name': create_input.body.name,
+        'id': create_input.pathParameters.product,
+        'price': create_input.body.price,
+    })
 
     return {
         'statusCode': HTTPStatus.OK,

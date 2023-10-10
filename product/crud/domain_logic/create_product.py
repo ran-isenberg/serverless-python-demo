@@ -4,7 +4,7 @@ from aws_lambda_powertools.utilities.idempotency.serialization.pydantic import P
 
 from product.crud.handlers.schemas.env_vars import Idempotency
 from product.crud.handlers.utils.observability import logger, tracer
-from product.crud.integration import get_dal_handler
+from product.crud.integration import get_db_handler
 from product.crud.integration.db_handler import DbHandler
 from product.crud.schemas.output import CreateProductOutput
 from product.models.products.product import Product
@@ -25,7 +25,7 @@ IDEMPOTENCY_CONFIG = IdempotencyConfig(
 def create_product(product: Product, table_name: str) -> CreateProductOutput:
     logger.info('handling create product request')
 
-    dal_handler: DbHandler = get_dal_handler(table_name)
+    dal_handler: DbHandler = get_db_handler(table_name)
     dal_handler.create_product(product=product)
     # convert from db entry to output, they won't always be the same
     logger.info('created product successfully')
