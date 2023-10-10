@@ -1,19 +1,10 @@
-from abc import ABC, ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from typing import List
 
 from product.crud.integration.schemas.db import Product
 
 
-class _SingletonMeta(ABCMeta):
-    _instances: dict = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(_SingletonMeta, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
-
-
-class DalHandler(ABC, metaclass=_SingletonMeta):
+class DbHandler(ABC):
 
     @abstractmethod
     def create_product(self, product: Product) -> None:

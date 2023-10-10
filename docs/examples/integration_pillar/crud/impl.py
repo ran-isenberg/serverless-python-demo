@@ -1,5 +1,4 @@
 import boto3
-from cachetools import TTLCache, cached
 from mypy_boto3_dynamodb.service_resource import Table
 
 from product.crud.integration.db_handler import DbHandler
@@ -11,7 +10,6 @@ class DynamoDalHandler(DbHandler):
     def __init__(self, table_name: str):
         self.table_name = table_name
 
-    @cached(cache=TTLCache(maxsize=1, ttl=300))
     def _get_db_handler(self, table_name: str) -> Table:
         dynamodb = boto3.resource('dynamodb')
         return dynamodb.Table(table_name)
@@ -30,3 +28,6 @@ class DynamoDalHandler(DbHandler):
         response = table.scan(ConsistentRead=True)
         db_entries = ProductEntries.model_validate(response)
         return db_entries.Items
+
+    def delete_product(self, product_id: str) -> None:
+        return

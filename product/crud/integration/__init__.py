@@ -5,5 +5,5 @@ from product.crud.integration.dynamo_db_handler import DynamoDbHandler
 
 
 @lru_cache
-def get_dal_handler(table_name: str) -> DbHandler:
+def get_db_handler(table_name: str) -> DbHandler:
     return DynamoDbHandler(table_name)

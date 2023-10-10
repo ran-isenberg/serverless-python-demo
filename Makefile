@@ -1,4 +1,4 @@
-.PHONY: dev lint complex coverage pre-commit sort deploy destroy deps unit infra-tests integration e2e coverage-tests docs lint-docs build format
+.PHONY: dev lint complex coverage pre-commit sort deploy destroy deps unit infra-tests integration e2e coverage-tests docs update-deps lint-docs build format
 PYTHON := ".venv/bin/python3"
 
 .ONESHELL:  # run all commands in a single shell, ensuring it runs within a local virtual env
@@ -26,9 +26,9 @@ lint: format
 
 complex:
 	@echo "Running Radon"
-	poetry run radon cc -e 'tests/*,cdk.out/*,node_modules/*' .
+	poetry run radon cc -e 'tests/*,docs/*,cdk.out/*,node_modules/*' .
 	@echo "Running xenon"
-	poetry run xenon --max-absolute B --max-modules A --max-average A -e 'tests/*,.venv/*,cdk.out/*,node_modules/*' .
+	poetry run xenon --max-absolute B --max-modules A --max-average A -e 'tests/*,docs/*,.venv/*,cdk.out/*,node_modules/*' .
 
 pre-commit:
 	poetry run pre-commit run -a --show-diff-on-failure
@@ -56,7 +56,7 @@ integration:
 e2e:
 	poetry run pytest tests/e2e  --cov-config=.coveragerc --cov=product --cov-report xml
 
-pr: deps pre-commit format-fix complex lint unit deploy integration e2e
+pr: deps pre-commit complex lint unit deploy integration e2e
 
 coverage-tests:
 	poetry run pytest tests/unit tests/integration  --cov-config=.coveragerc --cov=product --cov-report xml
@@ -75,3 +75,7 @@ lint-docs:
 
 watch:
 	npx cdk watch
+
+update-deps:
+	poetry update
+	npm i --package-lock-only
