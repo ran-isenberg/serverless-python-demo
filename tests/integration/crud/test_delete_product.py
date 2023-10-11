@@ -25,7 +25,7 @@ def test_handler_204_success_delete(add_product_entry_to_db: Product):
 def test_internal_server_error(table_name):
     # GIVEN a DynamoDB exception scenario
     db_handler: DynamoDbHandler = DynamoDbHandler(table_name)
-    table = db_handler._get_db_handler(table_name)
+    table = db_handler._get_table(table_name)
 
     with Stubber(table.meta.client) as stubber:
         # WHEN attempting to delete a product while the DynamoDB exception is triggered

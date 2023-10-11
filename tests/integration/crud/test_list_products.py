@@ -45,7 +45,7 @@ def test_handler_empty_list(table_name: str):
 def test_internal_server_error(table_name):
     # GIVEN a DynamoDB exception scenario
     db_handler: DynamoDbHandler = DynamoDbHandler(table_name)
-    table = db_handler._get_db_handler(table_name)
+    table = db_handler._get_table(table_name)
 
     with Stubber(table.meta.client) as stubber:
         # WHEN attempting to list products while the DynamoDB exception is triggered

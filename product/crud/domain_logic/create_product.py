@@ -25,8 +25,8 @@ IDEMPOTENCY_CONFIG = IdempotencyConfig(
 def create_product(product: Product, table_name: str) -> CreateProductOutput:
     logger.info('handling create product request')
 
-    dal_handler: DbHandler = get_db_handler(table_name)
-    dal_handler.create_product(product=product)
+    db_handler: DbHandler = get_db_handler(table_name)
+    db_handler.create_product(product=product)
     # convert from db entry to output, they won't always be the same
     logger.info('created product successfully')
     return CreateProductOutput(id=product.id)
