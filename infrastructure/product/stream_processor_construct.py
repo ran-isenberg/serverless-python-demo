@@ -6,6 +6,7 @@ from aws_cdk import aws_lambda as _lambda
 from aws_cdk.aws_lambda_event_sources import DynamoEventSource
 from aws_cdk.aws_lambda_python_alpha import PythonLayerVersion
 from aws_cdk.aws_logs import RetentionDays
+from cdk_monitoring_constructs import CustomMetricGroup, MetricStatistic, MonitoringFacade
 from constructs import Construct
 
 import infrastructure.product.constants as constants
@@ -15,11 +16,12 @@ class StreamProcessorConstruct(Construct):
 
     def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table) -> None:
         super().__init__(scope, id_)
+        self.id_ = id_
         bus_name = f'{id_}{constants.EVENT_BUS_NAME}'
         self.event_bus = events.EventBus(self, bus_name, event_bus_name=bus_name)
         self.role = self._build_lambda_role(db=dynamodb_table, bus=self.event_bus)
-
         self.lambda_function = self._build_stream_processor_lambda(self.role, lambda_layer, dynamodb_table)
+        self._add_monitoring_dashboard(self.lambda_function)
 
     def _build_lambda_role(self, db: dynamodb.Table, bus: events.EventBus) -> iam.Role:
         return iam.Role(
@@ -70,3 +72,27 @@ class StreamProcessorConstruct(Construct):
         # Add DynamoDB Stream as an event source for the Lambda function
         lambda_function.add_event_source(DynamoEventSource(dynamodb_table, starting_position=_lambda.StartingPosition.LATEST))
         return lambda_function
+
+    def _add_monitoring_dashboard(self, processor: _lambda.Function):
+        high_level_facade = MonitoringFacade(self, f'{self.id_}HighFacade')
+        high_level_facade.add_large_header('Streaming Processor High Level Dashboard')
+        high_level_facade.monitor_lambda_function(lambda_function=processor)
+        high_level_facade.monitor_log(
+            log_group_name=processor.log_group.log_group_name,
+            human_readable_name='Error logs',
+            pattern='ERROR',
+            alarm_friendly_name='error logs',
+        )
+
+        metric_factory = high_level_facade.create_metric_factory()
+        # according to https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-monitoring.html
+        event_bridge_events = metric_factory.create_metric(
+            metric_name='MatchedEvents',
+            namespace='AWS/Events',
+            statistic=MetricStatistic.SUM,
+            label='matched events',
+            period=Duration.days(1),
+        )
+        group = CustomMetricGroup(metrics=[event_bridge_events], title='Daily Streaming Stats')
+        high_level_facade.monitor_custom(metric_groups=[group], human_readable_name='Daily Streaming Stats',
+                                         alarm_friendly_name='Daily Streaming Stats')

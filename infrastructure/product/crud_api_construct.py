@@ -8,6 +8,7 @@ from constructs import Construct
 
 import infrastructure.product.constants as constants
 from infrastructure.product.crud_api_db_construct import ApiDbConstruct
+from infrastructure.product.crud_monitoring import CrudMonitoring
 
 
 class CrudApiConstruct(Construct):
@@ -19,11 +20,20 @@ class CrudApiConstruct(Construct):
         self.rest_api = self._build_api_gw()
         api_resource: aws_apigateway.Resource = self.rest_api.root.add_resource('api')
         product_resource = api_resource.add_resource(constants.PRODUCT_RESOURCE).add_resource('{product}')
-        self._add_put_product_lambda_integration(product_resource, self.api_db.db, self.api_db.idempotency_db)
-        self._add_delete_product_lambda_integration(product_resource, self.api_db.db)
-        self._add_get_product_lambda_integration(product_resource, self.api_db.db)
+        self.create_prod_func = self._add_put_product_lambda_integration(product_resource, self.api_db.db, self.api_db.idempotency_db)
+        self.delete_prod_func = self._add_delete_product_lambda_integration(product_resource, self.api_db.db)
+        self.get_prod_func = self._add_get_product_lambda_integration(product_resource, self.api_db.db)
         products_resource: aws_apigateway.Resource = api_resource.add_resource(constants.PRODUCTS_RESOURCE)
-        self._add_list_products_lambda_integration(products_resource, self.api_db.db)
+        self.list_prods_func = self._add_list_products_lambda_integration(products_resource, self.api_db.db)
+        # add CW dashboards
+        self.dashboard = CrudMonitoring(
+            self,
+            id_,
+            crud_api=self.rest_api,
+            db=self.api_db.db,
+            idempotency_table=self.api_db.idempotency_db,
+            functions=[self.create_prod_func, self.delete_prod_func, self.get_prod_func, self.list_prods_func],
+        )
 
     def _build_api_gw(self) -> aws_apigateway.RestApi:
         rest_api: aws_apigateway.RestApi = aws_apigateway.RestApi(
@@ -127,7 +137,7 @@ class CrudApiConstruct(Construct):
         put_resource: aws_apigateway.Resource,
         db: dynamodb.Table,
         idempotency_table: dynamodb.Table,
-    ):
+    ) -> _lambda.Function:
         role = self._build_create_product_lambda_role(db, idempotency_table)
         lambda_function = _lambda.Function(
             self,
@@ -152,12 +162,13 @@ class CrudApiConstruct(Construct):
 
         # PUT /api/product/{product}/
         put_resource.add_method(http_method='PUT', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))
+        return lambda_function
 
     def _add_delete_product_lambda_integration(
         self,
         put_resource: aws_apigateway.Resource,
         db: dynamodb.Table,
-    ):
+    ) -> _lambda.Function:
         role = self._build_delete_product_lambda_role(db)
         lambda_function = _lambda.Function(
             self,
@@ -181,12 +192,13 @@ class CrudApiConstruct(Construct):
 
         # DELETE /api/product/{product}/
         put_resource.add_method(http_method='DELETE', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))
+        return lambda_function
 
     def _add_get_product_lambda_integration(
         self,
         put_resource: aws_apigateway.Resource,
         db: dynamodb.Table,
-    ):
+    ) -> _lambda.Function:
         role = self._build_get_product_lambda_role(db)
         lambda_function = _lambda.Function(
             self,
@@ -210,12 +222,13 @@ class CrudApiConstruct(Construct):
 
         # GET /api/product/{product}/
         put_resource.add_method(http_method='GET', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))
+        return lambda_function
 
     def _add_list_products_lambda_integration(
         self,
         api_resource: aws_apigateway.Resource,
         db: dynamodb.Table,
-    ):
+    ) -> _lambda.Function:
         role = self._build_list_products_lambda_role(db)
         lambda_function = _lambda.Function(
             self,
@@ -239,3 +252,5 @@ class CrudApiConstruct(Construct):
 
         # GET /api/products/
         api_resource.add_method(http_method='GET', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))
+
+        return lambda_function
