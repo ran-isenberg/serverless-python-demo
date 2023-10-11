@@ -1,6 +1,5 @@
 import json
 import os
-from http import HTTPStatus
 from typing import Annotated, Any
 
 import boto3
@@ -26,20 +25,20 @@ class CreateProductRequest(APIGatewayProxyEventModel):
 
 
 def create_product(event, context) -> dict[str, Any]:
-    create_input: CreateProductRequest = parse(event=event, model=CreateProductRequest)
-
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table(os.getenv('TABLE_NAME', ''))
+    create_input = parse(event=event, model=CreateProductRequest)
+    product_id = create_input.pathParameters.product
+    table_name = os.getenv('TABLE_NAME', '')
+    table = boto3.resource('dynamodb').Table(table_name)
     table.put_item(Item={
         'name': create_input.body.name,
-        'id': create_input.pathParameters.product,
+        'id': product_id,
         'price': create_input.body.price,
     })
 
     return {
-        'statusCode': HTTPStatus.OK,
+        'statusCode': 200,
         'headers': {
             'Content-Type': 'application/json'
         },
-        'body': json.dumps({'id': create_input.pathParameters.product})
+        'body': json.dumps({'id': product_id}),
     }

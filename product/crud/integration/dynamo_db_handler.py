@@ -20,7 +20,7 @@ class DynamoDbHandler(DbHandler):
 
     # cache dynamodb connection data for no longer than 5 minutes
     @cached(cache=TTLCache(maxsize=1, ttl=300))
-    def _get_db_handler(self, table_name: str) -> Table:
+    def _get_table(self, table_name: str) -> Table:
         logger.debug('opening connection to dynamodb table', table_name=table_name)
         dynamodb: DynamoDBServiceResource = boto3.resource('dynamodb')
         return dynamodb.Table(table_name)
@@ -29,7 +29,7 @@ class DynamoDbHandler(DbHandler):
     def create_product(self, product: Product) -> None:
         logger.info('trying to create a product')
         try:
-            table: Table = self._get_db_handler(self.table_name)
+            table = self._get_table(self.table_name)
             table.put_item(Item=product.model_dump(), ConditionExpression='attribute_not_exists(id)')
         except ValidationError as exc:  # pragma: no cover
             error_msg = 'failed to turn input into db entry'
@@ -50,7 +50,7 @@ class DynamoDbHandler(DbHandler):
     def get_product(self, product_id: str) -> Product:
         logger.info('trying to get a product')
         try:
-            table: Table = self._get_db_handler(self.table_name)
+            table: Table = self._get_table(self.table_name)
             response = table.get_item(
                 Key={'id': product_id},
                 ConsistentRead=True,
@@ -80,7 +80,7 @@ class DynamoDbHandler(DbHandler):
     def delete_product(self, product_id: str) -> None:
         logger.info('trying to delete a product')
         try:
-            table: Table = self._get_db_handler(self.table_name)
+            table: Table = self._get_table(self.table_name)
             table.delete_item(Key={'id': product_id})
         except ClientError as exc:  # pragma: no cover (covered in integration test)
             error_msg = 'failed to delete product from db'
@@ -93,7 +93,7 @@ class DynamoDbHandler(DbHandler):
     def list_products(self) -> List[Product]:
         logger.info('trying to list all products')
         try:
-            table: Table = self._get_db_handler(self.table_name)
+            table: Table = self._get_table(self.table_name)
             # production readiness : add pagination support
             response = table.scan(ConsistentRead=True)
         except ClientError as exc:  # pragma: no cover (covered in integration test)

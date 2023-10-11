@@ -10,7 +10,7 @@ from tests.utils import generate_context
 
 def test_internal_server_error(table_name: str) -> None:
     db_handler: DynamoDbHandler = DynamoDbHandler('table')
-    table = db_handler._get_db_handler(table_name)
+    table = db_handler._get_table(table_name)
     stubber = Stubber(table.meta.client)
     stubber.add_client_error(method='put_item', service_error_code='ValidationException')
     stubber.activate()

@@ -64,7 +64,7 @@ def test_handler_bad_request_product_already_exists(add_product_entry_to_db: Pro
 def test_internal_server_error(table_name: str):
     # GIVEN a DynamoDB exception scenario
     db_handler: DynamoDbHandler = DynamoDbHandler(table_name)
-    table = db_handler._get_db_handler(table_name)
+    table = db_handler._get_table(table_name)
 
     with Stubber(table.meta.client) as stubber:
         stubber.add_client_error(method='put_item', service_error_code='ValidationException')
