@@ -1,7 +1,18 @@
-from aws_cdk import Duration, aws_apigateway
+import aws_cdk.aws_sns as sns
+from aws_cdk import CfnOutput, Duration, aws_apigateway
 from aws_cdk import aws_dynamodb as dynamodb
+from aws_cdk import aws_iam as iam
+from aws_cdk import aws_kms as kms
 from aws_cdk import aws_lambda as _lambda
-from cdk_monitoring_constructs import CustomMetricGroup, ErrorRateThreshold, LatencyThreshold, MetricStatistic, MonitoringFacade
+from cdk_monitoring_constructs import (
+    AlarmFactoryDefaults,
+    CustomMetricGroup,
+    ErrorRateThreshold,
+    LatencyThreshold,
+    MetricStatistic,
+    MonitoringFacade,
+    SnsAlarmActionStrategy,
+)
 from constructs import Construct
 
 from infrastructure.product import constants
@@ -20,11 +31,39 @@ class CrudMonitoring(Construct):
     ) -> None:
         super().__init__(scope, id_)
         self.id_ = id_
-        self._build_high_level_dashboard(crud_api)
-        self._build_low_level_dashboard(db, idempotency_table, functions)
+        self.notification_topic = self._build_topic()
+        self._build_high_level_dashboard(crud_api, self.notification_topic)
+        self._build_low_level_dashboard(db, idempotency_table, functions, self.notification_topic)
 
-    def _build_high_level_dashboard(self, crud_api: aws_apigateway.RestApi):
-        high_level_facade = MonitoringFacade(self, f'{self.id_}HighFacade')
+    def _build_topic(self) -> sns.Topic:
+        key = kms.Key(
+            self,
+            'MyKey',
+            description='KMS Key for SNS Topic Encryption',
+            enable_key_rotation=True  # Enables automatic key rotation
+        )
+        topic = sns.Topic(self, f'{self.id_}alarms', display_name=f'{self.id_}alarms', master_key=key)
+        # Grant CloudWatch permissions to publish to the SNS topic
+        topic.add_to_resource_policy(
+            statement=iam.PolicyStatement(
+                actions=['sns:Publish'],
+                effect=iam.Effect.ALLOW,
+                principals=[iam.ServicePrincipal('cloudwatch.amazonaws.com')],
+                resources=[topic.topic_arn],
+            ))
+        CfnOutput(self, id=constants.MONITORING_TOPIC, value=topic.topic_name).override_logical_id(constants.MONITORING_TOPIC)
+        return topic
+
+    def _build_high_level_dashboard(self, crud_api: aws_apigateway.RestApi, topic: sns.Topic):
+        high_level_facade = MonitoringFacade(
+            self,
+            f'{self.id_}HighFacade',
+            alarm_factory_defaults=AlarmFactoryDefaults(
+                actions_enabled=True,
+                alarm_name_prefix=self.id_,
+                action=SnsAlarmActionStrategy(on_alarm_topic=topic),
+            ),
+        )
         high_level_facade.add_large_header('Products REST API High Level Dashboard')
         high_level_facade.monitor_api_gateway(
             api=crud_api,
@@ -68,8 +107,16 @@ class CrudMonitoring(Construct):
         group = CustomMetricGroup(metrics=[create_metric, get_metric, list_metric, delete_metric], title='Daily Product Requests')
         high_level_facade.monitor_custom(metric_groups=[group], human_readable_name='Daily KPIs', alarm_friendly_name='KPIs')
 
-    def _build_low_level_dashboard(self, db: dynamodb.Table, idempotency_table: dynamodb.Table, functions: list[_lambda.Function]):
-        low_level_facade = MonitoringFacade(self, f'{self.id_}LowFacade')
+    def _build_low_level_dashboard(self, db: dynamodb.Table, idempotency_table: dynamodb.Table, functions: list[_lambda.Function], topic: sns.Topic):
+        low_level_facade = MonitoringFacade(
+            self,
+            f'{self.id_}LowFacade',
+            alarm_factory_defaults=AlarmFactoryDefaults(
+                actions_enabled=True,
+                alarm_name_prefix=self.id_,
+                action=SnsAlarmActionStrategy(on_alarm_topic=topic),
+            ),
+        )
         low_level_facade.add_large_header('Products REST API Low Level Dashboard')
         for func in functions:
             low_level_facade.monitor_lambda_function(
