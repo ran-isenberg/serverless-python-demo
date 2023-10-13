@@ -38,8 +38,8 @@ class CrudMonitoring(Construct):
     def _build_topic(self) -> sns.Topic:
         key = kms.Key(
             self,
-            'MyKey',
-            description='KMS Key for SNS Topic Encryption',
+            'MonitoringKey',
+            description='KMS Key for Monitoring SNS Topic Encryption',
             enable_key_rotation=True  # Enables automatic key rotation
         )
         topic = sns.Topic(self, f'{self.id_}alarms', display_name=f'{self.id_}alarms', master_key=key)
