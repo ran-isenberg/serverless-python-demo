@@ -2,6 +2,14 @@
 
 This file is meant to capture project-level decisions that were made in this project and why. There are often no obvious correct answers, and we must decide with multiple options.
 
+## 2023-10-17
+
+Added serverless monitoring with CloudWatch dashboards: logs, metrics, custom metrics and alarms.
+
+We use 'cdk-monitoring-constructs' open-source because it simplifies the dashboard creation and it is very simple to use.
+
+Based on concepts and examples described [here](https://www.ranthebuilder.cloud/post/how-to-effortlessly-monitor-serverless-applications-with-cloudwatch-part-one)
+
 ## 2023-08-17
 
 ### Project Structure
@@ -13,7 +21,7 @@ We chose an opinionated project structure with an infrastructure folder (CDK-bas
 #### Why
 This structure has proven its worth in production for us. However, there's no right or wrong; other structures might make sense to you.
 
-You can read more about it [here](https://www.ranthebuilder.cloud/post/aws-cdk-best-practices-from-the-trenches)
+You can read more about it [here.](https://www.ranthebuilder.cloud/post/aws-cdk-best-practices-from-the-trenches)
 
 ### CDK
 
