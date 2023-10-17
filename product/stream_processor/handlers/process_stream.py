@@ -19,7 +19,7 @@ from product.stream_processor.integrations.events.models.output import EventRece
 @metrics.log_metrics
 @tracer.capture_lambda_handler(capture_response=False)
 def lambda_handler(event: dict[str, Any], context: LambdaContext) -> EventReceipt:
-    return process_stream(event, context)
+    return process_stream(event, context)  # pragma: no cover
 
 
 def process_stream(
@@ -84,7 +84,7 @@ def process_stream(
             case record.event_name.REMOVE:  # type: ignore[union-attr]
                 product_updates.append(ProductChangeNotification(product_id=product_id, status='REMOVED'))
 
-    if event_handler is None:
+    if event_handler is None:  # pragma: no cover
         event_handler = EventHandler(event_source=env_vars.EVENT_SOURCE, event_bus=env_vars.EVENT_BUS)
 
     return notify_product_updates(update=product_updates, event_handler=event_handler)
