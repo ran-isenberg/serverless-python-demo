@@ -20,7 +20,7 @@ class StreamProcessorConstruct(Construct):
         bus_name = f'{id_}{constants.EVENT_BUS_NAME}'
         self.event_bus = events.EventBus(self, bus_name, event_bus_name=bus_name)
         self.role = self._build_lambda_role(db=dynamodb_table, bus=self.event_bus)
-        self.lambda_function = self._build_stream_processor_lambda(self.role, lambda_layer, dynamodb_table)
+        self.lambda_function = self._build_stream_processor_lambda(self.role, lambda_layer, dynamodb_table, self.event_bus)
         self._add_monitoring_dashboard(self.lambda_function)
 
     def _build_lambda_role(self, db: dynamodb.Table, bus: events.EventBus) -> iam.Role:
@@ -50,16 +50,19 @@ class StreamProcessorConstruct(Construct):
             ],
         )
 
-    def _build_stream_processor_lambda(self, role: iam.Role, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table) -> _lambda.Function:
+    def _build_stream_processor_lambda(self, role: iam.Role, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table,
+                                       bus: events.EventBus) -> _lambda.Function:
         lambda_function = _lambda.Function(
             self,
             id=constants.STREAM_PROCESSOR_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.stream_processor.handlers.process_stream.process_stream',
+            handler='product.stream_processor.handlers.process_stream.lambda_layer',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
+                'EVENT_BUS': bus.event_bus_name,
+                'EVENT_SOURCE': constants.EVENT_SOURCE,
             },
             tracing=_lambda.Tracing.ACTIVE,
             retry_attempts=0,

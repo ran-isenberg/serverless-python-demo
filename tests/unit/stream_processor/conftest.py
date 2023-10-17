@@ -1,11 +1,22 @@
+import os
 from typing import Any, Sequence
 
+import pytest
 from pytest_socket import disable_socket
 
+from infrastructure.product.constants import POWER_TOOLS_LOG_LEVEL, POWERTOOLS_SERVICE_NAME, SERVICE_NAME
 from product.stream_processor.integrations.events.base import BaseEventHandler, BaseEventProvider
 from product.stream_processor.integrations.events.event_handler import EventHandler
 from product.stream_processor.integrations.events.models.input import AnyModel, Event
 from product.stream_processor.integrations.events.models.output import EventReceipt, EventReceiptSuccess
+
+
+@pytest.fixture(scope='session', autouse=True)
+def init():
+    os.environ[POWERTOOLS_SERVICE_NAME] = SERVICE_NAME
+    os.environ[POWER_TOOLS_LOG_LEVEL] = 'DEBUG'
+    os.environ['EVENT_BUS'] = 'dummy'
+    os.environ['EVENT_SOURCE'] = 'myorg.product.product_notification'
 
 
 def pytest_runtest_setup():
