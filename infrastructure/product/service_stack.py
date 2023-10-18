@@ -3,11 +3,11 @@ from aws_cdk import aws_lambda as _lambda
 from aws_cdk.aws_lambda_python_alpha import PythonLayerVersion
 from cdk_nag import AwsSolutionsChecks, NagSuppressions
 from constructs import Construct
-
 import infrastructure.product.constants as constants
 from infrastructure.product.crud_api_construct import CrudApiConstruct
 from infrastructure.product.stream_processor_construct import StreamProcessorConstruct
 from infrastructure.product.utils import get_construct_name, get_username
+from infrastructure.product.stream_processor_testing_construct import StreamProcessorTestingConstruct
 
 
 class ServiceStack(Stack):
@@ -30,8 +30,20 @@ class ServiceStack(Stack):
             dynamodb_table=self.api.api_db.db,
         )
 
+        # deploy testing construct only in non production accounts
+        if not self._is_production_account():
+            StreamProcessorTestingConstruct(
+                self,
+                id_=get_construct_name(id, constants.STREAM_PROCESSOR_TEST_CONSTRUCT_NAME),
+                lambda_layer=self.shared_layer,
+                events=self.stream_processor.event_bus,
+            )
+
         # add security check
         self._add_security_tests()
+
+    def _is_production_account(self) -> bool:
+        return False
 
     def _build_common_lambda_layer(self, id_: str) -> PythonLayerVersion:
         return PythonLayerVersion(
