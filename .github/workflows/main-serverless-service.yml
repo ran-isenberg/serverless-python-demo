@@ -47,6 +47,7 @@ jobs:
           BRANCH_NAME: ${{ github.ref }}
           REPO_NAME: ${{ github.repository }}
           ENVIRONMENT: ${{ matrix.environment }}
+          ASSUME_ROLE_NAME: "AWS_ROLE_${{ matrix.environment }}"
       - name: Check out repository code
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install poetry
@@ -69,7 +70,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@010d0da01d0b5a38af31e9c3470dbfdabdecca3a # v4.0.1
         with:
-          role-to-assume: ${{ secrets['AWS_ROLE_' + matrix.environment] }}
+          role-to-assume: ${{ env.ASSUME_ROLE_NAME }}
           role-session-name: ${{ env.SESSION_NAME }}
           aws-region: ${{ env.AWS_REGION }}
         env:
