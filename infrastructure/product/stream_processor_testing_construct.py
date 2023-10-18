@@ -7,7 +7,7 @@ from aws_cdk import aws_lambda as _lambda
 from aws_cdk import aws_stepfunctions as sfn
 from aws_cdk import aws_stepfunctions_tasks as tasks
 from aws_cdk.aws_lambda_python_alpha import PythonLayerVersion
-from aws_cdk.aws_logs import RetentionDays, LogGroup
+from aws_cdk.aws_logs import LogGroup, RetentionDays
 from constructs import Construct
 
 import infrastructure.product.constants as constants

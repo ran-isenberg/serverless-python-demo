@@ -3,11 +3,12 @@ from aws_cdk import aws_lambda as _lambda
 from aws_cdk.aws_lambda_python_alpha import PythonLayerVersion
 from cdk_nag import AwsSolutionsChecks, NagSuppressions
 from constructs import Construct
+
 import infrastructure.product.constants as constants
 from infrastructure.product.crud_api_construct import CrudApiConstruct
 from infrastructure.product.stream_processor_construct import StreamProcessorConstruct
-from infrastructure.product.utils import get_construct_name, get_username
 from infrastructure.product.stream_processor_testing_construct import StreamProcessorTestingConstruct
+from infrastructure.product.utils import get_construct_name, get_username
 
 
 class ServiceStack(Stack):
