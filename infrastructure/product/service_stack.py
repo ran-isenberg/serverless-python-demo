@@ -16,6 +16,7 @@ class ServiceStack(Stack):
     def __init__(self, scope: Construct, id: str, cicd_environment: str, **kwargs) -> None:
         id = f'{id}-{cicd_environment}'
         super().__init__(scope, id, **kwargs)
+        self.cicd_environment = cicd_environment
         self._add_stack_tags()
         self.shared_layer = self._build_common_lambda_layer(id)
 
@@ -45,7 +46,7 @@ class ServiceStack(Stack):
         self._add_security_tests()
 
     def _is_production_account(self) -> bool:
-        return False
+        return self.cicd_environment == 'production'
 
     def _build_common_lambda_layer(self, id_: str) -> PythonLayerVersion:
         return PythonLayerVersion(
