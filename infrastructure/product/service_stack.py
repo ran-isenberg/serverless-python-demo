@@ -3,16 +3,18 @@ from aws_cdk import aws_lambda as _lambda
 from aws_cdk.aws_lambda_python_alpha import PythonLayerVersion
 from cdk_nag import AwsSolutionsChecks, NagSuppressions
 from constructs import Construct
+
 import infrastructure.product.constants as constants
 from infrastructure.product.crud_api_construct import CrudApiConstruct
 from infrastructure.product.stream_processor_construct import StreamProcessorConstruct
-from infrastructure.product.utils import get_construct_name, get_username
 from infrastructure.product.stream_processor_testing_construct import StreamProcessorTestingConstruct
+from infrastructure.product.utils import get_construct_name, get_username
 
 
 class ServiceStack(Stack):
 
-    def __init__(self, scope: Construct, id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, id: str, cicd_environment: str, **kwargs) -> None:
+        id = f'{id}-{cicd_environment}'
         super().__init__(scope, id, **kwargs)
         self._add_stack_tags()
         self.shared_layer = self._build_common_lambda_layer(id)

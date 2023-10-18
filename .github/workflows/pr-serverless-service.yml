@@ -1,6 +1,6 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-name: Serverless Service CI/CD
+name: Pull Request Serverless Service CI/CD
 
 permissions:
   contents: read
@@ -12,19 +12,6 @@ env:
 
 on:
   workflow_dispatch:
-
-  push:
-    branches: [main]
-    paths:
-      - "product/**" # source code
-      - "infrastructure/**" # CDK source code
-      - "tests/**"
-      - "pyproject.toml" # deps
-      - "poetry.lock" # deps
-      - "mypy.ini"
-      - "app.py" # CDK entrypoint
-      - ".flake8" # linter settings
-      - ".isort.cfg" # formatter settings
 
   pull_request:
     branches: [main]
@@ -53,6 +40,7 @@ jobs:
           OS_ARCH: ${{runner.arch }}
           BRANCH_NAME: ${{ github.ref }}
           REPO_NAME: ${{ github.repository }}
+          ENVIRONMENT: "DEV"
       - name: Check out repository code
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install poetry
@@ -99,11 +87,11 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@010d0da01d0b5a38af31e9c3470dbfdabdecca3a # v4.0.1
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE }}
+          role-to-assume: ${{ secrets['AWS_ROLE'] }}
           role-session-name: ${{ env.SESSION_NAME }}
           aws-region: ${{ env.AWS_REGION }}
         env:
-          SESSION_NAME: "github-${{github.sha}}"
+          SESSION_NAME: "github-${{github.sha}}-dev"
       - name: Unit tests
         run: make unit
       - name: Infrastructure tests
@@ -122,30 +110,5 @@ jobs:
           verbose: false # optional (default = false)
       - name: Run E2E tests
         run: make e2e
-      - name: Destroy stack
-        if: always()
+      - name: Destroy stack in non production
         run: make destroy
-
-  publish_github_pages:
-    runs-on: ubuntu-latest
-    needs: [tests]
-    permissions:
-      contents: write # for docs push
-    if: contains('refs/heads/main', github.ref)
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
-      - name: Set up Python
-        uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Set up Node
-        uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: "npm"
-      - name: Install dependencies
-        run: make dev
-      - name: Generate docs
-        run: |
-          poetry run mkdocs gh-deploy --force
