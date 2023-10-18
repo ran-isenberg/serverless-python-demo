@@ -43,7 +43,6 @@ jobs:
           OS_ARCH: ${{runner.arch }}
           BRANCH_NAME: ${{ github.ref }}
           REPO_NAME: ${{ github.repository }}
-          ENVIRONMENT: staging
       - name: Check out repository code
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install poetry
@@ -73,6 +72,8 @@ jobs:
           SESSION_NAME: "github-${{github.sha}}-staging"
       - name: Deploy to AWS
         run: make deploy
+        env:
+          ENVIRONMENT: staging # Custom environment variable
       # NOTE: these run unit and integration tests
       # we can look into coverage collection only later to make it faster and less brittle (--collect-only)
       - name: Code coverage tests
@@ -103,7 +104,6 @@ jobs:
           OS_ARCH: ${{runner.arch }}
           BRANCH_NAME: ${{ github.ref }}
           REPO_NAME: ${{ github.repository }}
-          ENVIRONMENT: production
       - name: Check out repository code
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install poetry
@@ -133,6 +133,8 @@ jobs:
           SESSION_NAME: "github-${{github.sha}}-production"
       - name: Deploy to AWS
         run: make deploy
+        env:
+          ENVIRONMENT: production # Custom environment variable
 
   publish_github_pages:
     runs-on: ubuntu-latest
