@@ -27,33 +27,7 @@ on:
       - ".isort.cfg" # formatter settings
 
 jobs:
-  quality_standards:
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          echo "🎉 The job was automatically triggered by a ${{ env.EVENT_NAME }} event." >> $GITHUB_STEP_SUMMARY
-          echo "🐧 This job is now running on a ${{ env.OS_NAME }} ${{env.OS_ARCH}} server hosted by GitHub!" >> $GITHUB_STEP_SUMMARY
-          echo "🔎 The name of your branch is ${{ env.BRANCH_NAME }} and your repository is ${{ env.REPO_NAME }}." >> $GITHUB_STEP_SUMMARY
-        env:
-          EVENT_NAME: ${{ github.event_name}}
-          OS_NAME: ${{ runner.os }}
-          OS_ARCH: ${{runner.arch }}
-          BRANCH_NAME: ${{ github.ref }}
-          REPO_NAME: ${{ github.repository }}
-      - name: Check out repository code
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
-      - name: Install poetry
-        run: pipx install poetry
-      - name: Set up Python
-        uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: "poetry" # NOTE: poetry must be installed before this step, or else cache doesn't work
-      - name: Install dependencies
-        run: make dev
-
   tests:
-    needs: quality_standards
     runs-on: ubuntu-latest
     strategy:
       matrix:
