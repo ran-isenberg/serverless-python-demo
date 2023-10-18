@@ -9,11 +9,11 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 from product.crud.domain_logic.create_product import create_product
 from product.crud.handlers.constants import PRODUCT_PATH
 from product.crud.handlers.schemas.env_vars import CreateVars
-from product.crud.handlers.utils.observability import logger, metrics, tracer
 from product.crud.handlers.utils.rest_api_resolver import app
 from product.crud.schemas.input import CreateProductInput
 from product.crud.schemas.output import CreateProductOutput
 from product.models.products.product import Product
+from product.observability import logger, metrics, tracer
 
 
 @app.route(PRODUCT_PATH, method=HTTPMethod.PUT)

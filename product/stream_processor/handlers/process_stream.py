@@ -1,24 +1,27 @@
-import os
 from typing import Any
 
-from aws_lambda_powertools import Logger
+from aws_lambda_env_modeler import get_environment_variables, init_environment_variables
+from aws_lambda_powertools.metrics import MetricUnit
 from aws_lambda_powertools.utilities.data_classes.dynamo_db_stream_event import DynamoDBStreamEvent
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from product.models.products.product import ProductChangeNotification
+from product.observability import logger, metrics, tracer
 from product.stream_processor.domain_logic.product_notification import notify_product_updates
+from product.stream_processor.handlers.schemas.env_vars import PrcStreamVars
 from product.stream_processor.integrations.events.base import BaseEventHandler
 from product.stream_processor.integrations.events.event_handler import EventHandler
 from product.stream_processor.integrations.events.models.output import EventReceipt
 
-logger = Logger()
 
-# NOTE: these will move to environment variables. Event source format could even use a pydantic validation!
-EVENT_BUS = os.environ.get('EVENT_BUS', '')
-EVENT_SOURCE = 'myorg.product.product_notification'
-
-
+@init_environment_variables(model=PrcStreamVars)
 @logger.inject_lambda_context(log_event=True)
+@metrics.log_metrics
+@tracer.capture_lambda_handler(capture_response=False)
+def lambda_handler(event: dict[str, Any], context: LambdaContext) -> EventReceipt:
+    return process_stream(event, context)  # pragma: no cover
+
+
 def process_stream(
     event: dict[str, Any],
     context: LambdaContext,
@@ -64,9 +67,16 @@ def process_stream(
     # Until we create our handler product stream change input
     stream_records = DynamoDBStreamEvent(event)
 
+    env_vars = get_environment_variables(model=PrcStreamVars)
+    logger.debug('environment variables', env_vars=env_vars.model_dump())
+
+    metrics.add_metric(name='StreamRecords', unit=MetricUnit.Count, value=len(stream_records.keys()))
+
     product_updates = []
     for record in stream_records.records:
         product_id = record.dynamodb.keys.get('id', '')  # type: ignore[union-attr]
+        logger.append_keys(product_id=product_id)
+        logger.info('handling record', event_name=record.event_name)
 
         match record.event_name:
             case record.event_name.INSERT:  # type: ignore[union-attr]
@@ -74,7 +84,7 @@ def process_stream(
             case record.event_name.REMOVE:  # type: ignore[union-attr]
                 product_updates.append(ProductChangeNotification(product_id=product_id, status='REMOVED'))
 
-    if event_handler is None:
-        event_handler = EventHandler(event_source=EVENT_SOURCE, event_bus=EVENT_BUS)
+    if event_handler is None:  # pragma: no cover
+        event_handler = EventHandler(event_source=env_vars.EVENT_SOURCE, event_bus=env_vars.EVENT_BUS)
 
     return notify_product_updates(update=product_updates, event_handler=event_handler)

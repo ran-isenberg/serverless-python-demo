@@ -35,7 +35,6 @@ theme:
     - navigation.instant
     - navigation.indexes
     - navigation.tracking
-    - navigation.tabs
     - content.code.annotate
     - content.code.copy
   icon:
