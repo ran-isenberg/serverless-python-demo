@@ -8,12 +8,9 @@ from infrastructure.product.service_stack import ServiceStack
 
 def test_synthesizes_properly():
     app = App()
-
-    service_stack = ServiceStack(
-        app,
-        'service-test',
-        os.getenv('ENVIRONMENT', 'dev'),
-    )
+    environment = os.getenv('ENVIRONMENT', 'dev'),
+    is_production = True if environment == 'production' else False,
+    service_stack = ServiceStack(app, 'service-test', is_production)
 
     # Prepare the stack for assertions.
     template = Template.from_stack(service_stack)

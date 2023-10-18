@@ -13,10 +13,8 @@ from infrastructure.product.utils import get_construct_name, get_username
 
 class ServiceStack(Stack):
 
-    def __init__(self, scope: Construct, id: str, cicd_environment: str, **kwargs) -> None:
-        id = f'{id}-{cicd_environment}'
+    def __init__(self, scope: Construct, id: str, is_production: bool, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
-        self.cicd_environment = cicd_environment
         self._add_stack_tags()
         self.shared_layer = self._build_common_lambda_layer(id)
 
@@ -34,7 +32,7 @@ class ServiceStack(Stack):
         )
 
         # deploy testing construct only in non production accounts
-        if not self._is_production_account():
+        if not is_production:
             StreamProcessorTestingConstruct(
                 self,
                 id_=get_construct_name(id, constants.STREAM_PROCESSOR_TEST_CONSTRUCT_NAME),
@@ -44,9 +42,6 @@ class ServiceStack(Stack):
 
         # add security check
         self._add_security_tests()
-
-    def _is_production_account(self) -> bool:
-        return self.cicd_environment == 'production'
 
     def _build_common_lambda_layer(self, id_: str) -> PythonLayerVersion:
         return PythonLayerVersion(
