@@ -13,7 +13,8 @@ from infrastructure.product.utils import get_construct_name, get_username
 
 class ServiceStack(Stack):
 
-    def __init__(self, scope: Construct, id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, id: str, cicd_environment: str, **kwargs) -> None:
+        id = f'{id}-{cicd_environment}'
         super().__init__(scope, id, **kwargs)
         self._add_stack_tags()
         self.shared_layer = self._build_common_lambda_layer(id)

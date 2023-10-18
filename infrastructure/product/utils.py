@@ -26,4 +26,4 @@ def get_stack_name() -> str:
 
 
 def get_construct_name(stack_prefix: str, construct_name: str) -> str:
-    return f'{stack_prefix}{construct_name}'[0:64]
+    return f'{stack_prefix}-{construct_name}'[0:64]

@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: [staging, production]
+        environment: [STAGING, PRODUCTION]
     environment: ${{ matrix.environment }}
     permissions:
       id-token: write # required for requesting the JWT (GitHub OIDC)
@@ -72,6 +72,7 @@ jobs:
           OS_ARCH: ${{runner.arch }}
           BRANCH_NAME: ${{ github.ref }}
           REPO_NAME: ${{ github.repository }}
+          ENVIRONMENT: ${{ matrix.environment }}
       - name: Check out repository code
         uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install poetry

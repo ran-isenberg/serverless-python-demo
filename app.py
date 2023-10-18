@@ -14,6 +14,7 @@ my_stack = ServiceStack(
     app,
     get_stack_name(),
     env=Environment(account=os.environ.get('AWS_DEFAULT_ACCOUNT', account), region=os.environ.get('AWS_DEFAULT_REGION', region)),
+    cicd_environment=os.getenv('ENVIRONMENT', 'dev'),
 )
 
 app.synth()
