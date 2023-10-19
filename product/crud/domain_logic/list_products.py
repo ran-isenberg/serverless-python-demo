@@ -2,8 +2,8 @@ from typing import List
 
 from product.crud.integration import get_db_handler
 from product.crud.integration.db_handler import DbHandler
-from product.crud.integration.schemas.db import Product
-from product.crud.schemas.output import ListProductsOutput
+from product.crud.models.output import ListProductsOutput
+from product.crud.models.product import Product
 from product.observability import logger, tracer
 
 

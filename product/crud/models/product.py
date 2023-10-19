@@ -8,12 +8,11 @@ from product.models.products.validators import validate_product_id
 ProductId = Annotated[str, Field(min_length=36, max_length=36), AfterValidator(validate_product_id)]
 """Unique Product ID, represented and validated as a UUID string."""
 
-# schemas here are shared between both CRUD and Stream processor modules
+# schemas here are shared between both handler and domain layer of the crud module
 
 
-class ProductEntry(BaseModel):
-    """Data representation for a product in a DynamoDB.
-    In advanced services, ProductEntry is different than Product
+class Product(BaseModel):
+    """Data representation for a product.
 
     Parameters
     ----------

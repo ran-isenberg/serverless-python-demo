@@ -5,13 +5,13 @@ from aws_lambda_powertools.metrics import MetricUnit
 from aws_lambda_powertools.utilities.data_classes.dynamo_db_stream_event import DynamoDBStreamEvent
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
-from product.models.products.product import ProductChangeNotification
 from product.observability import logger, metrics, tracer
 from product.stream_processor.domain_logic.product_notification import notify_product_updates
-from product.stream_processor.handlers.schemas.env_vars import PrcStreamVars
+from product.stream_processor.handlers.models.env_vars import PrcStreamVars
 from product.stream_processor.integrations.events.base import BaseEventHandler
 from product.stream_processor.integrations.events.event_handler import EventHandler
 from product.stream_processor.integrations.events.models.output import EventReceipt
+from product.stream_processor.models.product import ProductChangeNotification
 
 
 @init_environment_variables(model=PrcStreamVars)

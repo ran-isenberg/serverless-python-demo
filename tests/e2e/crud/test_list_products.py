@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 import requests
 
-from product.crud.integration.schemas.db import Product
-from product.crud.schemas.output import ListProductsOutput
+from product.crud.models.output import ListProductsOutput
+from product.crud.models.product import Product
 
 
 # create product and then get it back

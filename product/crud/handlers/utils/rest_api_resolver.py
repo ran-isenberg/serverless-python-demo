@@ -4,7 +4,7 @@ from http import HTTPStatus
 from aws_lambda_powertools.event_handler import APIGatewayRestResolver, Response, content_types
 from pydantic import ValidationError
 
-from product.crud.schemas.exceptions import InternalServerException, ProductAlreadyExistsException, ProductNotFoundException
+from product.crud.models.exceptions import InternalServerException, ProductAlreadyExistsException, ProductNotFoundException
 from product.observability import logger
 
 app = APIGatewayRestResolver()

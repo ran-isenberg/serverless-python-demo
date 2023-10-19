@@ -1,6 +1,6 @@
 from product.crud.integration import get_db_handler
-from product.crud.integration.schemas.db import Product
-from product.crud.schemas.output import CreateProductOutput
+from product.crud.models.output import CreateProductOutput
+from product.crud.models.product import Product
 
 
 def create_product(product: Product, table_name: str):

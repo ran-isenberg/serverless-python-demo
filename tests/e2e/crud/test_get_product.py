@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 import requests
 
-from product.crud.integration.schemas.db import Product
-from product.crud.schemas.output import GetProductOutput
+from product.crud.models.output import GetProductOutput
+from product.crud.models.product import Product
 from tests.crud_utils import generate_product_id
 
 

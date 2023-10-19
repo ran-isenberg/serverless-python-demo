@@ -11,7 +11,7 @@ from infrastructure.product.constants import (
     SERVICE_NAME,
     TABLE_NAME_OUTPUT,
 )
-from product.crud.integration.schemas.db import Product
+from product.crud.models.product import Product
 from tests.crud_utils import clear_table, generate_product_id
 from tests.utils import get_stack_output
 
