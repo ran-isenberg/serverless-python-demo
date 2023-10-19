@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 
 import boto3
 
-from product.crud.schemas.input import CreateProductBody
+from product.crud.models.input import CreateProductBody
 from tests.utils import generate_random_integer, generate_random_string
 
 

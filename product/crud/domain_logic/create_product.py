@@ -2,11 +2,11 @@ from aws_lambda_env_modeler import get_environment_variables
 from aws_lambda_powertools.utilities.idempotency import DynamoDBPersistenceLayer, IdempotencyConfig, idempotent_function
 from aws_lambda_powertools.utilities.idempotency.serialization.pydantic import PydanticSerializer
 
-from product.crud.handlers.schemas.env_vars import Idempotency
+from product.crud.handlers.models.env_vars import Idempotency
 from product.crud.integration import get_db_handler
 from product.crud.integration.db_handler import DbHandler
-from product.crud.schemas.output import CreateProductOutput
-from product.models.products.product import Product
+from product.crud.models.output import CreateProductOutput
+from product.crud.models.product import Product
 from product.observability import logger, tracer
 
 IDEMPOTENCY_LAYER = DynamoDBPersistenceLayer(table_name=get_environment_variables(model=Idempotency).IDEMPOTENCY_TABLE_NAME)

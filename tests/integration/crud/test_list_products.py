@@ -4,8 +4,8 @@ from botocore.stub import Stubber
 
 from product.crud.handlers.handle_list_products import lambda_handler
 from product.crud.integration.dynamo_db_handler import DynamoDbHandler
-from product.crud.integration.schemas.db import Product
-from product.crud.schemas.output import ListProductsOutput
+from product.crud.models.output import ListProductsOutput
+from product.crud.models.product import Product
 from tests.crud_utils import clear_table, generate_api_gw_list_products_event
 from tests.utils import generate_context
 

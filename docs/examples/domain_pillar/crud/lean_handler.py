@@ -7,8 +7,8 @@ from aws_lambda_powertools.utilities.parser.models import APIGatewayProxyEventMo
 from pydantic import BaseModel, Field, Json, PositiveInt
 
 from product.crud.domain_logic.create_product import create_product
-from product.crud.schemas.output import CreateProductOutput
-from product.models.products.product import Product
+from product.crud.models.output import CreateProductOutput
+from product.crud.models.product import Product
 from product.observability import logger
 
 ProductId = Annotated[str, Field(min_length=36, max_length=36)]

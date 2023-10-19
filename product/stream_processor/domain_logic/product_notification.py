@@ -1,6 +1,6 @@
-from product.models.products.product import ProductChangeNotification
 from product.stream_processor.integrations.events.base import BaseEventHandler
 from product.stream_processor.integrations.events.models.output import EventReceipt
+from product.stream_processor.models.product import ProductChangeNotification
 
 
 def notify_product_updates(update: list[ProductChangeNotification], event_handler: BaseEventHandler) -> EventReceipt:

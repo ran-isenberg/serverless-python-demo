@@ -1,7 +1,8 @@
 import boto3
 
 from product.crud.integration.db_handler import DbHandler
-from product.crud.integration.schemas.db import Product
+from product.crud.models.product import Product
+from product.models.products.product import ProductEntry
 
 
 class DynamoDalHandler(DbHandler):
@@ -10,6 +11,7 @@ class DynamoDalHandler(DbHandler):
         self.table_name = table_name
 
     def create_product(self, product: Product) -> None:
+        entry = ProductEntry(id=product.id, name=product.name, price=product.price)
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table(self.table_name)
-        table.put_item(Item=product.model_dump())
+        table.put_item(Item=entry.model_dump())

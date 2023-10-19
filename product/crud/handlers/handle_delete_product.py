@@ -7,9 +7,9 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from product.crud.domain_logic.delete_product import delete_product
 from product.crud.handlers.constants import PRODUCT_PATH
-from product.crud.handlers.schemas.env_vars import DeleteVars
+from product.crud.handlers.models.env_vars import DeleteVars
 from product.crud.handlers.utils.rest_api_resolver import app
-from product.crud.schemas.input import DeleteProductRequest
+from product.crud.models.input import DeleteProductRequest
 from product.observability import logger, metrics, tracer
 
 

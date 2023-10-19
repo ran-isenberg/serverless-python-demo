@@ -5,7 +5,7 @@ from botocore.stub import Stubber
 
 from product.crud.handlers.handle_delete_product import lambda_handler
 from product.crud.integration.dynamo_db_handler import DynamoDbHandler
-from product.crud.integration.schemas.db import Product
+from product.crud.models.product import Product
 from tests.crud_utils import generate_product_api_gw_event, generate_product_id
 from tests.utils import generate_context
 

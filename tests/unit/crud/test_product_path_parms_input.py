@@ -1,7 +1,7 @@
 import pytest
 from aws_lambda_powertools.utilities.parser import ValidationError
 
-from product.crud.schemas.input import ProductPathParams
+from product.crud.models.input import ProductPathParams
 
 
 @pytest.mark.parametrize(

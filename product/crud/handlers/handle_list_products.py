@@ -7,9 +7,9 @@ from aws_lambda_powertools.utilities.typing import LambdaContext
 
 from product.crud.domain_logic.list_products import list_products
 from product.crud.handlers.constants import PRODUCTS_PATH
-from product.crud.handlers.schemas.env_vars import ListVars
+from product.crud.handlers.models.env_vars import ListVars
 from product.crud.handlers.utils.rest_api_resolver import app
-from product.crud.schemas.output import ListProductsOutput
+from product.crud.models.output import ListProductsOutput
 from product.observability import logger, metrics, tracer
 
 

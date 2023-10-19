@@ -4,7 +4,7 @@ import time
 from typing import Any
 from uuid import uuid4
 
-from product.models.products.product import ProductChangeNotification
+from product.stream_processor.models.product import ProductChangeNotification
 
 
 def generate_dynamodb_stream_events(product_id: str = '8c18c85a-0f10-4b73-b54a-07ab0d381018',) -> dict[str, Any]:

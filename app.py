@@ -9,7 +9,7 @@ from infrastructure.product.utils import get_stack_name
 
 account = client('sts').get_caller_identity()['Account']
 region = session.Session().region_name
-environment = os.getenv('ENVIRONMENT')
+environment = os.getenv('ENVIRONMENT', 'dev')
 app = App()
 my_stack = ServiceStack(
     app,

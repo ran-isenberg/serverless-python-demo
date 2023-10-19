@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from product.crud.integration.schemas.db import Product
+from product.crud.models.product import Product
 
 
 class DbHandler(ABC):

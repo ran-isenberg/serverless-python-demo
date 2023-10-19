@@ -1,7 +1,7 @@
 import pytest
 from aws_lambda_powertools.utilities.parser import ValidationError
 
-from product.crud.schemas.output import CreateProductOutput
+from product.crud.models.output import CreateProductOutput
 
 
 def test_invalid_product_id():
