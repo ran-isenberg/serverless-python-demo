@@ -17,5 +17,5 @@ def test_synthesizes_properly():
 
     # verify that we have one API GW, that is it not deleted by mistake
     template.resource_count_is('AWS::ApiGateway::RestApi', 1)
-    template.resource_count_is('AWS::DynamoDB::Table', 3)  # main db and one for idempotency
+    template.resource_count_is('AWS::DynamoDB::Table', 3)  # main db and one for idempotency and one for tests
     template.resource_count_is('AWS::Events::EventBus', 1)
