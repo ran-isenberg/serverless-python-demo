@@ -7,28 +7,6 @@
 ![github-star-badge](https://img.shields.io/github/stars/ran-isenberg/serverless-python-demo.svg?style=social)
 ![issues](https://img.shields.io/github/issues/ran-isenberg/serverless-python-demo)
 
-<p align="center">
-  <img src="docs/images/design.png" alt="Architecture diagram"/>
-</p>
-
-## **The Pragmatic Python Serverless Developer**
-
-## **The Problem**
-
-Starting a Serverless service can be overwhelming. You need to figure out many questions and challenges that have nothing to do with your business domain:
-
-- How to deploy to the cloud? What IAC framework do you choose?# serverless-python-demo
-
-[![license](https://img.shields.io/github/license/ran-isenberg/serverless-python-demo)](https://github.com/ran-isenberg/serverless-python-demo/blob/master/LICENSE)
-![PythonSupport](https://img.shields.io/static/v1?label=python&message=3.11&color=blue?style=flat-square&logo=python)
-[![codecov](https://codecov.io/gh/ran-isenberg/serverless-python-demo/branch/main/graph/badge.svg?token=P2K7K4KICF)](https://codecov.io/gh/ran-isenberg/serverless-python-demo)
-![version](https://img.shields.io/github/v/release/ran-isenberg/serverless-python-demo)
-![github-star-badge](https://img.shields.io/github/stars/ran-isenberg/serverless-python-demo.svg?style=social)
-![issues](https://img.shields.io/github/issues/ran-isenberg/serverless-python-demo)
-
-<p align="center">
-  <img src="docs/images/design.png" alt="Architecture diagram"/>
-</p>
 
 ## **The Pragmatic Python Serverless Developer**
 
@@ -51,7 +29,9 @@ Learn about many open source tools, including Powertools for AWS Lambda—a tool
 
 ### The Products service
 
-<img alt="alt_text" src="images/design.png" alt="Architecture diagram />
+<p align="center">
+  <img src="docs/images/design.png" alt="Architecture diagram"/>
+</p>
 
 ### **Features**
 
@@ -73,14 +53,17 @@ While the code examples are written in Python, the principles are valid to any s
 
 #### **Monitoring Design**
 
-<img alt="alt_text" src="images/monitoring.png" alt="monitoring diagram />
-
+<p align="center">
+  <img src="docs/images/monitoring.png"/>
+</p>
 
 
 
 #### **Async Testing Design**
 
-<img alt="alt_text" src="images/tests.png" alt="tests diagram />
+<p align="center">
+  <img src="docs/images/tests.png"/>
+</p>
 
 ## **License**
 
