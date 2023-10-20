@@ -4,7 +4,6 @@ description: The Pragmatic Python Serverless Developer
 ---
 ## **The Pragmatic Python Serverless Developer**
 
-
 ## **The Problem**
 
 Starting a Serverless service can be overwhelming. You need to figure out many questions and challenges that have nothing to do with your business domain:
@@ -16,29 +15,13 @@ Starting a Serverless service can be overwhelming. You need to figure out many q
 
 ## **The Solution**
 
-
-
 ### The Products service
 
 <img alt="alt_text" src="images/diagram.png" alt="Architecture diagram />
 
-
-
-
 ### **Features**
 
-
-
-
 While the code examples are written in Python, the principles are valid to any supported AWS Lambda handler programming language.
-
-
-
-
-
-
-
-
 
 ## **License**
 

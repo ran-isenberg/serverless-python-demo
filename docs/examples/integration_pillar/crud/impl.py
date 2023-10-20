@@ -11,7 +11,7 @@ class DynamoDalHandler(DbHandler):
         self.table_name = table_name
 
     def create_product(self, product: Product) -> None:
-        entry = ProductEntry(id=product.id, name=product.name, price=product.price)
+        entry = ProductEntry(id=product.id, name=product.name, price=product.price, created_at=1697783194)
         dynamodb = boto3.resource('dynamodb')
         table = dynamodb.Table(self.table_name)
         table.put_item(Item=entry.model_dump())

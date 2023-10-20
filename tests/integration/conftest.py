@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from typing import Generator
 
 import boto3
@@ -12,6 +13,7 @@ from infrastructure.product.constants import (
     TABLE_NAME_OUTPUT,
 )
 from product.crud.models.product import Product
+from product.models.products.product import ProductEntry
 from tests.crud_utils import clear_table, generate_product_id
 from tests.utils import get_stack_output
 
@@ -35,8 +37,8 @@ def table_name():
 @pytest.fixture(scope='module', autouse=True)
 def add_product_entry_to_db(table_name: str) -> Generator[Product, None, None]:
     clear_table(table_name)
-    product = Product(id=generate_product_id(), price=1, name='test')
+    product = ProductEntry(id=generate_product_id(), price=1, name='test', created_at=int(datetime.utcnow().timestamp()))
     table = boto3.resource('dynamodb').Table(table_name)
     table.put_item(Item=product.model_dump())
-    yield product
+    yield Product(id=product.id, name=product.name, price=product.price)
     table.delete_item(Key={'id': product.id})
