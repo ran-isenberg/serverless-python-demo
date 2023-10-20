@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from http import HTTPMethod, HTTPStatus
 
 import boto3
@@ -41,6 +42,8 @@ def test_handler_200_ok(monkeypatch, table_name: str):
     assert response['Item']['name'] == body.name
     assert response['Item']['price'] == body.price
     assert response['Item']['id'] == product_id
+    now = int(datetime.utcnow().timestamp())
+    assert now - int(response['Item']['created_at']) <= 60  # assume item was created in last minute, check that utc time calc is correct
 
 
 def test_handler_bad_request_product_already_exists(add_product_entry_to_db: Product):

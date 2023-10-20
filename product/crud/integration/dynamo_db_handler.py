@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 import boto3
@@ -27,10 +28,18 @@ class DynamoDbHandler(DbHandler):
         dynamodb: DynamoDBServiceResource = boto3.resource('dynamodb')
         return dynamodb.Table(table_name)
 
+    def _get_unix_time(self) -> int:
+        return int(datetime.utcnow().timestamp())
+
     @tracer.capture_method(capture_response=False)
     def create_product(self, product: Product) -> None:
         logger.info('trying to create a product')
-        entry = ProductEntry(id=product.id, name=product.name, price=product.price)
+        entry = ProductEntry(
+            id=product.id,
+            name=product.name,
+            price=product.price,
+            created_at=self._get_unix_time(),
+        )
         try:
             table = self._get_table(self.table_name)
             table.put_item(Item=entry.model_dump(), ConditionExpression='attribute_not_exists(id)')

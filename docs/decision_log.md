@@ -15,10 +15,11 @@ Based on concepts and examples described [here](https://www.ranthebuilder.cloud/
 ### Project Structure
 
 #### What
+
 We chose an opinionated project structure with an infrastructure folder (CDK-based), a tests folder, and a service folder containing business domain Lambda function code with a makefile to automate developer actions.
 
-
 #### Why
+
 This structure has proven its worth in production for us. However, there's no right or wrong; other structures might make sense to you.
 
 You can read more about it [here.](https://www.ranthebuilder.cloud/post/aws-cdk-best-practices-from-the-trenches)
@@ -26,6 +27,7 @@ You can read more about it [here.](https://www.ranthebuilder.cloud/post/aws-cdk-
 ### CDK
 
 #### What
+
 We chose AWS CDK as the IaC of choice.
 
 #### Why
@@ -34,7 +36,6 @@ We chose AWS CDK as the IaC of choice.
 - Choose what fits your organization best: AWS SAM, Serverless, Terraform, Pulumi, etc.
 
 ### CDK Constructs Structure
-
 
 #### What
 
@@ -52,10 +53,7 @@ Finding resources and understanding their connections is more accessible by look
 
 You can read more about it with a similar example [here](https://www.ranthebuilder.cloud/post/aws-cdk-best-practices-from-the-trenches)
 
-
 ### CDK Best Practices
-
-
 
 #### What
 
@@ -63,18 +61,13 @@ You can read more about it with a similar example [here](https://www.ranthebuild
 - Shared resources are built on the stack and passed as parameters to the constructs init functions.
 - Lambda roles define inline policy definitions instead of using CDK's built-in functions
 
-
-
 #### Why
 
 - Stack per developer per branch - we wanted multiple developers to share a dev account and work in parallel on the same stack. The CI/CD main pipeline has its unique name to remove any chance of conflicts.
 - Shared resources - made sense to build once and pass internal resources such as Lambda layers.
 - Lambda roles define inline policy definitions instead of using CDK's built-in functions - CDK's built-in 'grant' function is less privileged and provides more resources than required. They also reduce visibility and abstract actual permissions too much.
 
-
 You can read more about it [here](https://www.ranthebuilder.cloud/post/aws-cdk-best-practices-from-the-trenches)
-
-
 
 ### Lambda Layers Usage
 
@@ -88,10 +81,7 @@ We use it as a deployment optimization since all our functions require mostly (o
 
 It comprises all '[tool.poetry.dependencies]' in the 'pyproject. toml' file.
 
-
 You can read more about creating Lambda layers [here](https://www.ranthebuilder.cloud/post/build-aws-lambda-layers-with-aws-cdk) and best practices [here](https://www.ranthebuilder.cloud/post/aws-lambda-layers-best-practices).
-
-
 
 ### .build folder
 
@@ -109,9 +99,6 @@ To solve this issue, we have a build step that it runs when you run 'make deploy
 
 This way, when CDK takes the lambda contents from this new top level, it also takes the 'product' top folder and the imports remain valid.
 
-
-
-
 ### Lambda architecture layers
 
 #### What
@@ -124,13 +111,11 @@ We have different architectural layers: handler -> domain logic -> data access l
 
 Each layer has folders for Pydantic schema classes and utilities.
 
-
 #### Why
 
 This is an opinionated structure backed by AWS best practices to separate handler code from domain logic.
 
 You can read more about it [here](https://www.ranthebuilder.cloud/post/learn-how-to-write-aws-lambda-functions-with-architecture-layers).
-
 
 ### Testing methodology
 
@@ -138,10 +123,10 @@ You can read more about it [here](https://www.ranthebuilder.cloud/post/learn-how
 
 We have unit tests, infrastructure tests, integration tests, and end-to-end tests.
 
-
 #### Why
 
 Each test type has its usage:
+
 - Unit tests check small functions and mostly schema validations.
 - Infrastructure tests are run before deployment; they check that critical resources exist and were not deleted from the CloudFormation template (CDK output) by mistake or bug.
 - Integration tests occur after deployment and generate a mocked event, call the function handler in the IDE and allow debugging the functions with breakpoints. We call real AWs services and can choose what to mock to simulate failures and what resources to call directly.
@@ -149,11 +134,10 @@ Each test type has its usage:
 
 You can read about testing methodology and how to test serverless in [this blog series](https://www.ranthebuilder.cloud/post/guide-to-serverless-lambda-testing-best-practices-part-1)
 
-
-
 ### Pydantic Usage
 
 #### What
+
 We are using pydantic for environment variables parsing, schema validation of input/output, and more.
 
 #### Why
