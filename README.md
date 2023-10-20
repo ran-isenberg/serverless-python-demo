@@ -7,6 +7,7 @@
 ![github-star-badge](https://img.shields.io/github/stars/ran-isenberg/serverless-python-demo.svg?style=social)
 ![issues](https://img.shields.io/github/issues/ran-isenberg/serverless-python-demo)
 
+**[📜Documentation](https://ran-isenberg.github.io/serverless-python-demo/)**
 
 ## **The Pragmatic Python Serverless Developer**
 
