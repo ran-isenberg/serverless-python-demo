@@ -8,7 +8,7 @@
 ![issues](https://img.shields.io/github/issues/ran-isenberg/serverless-python-demo)
 
 <p align="center">
-  <img src="docs/images/diagram.png" alt="Architecture diagram"/>
+  <img src="docs/images/design.png" alt="Architecture diagram"/>
 </p>
 
 This is a sample serverless application built in Python. It consists of an API Gateway backed by four Lambda functions and a DynamoDB table for storage.

@@ -11,6 +11,10 @@ nav:
       - API reference:
           - Stream Processor: api/stream_processor.md
           - Product models: api/product_models.md
+      - Monitoring: monitoring.md
+      - Pipeline: pipeline.md
+      - Open Source: opensource.md
+
 
 theme:
   name: material
@@ -93,9 +97,6 @@ plugins:
             show_docstring_attributes: false
             show_root_heading: false
             members_order: source
-
-extra_css:
-  - stylesheets/extra.css
 
 watch:
   - product
