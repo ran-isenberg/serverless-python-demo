@@ -16,9 +16,16 @@ Starting a Serverless service can be overwhelming. You need to figure out many q
 
 ## **The Solution**
 
-This project covers an opinionated approach to Python project setup, testing, profiling, deployments, and operations.
-Learn about many open source tools, including Powertools for AWS Lambda—a toolkit that can help you implement serverless best practices and increase developer velocity. Join to discover tools and patterns for effective serverless development with Python.
+This project provides a serverless service which is based an opinionated approach to Python project setup, testing, profiling, deployments, and operations.
+Learn about many open source tools, including Powertools for AWS Lambda—a toolkit that can help you implement serverless best practices and increase developer velocity.
 
+### **Serverless Template**
+
+The service we present here started from the [AWS Lambda Handler Cookbook](https://github.com/ran-isenberg/aws-lambda-handler-cookbook), a serverless service template project.
+
+The template project provides a working, deployable, open source-based, serverless service template with an AWS Lambda function and AWS CDK Python code with all the best practices and a complete CI/CD pipeline.
+
+You can start your own service in three clicks.
 
 
 ### The Products service
