@@ -77,17 +77,17 @@ class StreamProcessorConstruct(Construct):
         return lambda_function
 
     def _add_monitoring_dashboard(self, processor: _lambda.Function):
-        high_level_facade = MonitoringFacade(self, f'{self.id_}HighFacade')
-        high_level_facade.add_large_header('Streaming Processor High Level Dashboard')
-        high_level_facade.monitor_lambda_function(lambda_function=processor)
-        high_level_facade.monitor_log(
+        low_level_facade = MonitoringFacade(self, f'{self.id_}LowFacade')
+        low_level_facade.add_large_header('Streaming Processor Low Level Dashboard')
+        low_level_facade.monitor_lambda_function(lambda_function=processor)
+        low_level_facade.monitor_log(
             log_group_name=processor.log_group.log_group_name,
             human_readable_name='Error logs',
             pattern='ERROR',
             alarm_friendly_name='error logs',
         )
 
-        metric_factory = high_level_facade.create_metric_factory()
+        metric_factory = low_level_facade.create_metric_factory()
         # according to https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-monitoring.html
         event_bridge_events = metric_factory.create_metric(
             metric_name='MatchedEvents',
@@ -97,5 +97,5 @@ class StreamProcessorConstruct(Construct):
             period=Duration.days(1),
         )
         group = CustomMetricGroup(metrics=[event_bridge_events], title='Daily Streaming Stats')
-        high_level_facade.monitor_custom(metric_groups=[group], human_readable_name='Daily Streaming Stats',
-                                         alarm_friendly_name='Daily Streaming Stats')
+        low_level_facade.monitor_custom(metric_groups=[group], human_readable_name='Daily Streaming Stats',
+                                        alarm_friendly_name='Daily Streaming Stats')
