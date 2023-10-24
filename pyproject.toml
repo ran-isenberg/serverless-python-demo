@@ -145,4 +145,4 @@ indent-style = "space"
 line-ending = "auto"
 
 [tool.ruff.isort]
-known-third-party = ["pydantic", "aws_lambda_powertools", "aws_cdk"]
+known-third-party = ["pydantic", "aws_lambda_powertools"]
