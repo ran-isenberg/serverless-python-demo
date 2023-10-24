@@ -13,7 +13,6 @@ import infrastructure.product.constants as constants
 
 
 class StreamProcessorConstruct(Construct):
-
     def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table) -> None:
         super().__init__(scope, id_)
         self.id_ = id_
@@ -29,29 +28,33 @@ class StreamProcessorConstruct(Construct):
             id=constants.STREAM_PROCESSOR_LAMBDA_SERVICE_ROLE_ARN,
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
             inline_policies={
-                'streams':
-                    iam.PolicyDocument(statements=[
+                'streams': iam.PolicyDocument(
+                    statements=[
                         iam.PolicyStatement(
                             actions=['dynamodb:DescribeStream', 'dynamodb:GetRecords', 'dynamodb:GetShardIterator', 'dynamodb:ListStreams'],
                             resources=[db.table_arn],
                             effect=iam.Effect.ALLOW,
                         )
-                    ]),
-                'event_bus':
-                    iam.PolicyDocument(
-                        statements=[iam.PolicyStatement(
+                    ]
+                ),
+                'event_bus': iam.PolicyDocument(
+                    statements=[
+                        iam.PolicyStatement(
                             actions=['events:PutEvents'],
                             resources=[bus.event_bus_arn],
                             effect=iam.Effect.ALLOW,
-                        )]),
+                        )
+                    ]
+                ),
             },
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name(managed_policy_name=(f'service-role/{constants.LAMBDA_BASIC_EXECUTION_ROLE}'))
             ],
         )
 
-    def _build_stream_processor_lambda(self, role: iam.Role, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table,
-                                       bus: events.EventBus) -> _lambda.Function:
+    def _build_stream_processor_lambda(
+        self, role: iam.Role, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table, bus: events.EventBus
+    ) -> _lambda.Function:
         lambda_function = _lambda.Function(
             self,
             id=constants.STREAM_PROCESSOR_LAMBDA,
@@ -97,5 +100,6 @@ class StreamProcessorConstruct(Construct):
             period=Duration.days(1),
         )
         group = CustomMetricGroup(metrics=[event_bridge_events], title='Daily Streaming Stats')
-        low_level_facade.monitor_custom(metric_groups=[group], human_readable_name='Daily Streaming Stats',
-                                        alarm_friendly_name='Daily Streaming Stats')
+        low_level_facade.monitor_custom(
+            metric_groups=[group], human_readable_name='Daily Streaming Stats', alarm_friendly_name='Daily Streaming Stats'
+        )

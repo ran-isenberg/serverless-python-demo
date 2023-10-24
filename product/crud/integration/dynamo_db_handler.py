@@ -17,7 +17,6 @@ from product.observability import logger, tracer
 
 
 class DynamoDbHandler(DbHandler):
-
     def __init__(self, table_name: str):
         self.table_name = table_name
 

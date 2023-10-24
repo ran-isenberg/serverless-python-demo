@@ -11,17 +11,11 @@ def generate_api_gw_event(
         'resource': '/api/product',
         'path': '/api/product',
         'httpMethod': 'PUT',
-        'headers': {
-            'Header1': 'value1',
-            'Header2': 'value2'
-        },
+        'headers': {'Header1': 'value1', 'Header2': 'value2'},
         'requestContext': {
             'accountId': '123456789012',
             'apiId': 'id',
-            'authorizer': {
-                'claims': None,
-                'scopes': None
-            },
+            'authorizer': {'claims': None, 'scopes': None},
             'httpMethod': 'PUT',
             'path': '/api/product',
             'protocol': 'HTTP/1.1',
@@ -30,10 +24,10 @@ def generate_api_gw_event(
             'requestTimeEpoch': 1583349317135,
             'resourceId': None,
             'resourcePath': '/api/product',
-            'stage': '$default'
+            'stage': '$default',
         },
         'pathParameters': path_params,
         'stageVariables': None,
         'body': '' if body is None else json.dumps(body),
-        'isBase64Encoded': True
+        'isBase64Encoded': True,
     }

@@ -23,29 +23,14 @@ def generate_product_api_gw_event(
         'resource': f'{path}{product_id}',
         'path': f'{path}{product_id}',
         'httpMethod': http_method.value,
-        'headers': {
-            'Header1': 'value1',
-            'Header2': 'value2'
-        },
-        'multiValueHeaders': {
-            'Header1': ['value1'],
-            'Header2': ['value1', 'value2']
-        },
-        'queryStringParameters': {
-            'parameter1': 'value1',
-            'parameter2': 'value'
-        },
-        'multiValueQueryStringParameters': {
-            'parameter1': ['value1', 'value2'],
-            'parameter2': ['value']
-        },
+        'headers': {'Header1': 'value1', 'Header2': 'value2'},
+        'multiValueHeaders': {'Header1': ['value1'], 'Header2': ['value1', 'value2']},
+        'queryStringParameters': {'parameter1': 'value1', 'parameter2': 'value'},
+        'multiValueQueryStringParameters': {'parameter1': ['value1', 'value2'], 'parameter2': ['value']},
         'requestContext': {
             'accountId': '123456789012',
             'apiId': 'id',
-            'authorizer': {
-                'claims': None,
-                'scopes': None
-            },
+            'authorizer': {'claims': None, 'scopes': None},
             'domainName': 'id.execute-api.us-east-1.amazonaws.com',
             'domainPrefix': 'id',
             'extendedRequestId': 'request-id',
@@ -68,11 +53,8 @@ def generate_product_api_gw_event(
                     'subjectDN': 'www.example.com',
                     'issuerDN': 'Example issuer',
                     'serialNumber': 'a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1',
-                    'validity': {
-                        'notBefore': 'May 28 12:30:02 2019 GMT',
-                        'notAfter': 'Aug  5 09:36:04 2021 GMT'
-                    }
-                }
+                    'validity': {'notBefore': 'May 28 12:30:02 2019 GMT', 'notAfter': 'Aug  5 09:36:04 2021 GMT'},
+                },
             },
             'path': f'{path}{product_id}',
             'protocol': 'HTTP/1.1',
@@ -81,12 +63,12 @@ def generate_product_api_gw_event(
             'requestTimeEpoch': 1583349317135,
             'resourceId': None,
             'resourcePath': f'{path}{product_id}',
-            'stage': '$default'
+            'stage': '$default',
         },
         'pathParameters': path_params,
         'stageVariables': None,
         'body': 'Hello from Lambda!' if body is None else json.dumps(body),
-        'isBase64Encoded': True
+        'isBase64Encoded': True,
     }
 
 
@@ -101,29 +83,14 @@ def generate_api_gw_list_products_event(
         'resource': f'{path}',
         'path': f'{path}',
         'httpMethod': 'GET',
-        'headers': {
-            'Header1': 'value1',
-            'Header2': 'value2'
-        },
-        'multiValueHeaders': {
-            'Header1': ['value1'],
-            'Header2': ['value1', 'value2']
-        },
-        'queryStringParameters': {
-            'parameter1': 'value1',
-            'parameter2': 'value'
-        },
-        'multiValueQueryStringParameters': {
-            'parameter1': ['value1', 'value2'],
-            'parameter2': ['value']
-        },
+        'headers': {'Header1': 'value1', 'Header2': 'value2'},
+        'multiValueHeaders': {'Header1': ['value1'], 'Header2': ['value1', 'value2']},
+        'queryStringParameters': {'parameter1': 'value1', 'parameter2': 'value'},
+        'multiValueQueryStringParameters': {'parameter1': ['value1', 'value2'], 'parameter2': ['value']},
         'requestContext': {
             'accountId': '123456789012',
             'apiId': 'id',
-            'authorizer': {
-                'claims': None,
-                'scopes': None
-            },
+            'authorizer': {'claims': None, 'scopes': None},
             'domainName': 'id.execute-api.us-east-1.amazonaws.com',
             'domainPrefix': 'id',
             'extendedRequestId': 'request-id',
@@ -146,11 +113,8 @@ def generate_api_gw_list_products_event(
                     'subjectDN': 'www.example.com',
                     'issuerDN': 'Example issuer',
                     'serialNumber': 'a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1:a1',
-                    'validity': {
-                        'notBefore': 'May 28 12:30:02 2019 GMT',
-                        'notAfter': 'Aug  5 09:36:04 2021 GMT'
-                    }
-                }
+                    'validity': {'notBefore': 'May 28 12:30:02 2019 GMT', 'notAfter': 'Aug  5 09:36:04 2021 GMT'},
+                },
             },
             'path': f'{path}',
             'protocol': 'HTTP/1.1',
@@ -159,12 +123,12 @@ def generate_api_gw_list_products_event(
             'requestTimeEpoch': 1583349317135,
             'resourceId': None,
             'resourcePath': f'{path}',
-            'stage': '$default'
+            'stage': '$default',
         },
         'pathParameters': path_params,
         'stageVariables': None,
         'body': None,
-        'isBase64Encoded': True
+        'isBase64Encoded': True,
     }
 
 

@@ -94,19 +94,18 @@ def test_eventbridge_put_events_with_stubber():
     event = events[0]
 
     put_events_request = {
-        'Entries': [{
-            'Source': event_source,
-            'DetailType': event.metadata.event_name,
-            'Detail': event.model_dump_json(),
-            'EventBusName': event_bus_name
-        }]
+        'Entries': [
+            {'Source': event_source, 'DetailType': event.metadata.event_name, 'Detail': event.model_dump_json(), 'EventBusName': event_bus_name}
+        ]
     }
 
     put_events_response = {
-        'Entries': [{
-            'EventId': f'{uuid4()}',
-        }],
-        'FailedEntryCount': 0
+        'Entries': [
+            {
+                'EventId': f'{uuid4()}',
+            }
+        ],
+        'FailedEntryCount': 0,
     }
 
     # WHEN EventBridge receives a stubbed client and send the event payload
@@ -139,12 +138,9 @@ def test_eventbridge_put_events_with_stubber_partial_failure():
 
     expected_failure_count = 1
     put_events_request = {
-        'Entries': [{
-            'Source': event_source,
-            'DetailType': event.metadata.event_name,
-            'Detail': event.model_dump_json(),
-            'EventBusName': event_bus_name
-        }]
+        'Entries': [
+            {'Source': event_source, 'DetailType': event.metadata.event_name, 'Detail': event.model_dump_json(), 'EventBusName': event_bus_name}
+        ]
     }
 
     put_events_response = {
@@ -155,10 +151,10 @@ def test_eventbridge_put_events_with_stubber_partial_failure():
             {
                 # https://docs.aws.amazon.com/eventbridge/latest/APIReference/API_PutEvents.html#API_PutEvents_Errors
                 'ErrorCode': 'InternalException',
-                'ErrorMessage': 'An internal error occurred'
-            }
+                'ErrorMessage': 'An internal error occurred',
+            },
         ],
-        'FailedEntryCount': expected_failure_count
+        'FailedEntryCount': expected_failure_count,
     }
 
     # WHEN EventBridge receives a stubbed client with at least one FailedEntryCount

@@ -14,7 +14,6 @@ import infrastructure.product.constants as constants
 
 
 class StreamProcessorTestingConstruct(Construct):
-
     def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion, events: events.EventBus) -> None:
         super().__init__(scope, id_)
         self.id_ = id_
@@ -35,8 +34,9 @@ class StreamProcessorTestingConstruct(Construct):
             point_in_time_recovery=True,
             removal_policy=RemovalPolicy.DESTROY,
         )
-        CfnOutput(self, id=constants.STREAM_TESTS_TABLE_NAME_OUTPUT,
-                  value=table.table_name).override_logical_id(constants.STREAM_TESTS_TABLE_NAME_OUTPUT)
+        CfnOutput(self, id=constants.STREAM_TESTS_TABLE_NAME_OUTPUT, value=table.table_name).override_logical_id(
+            constants.STREAM_TESTS_TABLE_NAME_OUTPUT
+        )
         return table
 
     def _build_event_bridge_rule(self, event_bus: events.EventBus) -> events.Rule:
@@ -93,14 +93,15 @@ class StreamProcessorTestingConstruct(Construct):
             id=constants.STREAM_PROCESSOR_TEST_LAMBDA_ROLE_ARN,
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
             inline_policies={
-                'test_results':
-                    iam.PolicyDocument(statements=[
+                'test_results': iam.PolicyDocument(
+                    statements=[
                         iam.PolicyStatement(
                             actions=['dynamodb:PutItem'],
                             resources=[test_results_db.table_arn],
                             effect=iam.Effect.ALLOW,
                         )
-                    ]),
+                    ]
+                ),
             },
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name(managed_policy_name=(f'service-role/{constants.LAMBDA_BASIC_EXECUTION_ROLE}'))

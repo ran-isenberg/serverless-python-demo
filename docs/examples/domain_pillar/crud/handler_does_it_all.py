@@ -29,16 +29,16 @@ def create_product(event, context) -> dict[str, Any]:
     product_id = create_input.pathParameters.product
     table_name = os.getenv('TABLE_NAME', '')
     table = boto3.resource('dynamodb').Table(table_name)
-    table.put_item(Item={
-        'name': create_input.body.name,
-        'id': product_id,
-        'price': create_input.body.price,
-    })
+    table.put_item(
+        Item={
+            'name': create_input.body.name,
+            'id': product_id,
+            'price': create_input.body.price,
+        }
+    )
 
     return {
         'statusCode': 200,
-        'headers': {
-            'Content-Type': 'application/json'
-        },
+        'headers': {'Content-Type': 'application/json'},
         'body': json.dumps({'id': product_id}),
     }

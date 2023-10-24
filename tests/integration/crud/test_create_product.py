@@ -13,6 +13,7 @@ from tests.utils import generate_context
 
 def call_handler(event, context):
     from product.crud.handlers.handle_create_product import lambda_handler
+
     return lambda_handler(event, context)
 
 
@@ -25,8 +26,9 @@ def test_handler_200_ok(monkeypatch, table_name: str):
 
     # WHEN the lambda handler processes the request
     response = call_handler(
-        event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(),
-                                            path_params={'product': product_id}),
+        event=generate_product_api_gw_event(
+            http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(), path_params={'product': product_id}
+        ),
         context=generate_context(),
     )
 
@@ -52,8 +54,9 @@ def test_handler_bad_request_product_already_exists(add_product_entry_to_db: Pro
 
     # WHEN attempting to create a product with the same ID
     response = call_handler(
-        event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body=add_product_entry_to_db.model_dump(),
-                                            path_params={'product': product_id}),
+        event=generate_product_api_gw_event(
+            http_method=HTTPMethod.PUT, product_id=product_id, body=add_product_entry_to_db.model_dump(), path_params={'product': product_id}
+        ),
         context=generate_context(),
     )
 
@@ -76,8 +79,9 @@ def test_internal_server_error(table_name: str):
 
         # WHEN attempting to create a product while the DynamoDB exception is triggered
         response = call_handler(
-            event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(),
-                                                path_params={'product': product_id}),
+            event=generate_product_api_gw_event(
+                http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(), path_params={'product': product_id}
+            ),
             context=generate_context(),
         )
 
@@ -94,8 +98,9 @@ def test_handler_bad_request_invalid_body_input():
 
     # WHEN the lambda handler processes the request
     response = call_handler(
-        event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body={'price': 5},
-                                            path_params={'product': product_id}),
+        event=generate_product_api_gw_event(
+            http_method=HTTPMethod.PUT, product_id=product_id, body={'price': 5}, path_params={'product': product_id}
+        ),
         context=generate_context(),
     )
 
@@ -112,8 +117,9 @@ def test_handler_bad_request_invalid_product_id():
     body = generate_create_product_request_body()
     # WHEN the lambda handler processes the request
     response = call_handler(
-        event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(),
-                                            path_params={'product': product_id}),
+        event=generate_product_api_gw_event(
+            http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(), path_params={'product': product_id}
+        ),
         context=generate_context(),
     )
 
@@ -131,8 +137,9 @@ def test_handler_bad_request_invalid_path_params():
 
     # WHEN the lambda handler processes the request
     response = call_handler(
-        event=generate_product_api_gw_event(http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(),
-                                            path_params={'dummy': product_id}, path='dummy'),
+        event=generate_product_api_gw_event(
+            http_method=HTTPMethod.PUT, product_id=product_id, body=body.model_dump(), path_params={'dummy': product_id}, path='dummy'
+        ),
         context=generate_context(),
     )
 
