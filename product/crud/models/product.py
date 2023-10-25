@@ -23,6 +23,7 @@ class Product(BaseModel):
     price : PositiveInt
         Product price represented as a positive integer
     """
+
     name: Annotated[str, Field(min_length=1, max_length=30)]
     id: ProductId
     price: PositiveInt

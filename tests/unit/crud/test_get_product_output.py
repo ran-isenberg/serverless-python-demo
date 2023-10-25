@@ -27,7 +27,8 @@ def test_valid_output(product_id):
         'a',  # non-numeric price
         -1,  # negative price
         0,  # zero price
-    ])
+    ],
+)
 def test_invalid_price(product_id, price):
     # GIVEN an invalid price
     # WHEN attempting to create a GetProductOutput
@@ -42,7 +43,8 @@ def test_invalid_price(product_id, price):
     [
         '',  # empty name
         'A' * 31,  # too long name assuming 30 is the limit
-    ])
+    ],
+)
 def test_invalid_name(product_id, name):
     # GIVEN an invalid name
     # WHEN attempting to create a GetProductOutput

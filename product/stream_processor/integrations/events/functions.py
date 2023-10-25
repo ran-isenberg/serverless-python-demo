@@ -23,4 +23,4 @@ def chunk_from_list(events: list[T], max_items: int) -> Generator[list[T], None,
     """
     for idx in range(0, len(events), max_items):  # start, stop, step
         # slice the first 10 items, then the next 10 items starting from the index
-        yield from [events[idx:idx + max_items]]
+        yield from [events[idx : idx + max_items]]

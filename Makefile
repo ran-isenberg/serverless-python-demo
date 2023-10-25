@@ -1,4 +1,4 @@
-.PHONY: dev lint complex coverage pre-commit sort deploy destroy deps unit infra-tests integration e2e coverage-tests docs update-deps lint-docs build format
+.PHONY: dev lint complex coverage pre-commit sort deploy destroy deps unit infra-tests integration ruff e2e coverage-tests docs update-deps lint-docs build format
 PYTHON := ".venv/bin/python3"
 
 .ONESHELL:  # run all commands in a single shell, ensuring it runs within a local virtual env
@@ -11,16 +11,12 @@ dev:
 	npm ci
 
 format:
-	poetry run isort .
-	poetry run yapf -d -vv --style=./.style -r .
+	poetry run ruff check .
 
 format-fix:
-	poetry run isort .
-	poetry run yapf -vv --style=./.style -r --in-place .
+	poetry run ruff format .
 
 lint: format
-	@echo "Running flake8"
-	poetry run flake8 product/* infrastructure/* tests/* docs/examples/*
 	@echo "Running mypy"
 	$(MAKE) mypy-lint
 

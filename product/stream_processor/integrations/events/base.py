@@ -33,7 +33,6 @@ class BaseEventProvider(ABC):
 
 
 class BaseEventHandler(ABC, Generic[T]):
-
     @abstractmethod
     def __init__(self, event_source: str, event_bus: str, provider: BaseEventProvider) -> None:
         """ABC to handle event manipulation from a model, and publishing through a provider.

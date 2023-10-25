@@ -6,7 +6,6 @@ from product.models.products.product import ProductEntry
 
 
 class DynamoDalHandler(DbHandler):
-
     def __init__(self, table_name: str):
         self.table_name = table_name
 

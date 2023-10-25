@@ -18,7 +18,6 @@ if TYPE_CHECKING:
 
 
 class EventBridge(BaseEventProvider):
-
     def __init__(self, bus_name: str, client: Optional['EventBridgeClient'] = None):
         """Amazon EventBridge provider using PutEvents API.
 

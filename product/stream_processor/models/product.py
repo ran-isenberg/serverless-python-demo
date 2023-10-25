@@ -20,6 +20,7 @@ class ProductChangeNotification(BaseModel):
     created_at : datetime
         Product change notification creation time (UTC)
     """
+
     product_id: ProductId
     status: Literal['ADDED', 'REMOVED', 'UPDATED']
     created_at: datetime = Field(default_factory=datetime.utcnow)

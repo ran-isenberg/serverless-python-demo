@@ -44,8 +44,6 @@ def handle_create_product(event, context) -> dict[str, Any]:
     logger.info('finished handling create product request')
     return {
         'statusCode': HTTPStatus.OK,
-        'headers': {
-            'Content-Type': 'application/json'
-        },
+        'headers': {'Content-Type': 'application/json'},
         'body': response.model_dump(),
     }

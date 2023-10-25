@@ -13,7 +13,8 @@ from product.models.products.validators import validate_product_id
         None,  # None value
         123,  # integer
         12.3,  # float
-    ])
+    ],
+)
 def test_invalid_id(invalid_id):
     # GIVEN an invalid id
     # WHEN attempting to validate it using validate_product_id

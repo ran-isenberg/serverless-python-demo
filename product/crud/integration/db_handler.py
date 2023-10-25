@@ -14,7 +14,6 @@ class _SingletonMeta(ABCMeta):
 
 
 class DbHandler(ABC, metaclass=_SingletonMeta):
-
     @abstractmethod
     def create_product(self, product: Product) -> None:
         ...  # pragma: no cover

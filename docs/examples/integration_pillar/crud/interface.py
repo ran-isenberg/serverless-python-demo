@@ -5,7 +5,6 @@ from product.crud.models.product import Product
 
 
 class DbHandler(ABC):
-
     @abstractmethod
     def create_product(self, product: Product) -> None:
         ...  # pragma: no cover

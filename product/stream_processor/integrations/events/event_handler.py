@@ -16,7 +16,6 @@ _pascal_to_snake_pattern = re.compile(rf'({_exclude_underscores}{_pascal_case}{_
 
 
 class EventHandler(BaseEventHandler[AnyModel]):
-
     def __init__(self, event_source: str, event_bus: str, provider: BaseEventProvider | None = None) -> None:
         """Event Handler for emitting events with a given provider.
 
@@ -50,8 +49,12 @@ class EventHandler(BaseEventHandler[AnyModel]):
         EventReceipt
             Receipts for unsuccessfully and successfully published events.
         """
-        event_payload = EventHandler.build_events_from_models(models=payload, metadata=metadata, correlation_id=correlation_id,
-                                                              event_source=self.event_source)
+        event_payload = EventHandler.build_events_from_models(
+            models=payload,
+            metadata=metadata,
+            correlation_id=correlation_id,
+            event_source=self.event_source,
+        )
         return self.provider.send(payload=event_payload)
 
     @staticmethod
@@ -93,8 +96,9 @@ class EventHandler(BaseEventHandler[AnyModel]):
         return _pascal_to_snake_pattern.sub(r'_\1', model_name).upper()
 
     @staticmethod
-    def build_events_from_models(models: list[AnyModel], event_source: str, metadata: dict[str, Any] | None = None,
-                                 correlation_id: str = '') -> list[Event]:
+    def build_events_from_models(
+        models: list[AnyModel], event_source: str, metadata: dict[str, Any] | None = None, correlation_id: str = ''
+    ) -> list[Event]:
         """Converts a Pydantic model into a standard event.
 
         Parameters
@@ -146,7 +150,11 @@ class EventHandler(BaseEventHandler[AnyModel]):
 
             events.append(
                 Event(
-                    data=model, metadata=EventMetadata(event_name=event_name, event_source=event_source, event_version=event_version,
-                                                       correlation_id=correlation_id, **metadata)))
+                    data=model,
+                    metadata=EventMetadata(
+                        event_name=event_name, event_source=event_source, event_version=event_version, correlation_id=correlation_id, **metadata
+                    ),
+                )
+            )
 
         return events

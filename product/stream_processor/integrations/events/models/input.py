@@ -23,6 +23,7 @@ class EventMetadata(BaseModel):
     created_at : datetime
         Timestamp of when the event was created (UTC)
     """
+
     event_name: str
     event_source: str
     event_version: str
@@ -42,5 +43,6 @@ class Event(BaseModel, Generic[AnyModel]):
     metadata : EventMetadata
         Event metadata
     """
+
     data: AnyModel
     metadata: EventMetadata

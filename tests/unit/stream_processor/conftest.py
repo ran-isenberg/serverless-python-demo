@@ -31,14 +31,12 @@ def pytest_runtest_setup():
 
 
 class FakeProvider(BaseEventProvider):
-
     def send(self, payload: Sequence[Event]) -> EventReceipt:
         notifications = [EventReceiptSuccess(receipt_id='test') for _ in payload]
         return EventReceipt(success=notifications)
 
 
 class FakeEventHandler(BaseEventHandler[AnyModel]):
-
     def __init__(self, event_source: str = 'fake', event_bus: str = 'fake_bus', provider: BaseEventProvider | None = None) -> None:
         self.provider = provider or FakeProvider()
         self.published_payloads: list[AnyModel] = []

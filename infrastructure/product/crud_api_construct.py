@@ -12,7 +12,6 @@ from infrastructure.product.crud_monitoring import CrudMonitoring
 
 
 class CrudApiConstruct(Construct):
-
     def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion) -> None:
         super().__init__(scope, id_)
         self.api_db = ApiDbConstruct(self, f'{id_}db')
@@ -54,21 +53,24 @@ class CrudApiConstruct(Construct):
             constants.CREATE_PRODUCT_ROLE,
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
             inline_policies={
-                'dynamodb_db':
-                    iam.PolicyDocument(
-                        statements=[iam.PolicyStatement(
+                'dynamodb_db': iam.PolicyDocument(
+                    statements=[
+                        iam.PolicyStatement(
                             actions=['dynamodb:PutItem'],
                             resources=[db.table_arn],
                             effect=iam.Effect.ALLOW,
-                        )]),
-                'idempotency_table':
-                    iam.PolicyDocument(statements=[
+                        )
+                    ]
+                ),
+                'idempotency_table': iam.PolicyDocument(
+                    statements=[
                         iam.PolicyStatement(
                             actions=['dynamodb:PutItem', 'dynamodb:GetItem', 'dynamodb:UpdateItem', 'dynamodb:DeleteItem'],
                             resources=[idempotency_table.table_arn],
                             effect=iam.Effect.ALLOW,
                         )
-                    ]),
+                    ]
+                ),
             },
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name(managed_policy_name=(f'service-role/{constants.LAMBDA_BASIC_EXECUTION_ROLE}'))
@@ -81,13 +83,15 @@ class CrudApiConstruct(Construct):
             constants.DELETE_PRODUCT_ROLE,
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
             inline_policies={
-                'dynamodb_db':
-                    iam.PolicyDocument(
-                        statements=[iam.PolicyStatement(
+                'dynamodb_db': iam.PolicyDocument(
+                    statements=[
+                        iam.PolicyStatement(
                             actions=['dynamodb:DeleteItem'],
                             resources=[db.table_arn],
                             effect=iam.Effect.ALLOW,
-                        )]),
+                        )
+                    ]
+                ),
             },
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name(managed_policy_name=(f'service-role/{constants.LAMBDA_BASIC_EXECUTION_ROLE}'))
@@ -100,13 +104,15 @@ class CrudApiConstruct(Construct):
             constants.GET_PRODUCT_ROLE,
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
             inline_policies={
-                'dynamodb_db':
-                    iam.PolicyDocument(
-                        statements=[iam.PolicyStatement(
+                'dynamodb_db': iam.PolicyDocument(
+                    statements=[
+                        iam.PolicyStatement(
                             actions=['dynamodb:GetItem'],
                             resources=[db.table_arn],
                             effect=iam.Effect.ALLOW,
-                        )]),
+                        )
+                    ]
+                ),
             },
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name(managed_policy_name=(f'service-role/{constants.LAMBDA_BASIC_EXECUTION_ROLE}'))
@@ -119,13 +125,15 @@ class CrudApiConstruct(Construct):
             constants.LIST_PRODUCTS_ROLE,
             assumed_by=iam.ServicePrincipal('lambda.amazonaws.com'),
             inline_policies={
-                'dynamodb_db':
-                    iam.PolicyDocument(
-                        statements=[iam.PolicyStatement(
+                'dynamodb_db': iam.PolicyDocument(
+                    statements=[
+                        iam.PolicyStatement(
                             actions=['dynamodb:Scan'],
                             resources=[db.table_arn],
                             effect=iam.Effect.ALLOW,
-                        )]),
+                        )
+                    ]
+                ),
             },
             managed_policies=[
                 iam.ManagedPolicy.from_aws_managed_policy_name(managed_policy_name=(f'service-role/{constants.LAMBDA_BASIC_EXECUTION_ROLE}'))
