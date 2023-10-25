@@ -23,8 +23,6 @@ on:
       - "poetry.lock" # deps
       - "mypy.ini"
       - "app.py" # CDK entrypoint
-      - ".flake8" # linter settings
-      - ".isort.cfg" # formatter settings
 
 jobs:
   quality_standards:
