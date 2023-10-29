@@ -77,7 +77,7 @@ class StreamProcessorTestingConstruct(Construct):
                     self,
                     f'{self.id_}TestStateMachineLogGroup',
                     removal_policy=RemovalPolicy.DESTROY,
-                    log_group_name='/aws/vendedlogs/states/',
+                    log_group_name=f'/aws/vendedlogs/states/{self.id_}',
                 ),
                 level=sfn.LogLevel.ALL,
                 include_execution_data=True,
