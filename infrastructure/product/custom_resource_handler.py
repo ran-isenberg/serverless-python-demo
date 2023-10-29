@@ -12,7 +12,7 @@ def handler(event, context):
         secrets_client = boto3.client('secretsmanager')
         response = secrets_client.get_secret_value(SecretId=secret_name)
         secret_value = json.loads(response['SecretString'])
-        print(f"user={secret_value['username']}")
+
         # Change Cognito user password
         cognito_client = boto3.client('cognito-idp')
         cognito_client.admin_set_user_password(
