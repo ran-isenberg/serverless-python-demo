@@ -9,6 +9,7 @@ from constructs import Construct
 import infrastructure.product.constants as constants
 from infrastructure.product.crud_api_db_construct import ApiDbConstruct
 from infrastructure.product.crud_monitoring import CrudMonitoring
+from infrastructure.product.identity_provider_construct import IdentityProviderConstruct
 
 
 class CrudApiConstruct(Construct):
@@ -16,6 +17,7 @@ class CrudApiConstruct(Construct):
         super().__init__(scope, id_)
         self.api_db = ApiDbConstruct(self, f'{id_}db')
         self.common_layer = lambda_layer
+        self.idp = IdentityProviderConstruct(self, f'{id_}users')
         self.rest_api = self._build_api_gw()
         api_resource: aws_apigateway.Resource = self.rest_api.root.add_resource('api')
         product_resource = api_resource.add_resource(constants.PRODUCT_RESOURCE).add_resource('{product}')
