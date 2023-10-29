@@ -13,11 +13,11 @@ from infrastructure.product.identity_provider_construct import IdentityProviderC
 
 
 class CrudApiConstruct(Construct):
-    def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion) -> None:
+    def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion, is_production: bool) -> None:
         super().__init__(scope, id_)
         self.api_db = ApiDbConstruct(self, f'{id_}db')
         self.common_layer = lambda_layer
-        self.idp = IdentityProviderConstruct(self, f'{id_}users')
+        self.idp = IdentityProviderConstruct(self, f'{id_}users', is_production)
         self.rest_api = self._build_api_gw()
         api_resource: aws_apigateway.Resource = self.rest_api.root.add_resource('api')
         product_resource = api_resource.add_resource(constants.PRODUCT_RESOURCE).add_resource('{product}')

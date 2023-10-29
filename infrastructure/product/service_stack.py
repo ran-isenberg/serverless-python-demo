@@ -21,6 +21,7 @@ class ServiceStack(Stack):
             self,
             id_=get_construct_name(id, constants.CRUD_CONSTRUCT_NAME),
             lambda_layer=self.shared_layer,
+            is_production=is_production,
         )
 
         self.stream_processor = StreamProcessorConstruct(
