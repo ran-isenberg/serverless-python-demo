@@ -11,7 +11,7 @@ dev:
 	npm ci
 
 format:
-	poetry run ruff check .
+	poetry run ruff check . --fix
 
 format-fix:
 	poetry run ruff format .
@@ -52,7 +52,7 @@ integration:
 e2e:
 	poetry run pytest tests/e2e  --cov-config=.coveragerc --cov=product --cov-report xml
 
-pr: deps pre-commit complex lint unit deploy integration e2e
+pr: deps format pre-commit complex lint unit deploy integration e2e
 
 coverage-tests:
 	poetry run pytest tests/unit tests/integration  --cov-config=.coveragerc --cov=product --cov-report xml
