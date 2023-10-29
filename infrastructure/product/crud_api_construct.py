@@ -21,11 +21,12 @@ class CrudApiConstruct(Construct):
         self.rest_api = self._build_api_gw()
         api_resource: aws_apigateway.Resource = self.rest_api.root.add_resource('api')
         product_resource = api_resource.add_resource(constants.PRODUCT_RESOURCE).add_resource('{product}')
-        self.create_prod_func = self._add_put_product_lambda_integration(product_resource, self.api_db.db, self.api_db.idempotency_db)
-        self.delete_prod_func = self._add_delete_product_lambda_integration(product_resource, self.api_db.db)
-        self.get_prod_func = self._add_get_product_lambda_integration(product_resource, self.api_db.db)
+        authorizer = aws_apigateway.CognitoUserPoolsAuthorizer(self, 'ProductsAuthorizer', cognito_user_pools=[self.idp.user_pool])
+        self.create_prod_func = self._add_put_product_lambda_integration(product_resource, self.api_db.db, self.api_db.idempotency_db, authorizer)
+        self.delete_prod_func = self._add_delete_product_lambda_integration(product_resource, self.api_db.db, authorizer)
+        self.get_prod_func = self._add_get_product_lambda_integration(product_resource, self.api_db.db, authorizer)
         products_resource: aws_apigateway.Resource = api_resource.add_resource(constants.PRODUCTS_RESOURCE)
-        self.list_prods_func = self._add_list_products_lambda_integration(products_resource, self.api_db.db)
+        self.list_prods_func = self._add_list_products_lambda_integration(products_resource, self.api_db.db, authorizer)
         # add CW dashboards
         self.dashboard = CrudMonitoring(
             self,
@@ -147,6 +148,7 @@ class CrudApiConstruct(Construct):
         put_resource: aws_apigateway.Resource,
         db: dynamodb.Table,
         idempotency_table: dynamodb.Table,
+        auth: aws_apigateway.CognitoUserPoolsAuthorizer,
     ) -> _lambda.Function:
         role = self._build_create_product_lambda_role(db, idempotency_table)
         lambda_function = _lambda.Function(
@@ -171,13 +173,19 @@ class CrudApiConstruct(Construct):
         )
 
         # PUT /api/product/{product}/
-        put_resource.add_method(http_method='PUT', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))
+        put_resource.add_method(
+            http_method='PUT',
+            integration=aws_apigateway.LambdaIntegration(handler=lambda_function),
+            authorization_type=aws_apigateway.AuthorizationType.COGNITO,
+            authorizer=auth,
+        )
         return lambda_function
 
     def _add_delete_product_lambda_integration(
         self,
-        put_resource: aws_apigateway.Resource,
+        resource: aws_apigateway.Resource,
         db: dynamodb.Table,
+        auth: aws_apigateway.CognitoUserPoolsAuthorizer,
     ) -> _lambda.Function:
         role = self._build_delete_product_lambda_role(db)
         lambda_function = _lambda.Function(
@@ -201,13 +209,19 @@ class CrudApiConstruct(Construct):
         )
 
         # DELETE /api/product/{product}/
-        put_resource.add_method(http_method='DELETE', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))
+        resource.add_method(
+            http_method='DELETE',
+            integration=aws_apigateway.LambdaIntegration(handler=lambda_function),
+            authorization_type=aws_apigateway.AuthorizationType.COGNITO,
+            authorizer=auth,
+        )
         return lambda_function
 
     def _add_get_product_lambda_integration(
         self,
-        put_resource: aws_apigateway.Resource,
+        resource: aws_apigateway.Resource,
         db: dynamodb.Table,
+        auth: aws_apigateway.CognitoUserPoolsAuthorizer,
     ) -> _lambda.Function:
         role = self._build_get_product_lambda_role(db)
         lambda_function = _lambda.Function(
@@ -231,13 +245,19 @@ class CrudApiConstruct(Construct):
         )
 
         # GET /api/product/{product}/
-        put_resource.add_method(http_method='GET', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))
+        resource.add_method(
+            http_method='GET',
+            integration=aws_apigateway.LambdaIntegration(handler=lambda_function),
+            authorization_type=aws_apigateway.AuthorizationType.COGNITO,
+            authorizer=auth,
+        )
         return lambda_function
 
     def _add_list_products_lambda_integration(
         self,
         api_resource: aws_apigateway.Resource,
         db: dynamodb.Table,
+        auth: aws_apigateway.CognitoUserPoolsAuthorizer,
     ) -> _lambda.Function:
         role = self._build_list_products_lambda_role(db)
         lambda_function = _lambda.Function(
@@ -261,6 +281,11 @@ class CrudApiConstruct(Construct):
         )
 
         # GET /api/products/
-        api_resource.add_method(http_method='GET', integration=aws_apigateway.LambdaIntegration(handler=lambda_function))
+        api_resource.add_method(
+            http_method='GET',
+            integration=aws_apigateway.LambdaIntegration(handler=lambda_function),
+            authorization_type=aws_apigateway.AuthorizationType.COGNITO,
+            authorizer=auth,
+        )
 
         return lambda_function

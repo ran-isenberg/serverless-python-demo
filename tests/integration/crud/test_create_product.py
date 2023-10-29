@@ -17,7 +17,7 @@ def call_handler(event, context):
     return lambda_handler(event, context)
 
 
-def test_handler_200_ok(monkeypatch, table_name: str, access_token: str):
+def test_handler_200_ok(monkeypatch, table_name: str):
     # Set POWERTOOLS_IDEMPOTENCY_DISABLED before calling decorated functions
     monkeypatch.setenv('POWERTOOLS_IDEMPOTENCY_DISABLED', 1)
     # GIVEN a product creation request

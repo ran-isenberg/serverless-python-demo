@@ -17,7 +17,7 @@ class IdentityProviderConstruct(Construct):
         self.id_ = id_
 
         # Create the Cognito User Pool with recommended settings
-        user_pool = cognito.UserPool(
+        self.user_pool = cognito.UserPool(
             self,
             'UserPool',
             user_pool_name=constants.IDENTITY_USER_NAME,
@@ -36,14 +36,14 @@ class IdentityProviderConstruct(Construct):
             mfa=cognito.Mfa.OPTIONAL if not is_production else cognito.Mfa.REQUIRED,
         )
 
-        CfnOutput(self, id=constants.IDENTITY_USER_POOL_ID_OUTPUT, value=user_pool.user_pool_id).override_logical_id(
+        CfnOutput(self, id=constants.IDENTITY_USER_POOL_ID_OUTPUT, value=self.user_pool.user_pool_id).override_logical_id(
             constants.IDENTITY_USER_POOL_ID_OUTPUT
         )
 
         app_client = cognito.UserPoolClient(
             self,
             'UserPoolClient',
-            user_pool=user_pool,
+            user_pool=self.user_pool,
             auth_flows=cognito.AuthFlow(user_password=True),  # Allow username/password authentication
         )
 
@@ -54,12 +54,12 @@ class IdentityProviderConstruct(Construct):
         # Custom Resource to set user password directly
         create_test_user = AwsCustomResource(
             self,
-            'AwsCustomResource-CreateUser',
+            'AwsCustom-CreateUser',
             on_create={
                 'service': 'CognitoIdentityServiceProvider',
                 'action': 'adminCreateUser',
                 'parameters': {
-                    'UserPoolId': user_pool.user_pool_id,
+                    'UserPoolId': self.user_pool.user_pool_id,
                     'Username': constants.TEST_USER_USERNAME,
                     'MessageAction': 'SUPPRESS',
                     'TemporaryPassword': constants.TEST_USER_TEMP_PWD,
@@ -74,26 +74,32 @@ class IdentityProviderConstruct(Construct):
             #        'Username': constants.TEST_USER_USERNAME,
             #    },
             # },
-            policy=AwsCustomResourcePolicy.from_sdk_calls(resources=[user_pool.user_pool_arn]),
+            policy=AwsCustomResourcePolicy.from_sdk_calls(resources=[self.user_pool.user_pool_arn]),
             install_latest_aws_sdk=True,
             removal_policy=RemovalPolicy.DESTROY,
             timeout=Duration.minutes(1),
         )
-        create_test_user.node.add_dependency(user_pool.node.default_child)
+        create_test_user.node.add_dependency(self.user_pool.node.default_child)
 
         # Save the user's credentials to AWS Secrets Manager
         user_credentials_secret = secrets.Secret(
             self,
-            'TestUserCredentials',
+            f'{self.id_}TestUserSecret',
             description='Credentials for the test user in the Cognito User Pool',
             generate_secret_string=secrets.SecretStringGenerator(
                 secret_string_template=Fn.sub('{"username": "${user}"}', {'user': constants.TEST_USER_USERNAME}),
                 generate_string_key='password',
                 exclude_punctuation=False,
+                exclude_lowercase=False,
+                exclude_numbers=False,
+                exclude_uppercase=False,
                 include_space=False,
                 password_length=16,
+                require_each_included_type=True,
             ),
         )
+
+        user_credentials_secret.node.add_dependency(create_test_user)
 
         CfnOutput(self, id=constants.TEST_USER_IDENTITY_SECRET_NAME_OUTPUT, value=user_credentials_secret.secret_name).override_logical_id(
             constants.TEST_USER_IDENTITY_SECRET_NAME_OUTPUT
@@ -105,7 +111,7 @@ class IdentityProviderConstruct(Construct):
             # Lambda Function
         lambda_function = _lambda.Function(
             self,
-            'MyLambdaFunction',
+            'SetPassHandler',
             runtime=_lambda.Runtime.PYTHON_3_11,
             handler='index.handler',
             code=_lambda.InlineCode(handler_code),
@@ -113,7 +119,9 @@ class IdentityProviderConstruct(Construct):
 
         # Grant permission to Lambda to get secrets and interact with Cognito
         user_credentials_secret.grant_read(lambda_function)
-        lambda_function.add_to_role_policy(iam.PolicyStatement(actions=['cognito-idp:AdminSetUserPassword'], resources=[user_pool.user_pool_arn]))
+        lambda_function.add_to_role_policy(
+            iam.PolicyStatement(actions=['cognito-idp:AdminSetUserPassword'], resources=[self.user_pool.user_pool_arn])
+        )
 
         provider = Provider(scope=self, id=f'{id_}Provider', on_event_handler=lambda_function)
         lambda_resource = CustomResource(
@@ -123,7 +131,7 @@ class IdentityProviderConstruct(Construct):
             removal_policy=RemovalPolicy.DESTROY,
             properties={
                 'SecretName': user_credentials_secret.secret_name,
-                'UserPoolId': user_pool.user_pool_id,
+                'UserPoolId': self.user_pool.user_pool_id,
             },
             resource_type='Custom::IdentitySetTestPassword',
         )
