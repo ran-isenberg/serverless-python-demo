@@ -51,7 +51,9 @@ You can start your own service in three clicks.
 - The AWS Lambda handler embodies Serverless best practices and has all the bells and whistles for a proper production ready handler.
 - AWS Lambda handler uses [AWS Lambda Powertools](https://docs.powertools.aws.dev/lambda-python/): logger, tracer, metrics, event handler, validation, batch
 - AWS Lambda handler three layer architecture: handler layer, logic layer and data access layer (integration)
+- Cognito user pool with a test user. All E2E tests automatically login with the test user and use a JWT id token
 - Idempotent API
+- Authentication protected API
 - CloudWatch dashboards - High level and low level including CloudWatch alarms
 - Unit, infrastructure, security, integration and end to end tests.
 

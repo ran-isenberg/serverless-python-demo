@@ -2,6 +2,12 @@
 
 This file is meant to capture project-level decisions that were made in this project and why. There are often no obvious correct answers, and we must decide with multiple options.
 
+## 2023-10-30
+
+Added Amazon Cognito user pool. While it is not connected as external identity provider, or provides registration, it is a good start for any service.
+We build a test user in the CDK, and set its password, upload it to secrets manager and use it in the E2E tests to trigger the protected API.
+Its a good start to have a protected API during development prior to productization.
+
 ## 2023-10-17
 
 Added serverless monitoring with CloudWatch dashboards: logs, metrics, custom metrics and alarms.
