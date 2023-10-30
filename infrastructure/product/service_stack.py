@@ -21,6 +21,7 @@ class ServiceStack(Stack):
             self,
             id_=get_construct_name(id, constants.CRUD_CONSTRUCT_NAME),
             lambda_layer=self.shared_layer,
+            is_production=is_production,
         )
 
         self.stream_processor = StreamProcessorConstruct(
@@ -70,5 +71,6 @@ class ServiceStack(Stack):
                 {'id': 'AwsSolutions-APIG6', 'reason': 'not mandatory in a sample template'},
                 {'id': 'AwsSolutions-APIG4', 'reason': 'authorization not mandatory in a sample template'},
                 {'id': 'AwsSolutions-COG4', 'reason': 'not using cognito'},
+                {'id': 'AwsSolutions-SMG4', 'reason': 'secret for cognito does not support auto rotate'},
             ],
         )
