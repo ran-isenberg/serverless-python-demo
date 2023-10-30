@@ -49,7 +49,7 @@ class IdentityProviderConstruct(Construct):
             ),
             sign_in_aliases=cognito.SignInAliases(username=True, email=True),
             removal_policy=RemovalPolicy.DESTROY,
-            mfa=cognito.Mfa.OPTIONAL if not is_production else cognito.Mfa.REQUIRED,
+            mfa=cognito.Mfa.OPTIONAL,
         )
 
         CfnOutput(self, id=constants.IDENTITY_USER_POOL_ID_OUTPUT, value=user_pool.user_pool_id).override_logical_id(
