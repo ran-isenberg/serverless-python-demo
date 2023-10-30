@@ -39,9 +39,7 @@ KPI metrics are included in the bottom part as well.
 
 Personas that use this dashboard: SRE, developers, and product teams (KPIs)
 
-
 ![hl](../images/monitoring/high_level.png)
-
 
 ### **Low Level Dashboard**
 
