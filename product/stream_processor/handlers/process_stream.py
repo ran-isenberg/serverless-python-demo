@@ -10,7 +10,6 @@ from product.stream_processor.domain_logic.product_notification import notify_pr
 from product.stream_processor.handlers.models.env_vars import PrcStreamVars
 from product.stream_processor.integrations.events.base import BaseEventHandler
 from product.stream_processor.integrations.events.event_handler import EventHandler
-from product.stream_processor.integrations.events.models.output import EventReceipt
 from product.stream_processor.models.product import ProductChangeNotification
 
 
@@ -18,15 +17,11 @@ from product.stream_processor.models.product import ProductChangeNotification
 @logger.inject_lambda_context(log_event=True)
 @metrics.log_metrics
 @tracer.capture_lambda_handler(capture_response=False)
-def lambda_handler(event: dict[str, Any], context: LambdaContext) -> EventReceipt:
-    return process_stream(event, context)  # pragma: no cover
-
-
 def process_stream(
     event: dict[str, Any],
     context: LambdaContext,
     event_handler: BaseEventHandler | None = None,
-) -> EventReceipt:
+) -> dict:
     """Process batch of Amazon DynamoDB Stream containing product changes.
 
 
@@ -54,7 +49,7 @@ def process_stream(
 
     Returns
     -------
-    EventReceipt
+    Dict
         Receipts for unsuccessfully and successfully published events.
 
     Raises
@@ -87,4 +82,6 @@ def process_stream(
     if event_handler is None:  # pragma: no cover
         event_handler = EventHandler(event_source=env_vars.EVENT_SOURCE, event_bus=env_vars.EVENT_BUS)
 
-    return notify_product_updates(update=product_updates, event_handler=event_handler)
+    receipt = notify_product_updates(update=product_updates, event_handler=event_handler)
+
+    return receipt.model_dump()
