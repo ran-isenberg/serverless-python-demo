@@ -1817,6 +1817,40 @@ files = [
 ]
 
 [[package]]
+name = "stamina"
+version = "23.2.0"
+description = "Production-grade retries made easy."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "stamina-23.2.0-py3-none-any.whl", hash = "sha256:31af7998497156af39e08d061a66c94643d037d90f4510ab8d03ece7526afb66"},
+    {file = "stamina-23.2.0.tar.gz", hash = "sha256:69e61a2d303d3fc2a54ac4c4c4b86da916bc301a2a03f4d2e2a5b3bb48e4f5cc"},
+]
+
+[package.dependencies]
+tenacity = "*"
+
+[package.extras]
+dev = ["nox", "prometheus-client", "stamina[tests,typing]", "structlog", "tomli"]
+docs = ["furo", "myst-parser", "prometheus-client", "sphinx (>=7.2.2)", "sphinx-copybutton", "sphinx-notfound-page", "structlog"]
+tests = ["pytest", "pytest-asyncio"]
+typing = ["mypy (>=1.4)"]
+
+[[package]]
+name = "tenacity"
+version = "8.2.3"
+description = "Retry code until it succeeds"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "tenacity-8.2.3-py3-none-any.whl", hash = "sha256:ce510e327a630c9e1beaf17d42e6ffacc88185044ad85cf74c0a8887c6a0f88c"},
+    {file = "tenacity-8.2.3.tar.gz", hash = "sha256:5398ef0d78e63f40007c1fb4c0bff96e1911394d2fa8d194f77619c05ff6cc8a"},
+]
+
+[package.extras]
+doc = ["reno", "sphinx", "tornado (>=4.5)"]
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -2057,4 +2091,4 @@ requests = ">=2.0,<3.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.0"
-content-hash = "7ffca536b12da71a5cc99adb9c53162406068fb4fb9483dc7c1a2778cce22c78"
+content-hash = "256722c94af7eed4e166f26b095920c024c6d7122843f05ae7c0cb57cb075fb9"

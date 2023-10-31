@@ -1,10 +1,10 @@
 import os
-import time
 from datetime import datetime
 from typing import Generator
 
 import boto3
 import pytest
+import stamina
 from mypy_boto3_dynamodb.service_resource import Table
 from pydantic import BaseModel
 
@@ -65,7 +65,7 @@ def add_product_entry_to_db(table_name: str) -> Generator[Product, None, None]:
     table.delete_item(Key={'id': product.id})
 
 
-def get_event_from_table(table_name: str, event_source: str, event_name: str, receipt_id: str) -> EventIntercepted:
+def get_event_from_table(table_name: str, event_source: str, event_name: str, receipt_id: str, retries: int = 3, delay: int = 1) -> EventIntercepted:
     """Fetch event intercepted and stored in DynamoDB table.
 
     Intercepted events are stored with a primary key named: {event_source}#{event_name}#{receipt_id}.
@@ -86,25 +86,37 @@ def get_event_from_table(table_name: str, event_source: str, event_name: str, re
     ----------
     table_name : str
         Table name with events intercepted
-    event_source
+    event_source: str
         Event source for event intercepted
-    event_name
+    event_name: str
         Event name
-    receipt_id
+    receipt_id: str
         Receipt ID for event ingested earlier
+    retries: int
+        Number of retries in the event of no event found
+    delay: int
+        Time to wait before querying
 
     Returns
     -------
     EventIntercepted
         Event intercepted and retrieved from DynamoDB table
     """
-    pk = f'{event_source}#{event_name}#{receipt_id}'
+
+    @stamina.retry(on=ValueError, attempts=retries, wait_initial=delay, wait_jitter=0.2)
+    def get_event(table: Table):
+        pk = f'{event_source}#{event_name}#{receipt_id}'
+
+        ret = table.query(KeyConditionExpression='pk = :pk', ExpressionAttributeValues={':pk': pk})
+
+        if ret['Count'] == 0:
+            raise ValueError('No event found; forcing retry in the event of eventual consistency')
+
+        item = ret['Items'][0]
+
+        return EventIntercepted(metadata=item['metadata'], data=item['data'], receipt_id=item['receipt_id'])  # type: ignore[arg-type]
 
     ddb = boto3.resource('dynamodb')
     table: Table = ddb.Table(table_name)
 
-    time.sleep(1)  # TODO: replace this with polling logic
-    ret = table.query(KeyConditionExpression='pk = :pk', ExpressionAttributeValues={':pk': pk})
-
-    item = ret['Items'][0]  # todo: allow multiple events to be batched
-    return EventIntercepted(metadata=item['metadata'], data=item['data'], receipt_id=item['receipt_id'])  # type: ignore[arg-type]
+    return get_event(table)
