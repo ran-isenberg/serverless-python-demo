@@ -1,6 +1,6 @@
 from typing import Any
 
-from aws_lambda_env_modeler import get_environment_variables, init_environment_variables
+from aws_lambda_env_modeler import get_environment_variables
 from aws_lambda_powertools.metrics import MetricUnit
 from aws_lambda_powertools.utilities.data_classes.dynamo_db_stream_event import DynamoDBStreamEvent
 from aws_lambda_powertools.utilities.typing import LambdaContext
@@ -13,7 +13,7 @@ from product.stream_processor.integrations.events.event_handler import EventHand
 from product.stream_processor.models.product import ProductChangeNotification
 
 
-@init_environment_variables(model=PrcStreamVars)
+# @init_environment_variables(model=PrcStreamVars)
 @logger.inject_lambda_context(log_event=True)
 @metrics.log_metrics
 @tracer.capture_lambda_handler(capture_response=False)
