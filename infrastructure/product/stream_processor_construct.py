@@ -1,4 +1,4 @@
-from aws_cdk import Duration
+from aws_cdk import CfnOutput, Duration
 from aws_cdk import aws_dynamodb as dynamodb
 from aws_cdk import aws_events as events
 from aws_cdk import aws_iam as iam
@@ -21,6 +21,10 @@ class StreamProcessorConstruct(Construct):
         self.role = self._build_lambda_role(db=dynamodb_table, bus=self.event_bus)
         self.lambda_function = self._build_stream_processor_lambda(self.role, lambda_layer, dynamodb_table, self.event_bus)
         self._add_monitoring_dashboard(self.lambda_function)
+
+        CfnOutput(self, id=constants.STREAM_PROCESSOR_EVENT_BUS_NAME_OUTPUT, value=self.event_bus.event_bus_name).override_logical_id(
+            constants.STREAM_PROCESSOR_EVENT_BUS_NAME_OUTPUT
+        )
 
     def _build_lambda_role(self, db: dynamodb.Table, bus: events.EventBus) -> iam.Role:
         return iam.Role(
