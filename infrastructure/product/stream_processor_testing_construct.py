@@ -23,7 +23,7 @@ class StreamProcessorTestingConstruct(Construct):
         self.rule = self._build_event_bridge_rule(event_bus=events, state_machine=self.state_machine)
 
     def _build_test_results_db(self, id_prefix: str) -> dynamodb.Table:
-        table_id = f'{id_prefix}{constants.STREAM_TESTS_TABLE_NAME}'
+        table_id = f'{id_prefix}{constants.STREAM_PROCESSOR_TEST_TABLE_NAME}'
         table = dynamodb.Table(
             self,
             table_id,
@@ -34,8 +34,8 @@ class StreamProcessorTestingConstruct(Construct):
             point_in_time_recovery=True,
             removal_policy=RemovalPolicy.DESTROY,
         )
-        CfnOutput(self, id=constants.STREAM_TESTS_TABLE_NAME_OUTPUT, value=table.table_name).override_logical_id(
-            constants.STREAM_TESTS_TABLE_NAME_OUTPUT
+        CfnOutput(self, id=constants.STREAM_PROCESSOR_TEST_TABLE_NAME_OUTPUT, value=table.table_name).override_logical_id(
+            constants.STREAM_PROCESSOR_TEST_TABLE_NAME_OUTPUT
         )
         return table
 
@@ -45,7 +45,7 @@ class StreamProcessorTestingConstruct(Construct):
             self,
             f'{self.id_}TestRule',
             event_pattern=events.EventPattern(
-                source=events.Match.any_of(events.Match.prefix('test_'), events.Match.exact_string(constants.EVENT_SOURCE))
+                source=events.Match.any_of(events.Match.prefix('test_'), events.Match.exact_string(constants.STREAM_PROCESSOR_EVENT_SOURCE_NAME))
             ),
             enabled=True,
             event_bus=event_bus,

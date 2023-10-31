@@ -16,14 +16,14 @@ class StreamProcessorConstruct(Construct):
     def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table) -> None:
         super().__init__(scope, id_)
         self.id_ = id_
-        bus_name = f'{id_}{constants.EVENT_BUS_NAME}'
+        bus_name = f'{id_}{constants.STREAM_PROCESSOR_EVENT_BUS_NAME}'
         self.event_bus = events.EventBus(self, bus_name, event_bus_name=bus_name)
         self.role = self._build_lambda_role(db=dynamodb_table, bus=self.event_bus)
         self.lambda_function = self._build_stream_processor_lambda(self.role, lambda_layer, dynamodb_table, self.event_bus)
         self._add_monitoring_dashboard(self.lambda_function)
 
-        CfnOutput(self, id=constants.STREAM_PROCESSOR_EVENT_BUS_NAME_OUTPUT, value=self.event_bus.event_bus_name).override_logical_id(
-            constants.STREAM_PROCESSOR_EVENT_BUS_NAME_OUTPUT
+        CfnOutput(self, id=constants.STREAM_PROCESSOR_TEST_EVENT_BUS_NAME_OUTPUT, value=self.event_bus.event_bus_name).override_logical_id(
+            constants.STREAM_PROCESSOR_TEST_EVENT_BUS_NAME_OUTPUT
         )
 
     def _build_lambda_role(self, db: dynamodb.Table, bus: events.EventBus) -> iam.Role:
@@ -69,7 +69,7 @@ class StreamProcessorConstruct(Construct):
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
                 'EVENT_BUS': bus.event_bus_name,
-                'EVENT_SOURCE': constants.EVENT_SOURCE,
+                'EVENT_SOURCE': constants.STREAM_PROCESSOR_EVENT_SOURCE_NAME,
             },
             tracing=_lambda.Tracing.ACTIVE,
             retry_attempts=0,

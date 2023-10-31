@@ -13,8 +13,8 @@ from infrastructure.product.constants import (
     POWER_TOOLS_LOG_LEVEL,
     POWERTOOLS_SERVICE_NAME,
     SERVICE_NAME,
-    STREAM_PROCESSOR_EVENT_BUS_NAME_OUTPUT,
-    STREAM_TESTS_TABLE_NAME_OUTPUT,
+    STREAM_PROCESSOR_TEST_EVENT_BUS_NAME_OUTPUT,
+    STREAM_PROCESSOR_TEST_TABLE_NAME_OUTPUT,
     TABLE_NAME_OUTPUT,
 )
 from product.crud.models.product import Product
@@ -47,12 +47,12 @@ def table_name():
 
 @pytest.fixture(scope='session', autouse=True)
 def test_events_table():
-    return get_stack_output(STREAM_TESTS_TABLE_NAME_OUTPUT)
+    return get_stack_output(STREAM_PROCESSOR_TEST_TABLE_NAME_OUTPUT)
 
 
 @pytest.fixture(scope='session', autouse=True)
 def event_bus():
-    return get_stack_output(STREAM_PROCESSOR_EVENT_BUS_NAME_OUTPUT)
+    return get_stack_output(STREAM_PROCESSOR_TEST_EVENT_BUS_NAME_OUTPUT)
 
 
 @pytest.fixture(scope='module', autouse=True)
