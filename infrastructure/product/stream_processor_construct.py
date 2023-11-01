@@ -1,4 +1,4 @@
-from aws_cdk import Duration
+from aws_cdk import CfnOutput, Duration
 from aws_cdk import aws_dynamodb as dynamodb
 from aws_cdk import aws_events as events
 from aws_cdk import aws_iam as iam
@@ -16,11 +16,15 @@ class StreamProcessorConstruct(Construct):
     def __init__(self, scope: Construct, id_: str, lambda_layer: PythonLayerVersion, dynamodb_table: dynamodb.Table) -> None:
         super().__init__(scope, id_)
         self.id_ = id_
-        bus_name = f'{id_}{constants.EVENT_BUS_NAME}'
+        bus_name = f'{id_}{constants.STREAM_PROCESSOR_EVENT_BUS_NAME}'
         self.event_bus = events.EventBus(self, bus_name, event_bus_name=bus_name)
         self.role = self._build_lambda_role(db=dynamodb_table, bus=self.event_bus)
         self.lambda_function = self._build_stream_processor_lambda(self.role, lambda_layer, dynamodb_table, self.event_bus)
         self._add_monitoring_dashboard(self.lambda_function)
+
+        CfnOutput(self, id=constants.STREAM_PROCESSOR_TEST_EVENT_BUS_NAME_OUTPUT, value=self.event_bus.event_bus_name).override_logical_id(
+            constants.STREAM_PROCESSOR_TEST_EVENT_BUS_NAME_OUTPUT
+        )
 
     def _build_lambda_role(self, db: dynamodb.Table, bus: events.EventBus) -> iam.Role:
         return iam.Role(
@@ -60,12 +64,12 @@ class StreamProcessorConstruct(Construct):
             id=constants.STREAM_PROCESSOR_LAMBDA,
             runtime=_lambda.Runtime.PYTHON_3_11,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
-            handler='product.stream_processor.handlers.process_stream.lambda_layer',
+            handler='product.stream_processor.handlers.process_stream.process_stream',
             environment={
                 constants.POWERTOOLS_SERVICE_NAME: constants.SERVICE_NAME,  # for logger, tracer and metrics
                 constants.POWER_TOOLS_LOG_LEVEL: 'DEBUG',  # for logger
                 'EVENT_BUS': bus.event_bus_name,
-                'EVENT_SOURCE': constants.EVENT_SOURCE,
+                'EVENT_SOURCE': constants.STREAM_PROCESSOR_EVENT_SOURCE_NAME,
             },
             tracing=_lambda.Tracing.ACTIVE,
             retry_attempts=0,

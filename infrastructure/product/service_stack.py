@@ -36,7 +36,6 @@ class ServiceStack(Stack):
             StreamProcessorTestingConstruct(
                 self,
                 id_=get_construct_name(id, constants.STREAM_PROCESSOR_TEST_CONSTRUCT_NAME),
-                lambda_layer=self.shared_layer,
                 events=self.stream_processor.event_bus,
             )
 
