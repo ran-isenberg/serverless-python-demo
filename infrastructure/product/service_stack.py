@@ -7,7 +7,7 @@ from constructs import Construct
 import infrastructure.product.constants as constants
 from infrastructure.product.crud_api_construct import CrudApiConstruct
 from infrastructure.product.stream_processor_construct import StreamProcessorConstruct
-from infrastructure.product.stream_processor_testing_construct import StreamProcessorTestingConstruct
+from infrastructure.product.stream_processor_testing.stream_processor_testing_construct import StreamProcessorTestingConstruct
 from infrastructure.product.utils import get_construct_name, get_username
 
 
@@ -70,6 +70,6 @@ class ServiceStack(Stack):
                 {'id': 'AwsSolutions-APIG6', 'reason': 'not mandatory in a sample template'},
                 {'id': 'AwsSolutions-APIG4', 'reason': 'authorization not mandatory in a sample template'},
                 {'id': 'AwsSolutions-COG4', 'reason': 'not using cognito'},
-                {'id': 'AwsSolutions-SMG4', 'reason': 'secret for cognito does not support auto rotate'},
+                {'id': 'AwsSolutions-SMG4', 'reason': 'used for testing only, secret for cognito does not support auto rotate'},
             ],
         )
