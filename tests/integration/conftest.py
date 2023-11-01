@@ -55,7 +55,7 @@ def event_bus():
     return get_stack_output(STREAM_PROCESSOR_TEST_EVENT_BUS_NAME_OUTPUT)
 
 
-@pytest.fixture(scope='module', autouse=True)
+@pytest.fixture(scope='module')
 def add_product_entry_to_db(table_name: str) -> Generator[Product, None, None]:
     clear_table(table_name)
     product = ProductEntry(id=generate_product_id(), price=1, name='test', created_at=int(datetime.utcnow().timestamp()))
