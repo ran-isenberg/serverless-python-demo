@@ -25,7 +25,7 @@ class ProductEntry(BaseModel):
         Product price represented as a positive integer
     """
 
-    name: Annotated[str, Field(min_length=1, max_length=30)]
+    name: Annotated[str, Field(min_length=1, max_length=50)]
     id: ProductId
     price: PositiveInt
     created_at: PositiveInt
