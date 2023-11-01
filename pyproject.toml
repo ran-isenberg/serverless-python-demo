@@ -23,7 +23,7 @@ aws-lambda-powertools = { extras = ["tracer"], version = "^2.20.0" }
 mypy-boto3-dynamodb = "*"
 cachetools = "*"
 boto3 = "^1.26.125"
-aws-lambda-env-modeler = "*"
+aws-lambda-env-modeler = { version = "^1.0.5" }
 
 
 [tool.poetry.group.dev.dependencies]
@@ -91,7 +91,7 @@ exclude = [
     ".pytest_cache",
     ".build",
     ".mypy_cache",
-    ".github"
+    ".github",
 ]
 
 # Same as Black.
@@ -104,14 +104,14 @@ target-version = "py311"
 [tool.ruff.lint]
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
 select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "C",  # flake8-comprehensions
-    "B",  # flake8-bugbear
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "C", # flake8-comprehensions
+    "B", # flake8-bugbear
 ]
-ignore = [ "E203", "E266", "E501", "W191"]
+ignore = ["E203", "E266", "E501", "W191"]
 
 [tool.ruff.format]
 quote-style = "single"
