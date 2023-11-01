@@ -9,10 +9,10 @@
                 "TableName": "${TABLE_NAME}",
                 "Item": {
                     "pk": {
-                        "S.$": "States.Format('{}#{}#{}', $.detail.metadata.event_source, $.detail.metadata.event_name, $.id)"
+                        "S.$": "$.detail.metadata.event_source"
                     },
                     "sk": {
-                        "S.$": "$.detail.metadata.created_at"
+                        "S.$": "States.Format('{}#{}#{}', $.id, $.detail.metadata.event_name, $.detail.metadata.created_at)"
                     },
                     "receipt_id": {
                         "S.$": "$.id"
