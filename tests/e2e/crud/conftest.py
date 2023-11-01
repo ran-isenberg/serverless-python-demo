@@ -9,6 +9,7 @@ from infrastructure.product.constants import (
     IDENTITY_APP_CLIENT_ID_OUTPUT,
     PRODUCT_RESOURCE,
     PRODUCTS_RESOURCE,
+    STREAM_PROCESSOR_TEST_TABLE_NAME_OUTPUT,
     TABLE_NAME_OUTPUT,
     TEST_USER_IDENTITY_SECRET_NAME_OUTPUT,
 )
@@ -41,6 +42,11 @@ def product_id():
 @pytest.fixture(scope='module', autouse=True)
 def table_name():
     return get_stack_output(TABLE_NAME_OUTPUT)
+
+
+@pytest.fixture(scope='session')
+def test_events_table():
+    return get_stack_output(STREAM_PROCESSOR_TEST_TABLE_NAME_OUTPUT)
 
 
 @pytest.fixture()
