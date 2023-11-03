@@ -5,10 +5,10 @@ from cdk_nag import AwsSolutionsChecks, NagSuppressions
 from constructs import Construct
 
 import infrastructure.product.constants as constants
-from infrastructure.product.crud_api_construct import CrudApiConstruct
-from infrastructure.product.stream_processor_construct import StreamProcessorConstruct
-from infrastructure.product.stream_processor_testing.stream_processor_testing_construct import StreamProcessorTestingConstruct
-from infrastructure.product.utils import get_construct_name, get_username
+from infrastructure.product.crud.crud_api_construct import CrudApiConstruct
+from infrastructure.product.stack_utils import get_construct_name, get_username
+from infrastructure.product.stream_processor.stream_processor_construct import StreamProcessorConstruct
+from infrastructure.product.stream_processor.stream_processor_testing.stream_processor_testing_construct import StreamProcessorTestingConstruct
 
 
 class ServiceStack(Stack):
@@ -65,11 +65,9 @@ class ServiceStack(Stack):
                 {'id': 'AwsSolutions-IAM4', 'reason': 'policy for cloudwatch logs.'},
                 {'id': 'AwsSolutions-IAM5', 'reason': 'policy for cloudwatch logs.'},
                 {'id': 'AwsSolutions-APIG2', 'reason': 'lambda does input validation'},
+                {'id': 'AwsSolutions-SMG4', 'reason': 'used for testing only, secret for cognito does not support auto rotate'},
                 {'id': 'AwsSolutions-APIG1', 'reason': 'not mandatory in a sample template'},
                 {'id': 'AwsSolutions-APIG3', 'reason': 'not mandatory in a sample template'},
                 {'id': 'AwsSolutions-APIG6', 'reason': 'not mandatory in a sample template'},
-                {'id': 'AwsSolutions-APIG4', 'reason': 'authorization not mandatory in a sample template'},
-                {'id': 'AwsSolutions-COG4', 'reason': 'not using cognito'},
-                {'id': 'AwsSolutions-SMG4', 'reason': 'used for testing only, secret for cognito does not support auto rotate'},
             ],
         )

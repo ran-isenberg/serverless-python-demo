@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
         name: Ensure that code don't have trailing whitespace
@@ -20,13 +20,15 @@ repos:
         exclude: ".json"
       - id: double-quote-string-fixer
         name: Strings should be single quoted
+      - id: end-of-file-fixer
+        name: Newline at end of file
       - id: name-tests-test
         name: Tests should begin with test_
         args: ["--django"]
         exclude: "^(?!helpers/)"
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.1.2
+    rev: v0.1.3
     hooks:
       # Run the Ruff linter.
       - id: ruff

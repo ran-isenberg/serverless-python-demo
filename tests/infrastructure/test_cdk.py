@@ -1,7 +1,7 @@
 from aws_cdk import App
 from aws_cdk.assertions import Template
 
-from infrastructure.product.service_stack import ServiceStack
+from infrastructure.product.product_stack import ServiceStack
 
 
 def test_synthesizes_properly():

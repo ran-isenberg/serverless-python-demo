@@ -54,6 +54,7 @@ You can start your own service in three clicks.
 - Cognito user pool with a test user. All E2E tests automatically login with the test user and use a JWT id token
 - Idempotent API
 - Authentication protected API
+- REST API protected by WAF with four AWS managed rules in production deployment
 - CloudWatch dashboards - High level and low level including CloudWatch alarms
 - Unit, infrastructure, security, integration and end to end tests.
 

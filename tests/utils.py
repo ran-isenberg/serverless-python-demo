@@ -4,7 +4,7 @@ import string
 import boto3
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
-from infrastructure.product.utils import get_stack_name
+from infrastructure.product.stack_utils import get_stack_name
 
 
 def generate_random_string(length: int = 7):

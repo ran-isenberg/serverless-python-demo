@@ -7,9 +7,10 @@ from aws_cdk.aws_logs import RetentionDays
 from constructs import Construct
 
 import infrastructure.product.constants as constants
-from infrastructure.product.crud_api_db_construct import ApiDbConstruct
-from infrastructure.product.crud_monitoring import CrudMonitoring
-from infrastructure.product.identity_provider.identity_provider_construct import IdentityProviderConstruct
+from infrastructure.product.crud.crud_api_db_construct import ApiDbConstruct
+from infrastructure.product.crud.crud_monitoring import CrudMonitoring
+from infrastructure.product.crud.identity_provider.identity_provider_construct import IdentityProviderConstruct
+from infrastructure.product.crud.waf_construct import WafToApiGatewayConstruct
 
 
 class CrudApiConstruct(Construct):
@@ -36,6 +37,9 @@ class CrudApiConstruct(Construct):
             idempotency_table=self.api_db.idempotency_db,
             functions=[self.create_prod_func, self.delete_prod_func, self.get_prod_func, self.list_prods_func],
         )
+        if is_production:
+            # add WAF
+            self.waf = WafToApiGatewayConstruct(self, f'{id_}waf', self.rest_api)
 
     def _build_api_gw(self) -> aws_apigateway.RestApi:
         rest_api: aws_apigateway.RestApi = aws_apigateway.RestApi(
