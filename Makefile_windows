@@ -65,3 +65,11 @@ docs:
 
 lint-docs:
 	docker run -v \markdown 06kellyjac\markdownlint-cli --fix "docs"
+
+watch:
+	npx cdk watch
+
+update-deps:
+	poetry update
+	pre-commit autoupdate
+	npm i --package-lock-only
