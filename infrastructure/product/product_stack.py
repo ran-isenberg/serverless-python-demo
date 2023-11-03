@@ -66,5 +66,8 @@ class ServiceStack(Stack):
                 {'id': 'AwsSolutions-IAM5', 'reason': 'policy for cloudwatch logs.'},
                 {'id': 'AwsSolutions-APIG2', 'reason': 'lambda does input validation'},
                 {'id': 'AwsSolutions-SMG4', 'reason': 'used for testing only, secret for cognito does not support auto rotate'},
+                {'id': 'AwsSolutions-APIG1', 'reason': 'not mandatory in a sample template'},
+                {'id': 'AwsSolutions-APIG3', 'reason': 'not mandatory in a sample template'},
+                {'id': 'AwsSolutions-APIG6', 'reason': 'not mandatory in a sample template'},
             ],
         )
