@@ -79,17 +79,17 @@ typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "aws-cdk-aws-apigatewayv2-alpha"
-version = "2.103.1a0"
+version = "2.104.0a0"
 description = "The CDK Construct Library for AWS::APIGatewayv2"
 optional = false
 python-versions = "~=3.7"
 files = [
-    {file = "aws-cdk.aws-apigatewayv2-alpha-2.103.1a0.tar.gz", hash = "sha256:b8581cda464f383291339a9d119a041cf52f188b454010e625ede548c258a390"},
-    {file = "aws_cdk.aws_apigatewayv2_alpha-2.103.1a0-py3-none-any.whl", hash = "sha256:a2852f767a4e3bb9f5f599fc582f76d48c6a910a4e5f2b51a180b4fd2f4becc0"},
+    {file = "aws-cdk.aws-apigatewayv2-alpha-2.104.0a0.tar.gz", hash = "sha256:da03a8a31ce9a66572f43cf81e7db6e2ccc96b0fa6669e580872fb90a8388917"},
+    {file = "aws_cdk.aws_apigatewayv2_alpha-2.104.0a0-py3-none-any.whl", hash = "sha256:947165cda9e713b1c40bc8acb2579b3c30231bee63c1a43317bf2749fc30b46d"},
 ]
 
 [package.dependencies]
-aws-cdk-lib = ">=2.103.1,<3.0.0"
+aws-cdk-lib = ">=2.104.0,<3.0.0"
 constructs = ">=10.0.0,<11.0.0"
 jsii = ">=1.89.0,<2.0.0"
 publication = ">=0.0.3"
@@ -97,17 +97,17 @@ typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "aws-cdk-aws-lambda-python-alpha"
-version = "2.103.1a0"
+version = "2.104.0a0"
 description = "The CDK Construct Library for AWS Lambda in Python"
 optional = false
 python-versions = "~=3.7"
 files = [
-    {file = "aws-cdk.aws-lambda-python-alpha-2.103.1a0.tar.gz", hash = "sha256:1a7bf2d9d4516e541e5a7c20c8f4ea05c36522c3dc41af78094979c012f07e52"},
-    {file = "aws_cdk.aws_lambda_python_alpha-2.103.1a0-py3-none-any.whl", hash = "sha256:5b5dded24f9eaa80dc9d1796ba3de45ecc8dbd61146815e7fddc65c5185ac6aa"},
+    {file = "aws-cdk.aws-lambda-python-alpha-2.104.0a0.tar.gz", hash = "sha256:80aa6b84114ec546e3572f21c0258451e60e3054c279d519371350da02096955"},
+    {file = "aws_cdk.aws_lambda_python_alpha-2.104.0a0-py3-none-any.whl", hash = "sha256:1d76427e63edd80430e185fe26463263aa3d7d575e489f1ad19f367b70f31f74"},
 ]
 
 [package.dependencies]
-aws-cdk-lib = ">=2.103.1,<3.0.0"
+aws-cdk-lib = ">=2.104.0,<3.0.0"
 constructs = ">=10.0.0,<11.0.0"
 jsii = ">=1.89.0,<2.0.0"
 publication = ">=0.0.3"
@@ -115,17 +115,17 @@ typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "aws-cdk-aws-redshift-alpha"
-version = "2.103.1a0"
+version = "2.104.0a0"
 description = "The CDK Construct Library for AWS::Redshift"
 optional = false
 python-versions = "~=3.7"
 files = [
-    {file = "aws-cdk.aws-redshift-alpha-2.103.1a0.tar.gz", hash = "sha256:9671bdaa449a6da466088e09591fa8d104d6ea1556fe4ce43b057a35ebd7e43e"},
-    {file = "aws_cdk.aws_redshift_alpha-2.103.1a0-py3-none-any.whl", hash = "sha256:74975bc608d9adef63f083949215b642912c4cc029d3f5d2676778936549f6d9"},
+    {file = "aws-cdk.aws-redshift-alpha-2.104.0a0.tar.gz", hash = "sha256:3f016b30f8453807f9ec21eb455e826e324d846b47b1d97f6006ee66a462069d"},
+    {file = "aws_cdk.aws_redshift_alpha-2.104.0a0-py3-none-any.whl", hash = "sha256:3615ab2e63094bad5d797c02eae53a44b5caa94777d9afb2f5a83737c8d152e7"},
 ]
 
 [package.dependencies]
-aws-cdk-lib = ">=2.103.1,<3.0.0"
+aws-cdk-lib = ">=2.104.0,<3.0.0"
 constructs = ">=10.0.0,<11.0.0"
 jsii = ">=1.89.0,<2.0.0"
 publication = ">=0.0.3"
@@ -133,13 +133,13 @@ typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "aws-cdk-lib"
-version = "2.103.1"
+version = "2.104.0"
 description = "Version 2 of the AWS Cloud Development Kit library"
 optional = false
 python-versions = "~=3.7"
 files = [
-    {file = "aws-cdk-lib-2.103.1.tar.gz", hash = "sha256:798d5acdb4603d9f49466216781686a1e2dcf7d9bd2ffdc05a002730739e92a3"},
-    {file = "aws_cdk_lib-2.103.1-py3-none-any.whl", hash = "sha256:e558c5ae5ee7a5fe0560368cee65d1ace28a203078fa98ce99007c539085e083"},
+    {file = "aws-cdk-lib-2.104.0.tar.gz", hash = "sha256:3a180b45eaeefcce1400c49e162da639ac0e2a00d686e65f03ab823cd2c7ce9b"},
+    {file = "aws_cdk_lib-2.104.0-py3-none-any.whl", hash = "sha256:3130d4fd3d5ea68f566f8872dc44c1d0d93979127699610decd27d6dbeac766d"},
 ]
 
 [package.dependencies]
@@ -223,17 +223,17 @@ dev = ["freezegun (>=1.0,<2.0)", "pytest (>=6.0)", "pytest-cov"]
 
 [[package]]
 name = "boto3"
-version = "1.28.75"
+version = "1.28.77"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "boto3-1.28.75-py3-none-any.whl", hash = "sha256:b959decd588982bc919bfcbebc7916926b05003a0093e7f2845362da4f5dd9fc"},
-    {file = "boto3-1.28.75.tar.gz", hash = "sha256:63d772a784e8e35ee51974eb1c20dff5faa51b007d22c5647783f18966bf4042"},
+    {file = "boto3-1.28.77-py3-none-any.whl", hash = "sha256:c0899e54df362bea0ae329da59b0a00e4be5e220e99dc764802ed83cdfc4285c"},
+    {file = "boto3-1.28.77.tar.gz", hash = "sha256:1a47e5b8faea527bb2a40d0cf58faf0d09b5a46cf5658e2c5729479af20c96b8"},
 ]
 
 [package.dependencies]
-botocore = ">=1.31.75,<1.32.0"
+botocore = ">=1.31.77,<1.32.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.7.0,<0.8.0"
 
@@ -242,13 +242,13 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.31.75"
+version = "1.31.77"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "botocore-1.31.75-py3-none-any.whl", hash = "sha256:fa078c4aa9a5777b3ede756540e62fec551e13d39cf7abf9a37bb81981496d68"},
-    {file = "botocore-1.31.75.tar.gz", hash = "sha256:d704ea9867b2227de0350bc2a5ca2543349e164ecb5d15edbfacbb05f2056482"},
+    {file = "botocore-1.31.77-py3-none-any.whl", hash = "sha256:4c5c9562b5d1fb8355314ddf37142edf3f6abd7526f4a68cc1b6cd79bdda48ec"},
+    {file = "botocore-1.31.77.tar.gz", hash = "sha256:509168151f8a0e1b8296031a7fc7822d59d027865d3baa86917682b311a74d26"},
 ]
 
 [package.dependencies]
@@ -315,13 +315,13 @@ typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "cdk-nag"
-version = "2.27.179"
+version = "2.27.181"
 description = "Check CDK v2 applications for best practices using a combination on available rule packs."
 optional = false
 python-versions = "~=3.7"
 files = [
-    {file = "cdk-nag-2.27.179.tar.gz", hash = "sha256:2bde27f981213966dcca30c4e539f85caad79f2e24e1088e7ac70f7268b16210"},
-    {file = "cdk_nag-2.27.179-py3-none-any.whl", hash = "sha256:19e854d40dff9ec6f98d359feb184516bec6440038012315dbd5d55515b97d52"},
+    {file = "cdk-nag-2.27.181.tar.gz", hash = "sha256:7a01c68ee7f0c3486e65723188145b8f987822f7f0f688cce003d443273f1fb0"},
+    {file = "cdk_nag-2.27.181-py3-none-any.whl", hash = "sha256:4c08e30cabe6760fac8b279417789da5c0c64df1545b7cfe746c150fd67d0106"},
 ]
 
 [package.dependencies]
