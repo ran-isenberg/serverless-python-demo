@@ -174,8 +174,8 @@ class CrudApiConstruct(Construct):
             layers=[self.common_layer],
             role=role,
             log_retention=RetentionDays.ONE_DAY,
-            log_format=_lambda.LogFormat.JSON,
-            system_log_level=_lambda.SystemLogLevel.INFO,
+            log_format=_lambda.LogFormat.JSON.value,
+            system_log_level=_lambda.SystemLogLevel.INFO.value,
         )
 
         # PUT /api/product/{product}/
@@ -212,8 +212,8 @@ class CrudApiConstruct(Construct):
             layers=[self.common_layer],
             role=role,
             log_retention=RetentionDays.ONE_DAY,
-            log_format=_lambda.LogFormat.JSON,
-            system_log_level=_lambda.SystemLogLevel.INFO,
+            log_format=_lambda.LogFormat.JSON.value,
+            system_log_level=_lambda.SystemLogLevel.INFO.value,
         )
 
         # DELETE /api/product/{product}/
@@ -250,8 +250,8 @@ class CrudApiConstruct(Construct):
             layers=[self.common_layer],
             role=role,
             log_retention=RetentionDays.ONE_DAY,
-            log_format=_lambda.LogFormat.JSON,
-            system_log_level=_lambda.SystemLogLevel.INFO,
+            log_format=_lambda.LogFormat.JSON.value,
+            system_log_level=_lambda.SystemLogLevel.INFO.value,
         )
 
         # GET /api/product/{product}/
@@ -288,8 +288,8 @@ class CrudApiConstruct(Construct):
             layers=[self.common_layer],
             role=role,
             log_retention=RetentionDays.ONE_DAY,
-            log_format=_lambda.LogFormat.JSON,
-            system_log_level=_lambda.SystemLogLevel.INFO,
+            log_format=_lambda.LogFormat.JSON.value,
+            system_log_level=_lambda.SystemLogLevel.INFO.value,
         )
 
         # GET /api/products/
