@@ -69,5 +69,6 @@ class ServiceStack(Stack):
                 {'id': 'AwsSolutions-APIG1', 'reason': 'not mandatory in a sample template'},
                 {'id': 'AwsSolutions-APIG3', 'reason': 'not mandatory in a sample template'},
                 {'id': 'AwsSolutions-APIG6', 'reason': 'not mandatory in a sample template'},
+                {'id': 'AwsSolutions-L1', 'reason': 'Python 3.12 not out yet'},
             ],
         )
