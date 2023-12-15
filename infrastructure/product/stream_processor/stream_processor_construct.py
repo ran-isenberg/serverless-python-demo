@@ -62,7 +62,7 @@ class StreamProcessorConstruct(Construct):
         lambda_function = _lambda.Function(
             self,
             id=constants.STREAM_PROCESSOR_LAMBDA,
-            runtime=_lambda.Runtime.PYTHON_3_11,
+            runtime=_lambda.Runtime.PYTHON_3_12,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
             handler='product.stream_processor.handlers.process_stream.process_stream',
             environment={

@@ -47,7 +47,7 @@ class ServiceStack(Stack):
             self,
             f'{id_}{constants.LAMBDA_LAYER_NAME}',
             entry=constants.COMMON_LAYER_BUILD_FOLDER,
-            compatible_runtimes=[_lambda.Runtime.PYTHON_3_11],
+            compatible_runtimes=[_lambda.Runtime.PYTHON_3_12],
             removal_policy=RemovalPolicy.DESTROY,
         )
 
@@ -69,6 +69,5 @@ class ServiceStack(Stack):
                 {'id': 'AwsSolutions-APIG1', 'reason': 'not mandatory in a sample template'},
                 {'id': 'AwsSolutions-APIG3', 'reason': 'not mandatory in a sample template'},
                 {'id': 'AwsSolutions-APIG6', 'reason': 'not mandatory in a sample template'},
-                {'id': 'AwsSolutions-L1', 'reason': 'Python 3.12 not out yet'},
             ],
         )
