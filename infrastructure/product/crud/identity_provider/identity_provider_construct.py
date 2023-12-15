@@ -109,7 +109,7 @@ class IdentityProviderConstruct(Construct):
         lambda_function = _lambda.Function(
             self,
             'SetPassHandler',
-            runtime=_lambda.Runtime.PYTHON_3_11,
+            runtime=_lambda.Runtime.PYTHON_3_12,
             handler='index.handler',
             code=_lambda.InlineCode(handler_code),
         )
