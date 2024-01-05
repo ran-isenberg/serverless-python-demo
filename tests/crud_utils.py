@@ -68,7 +68,7 @@ def generate_product_api_gw_event(
         'pathParameters': path_params,
         'stageVariables': None,
         'body': 'Hello from Lambda!' if body is None else json.dumps(body),
-        'isBase64Encoded': True,
+        'isBase64Encoded': False,
     }
 
 
