@@ -75,7 +75,7 @@ class IdentityProviderConstruct(Construct):
             policy=AwsCustomResourcePolicy.from_sdk_calls(resources=[user_pool.user_pool_arn]),
             install_latest_aws_sdk=True,
             removal_policy=RemovalPolicy.DESTROY,
-            timeout=Duration.minutes(1),
+            timeout=Duration.minutes(2),
         )
         create_test_user.node.add_dependency(user_pool.node.default_child)
 
