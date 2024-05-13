@@ -16,7 +16,7 @@ class EventFetcher:
     PK = 'pk'
     SK = 'sk'
 
-    def __init__(self, table_name: str, event_source: str, retries: int = 3, delay: float = 1.5, jitter: float = 0.2) -> None:
+    def __init__(self, table_name: str, event_source: str, retries: int = 5, delay: float = 2.5, jitter: float = 0.2) -> None:
         """Fetch event intercepted and stored in an Amazon DynamoDB table.
 
         Intercepted events are stored in a composite key:
