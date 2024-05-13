@@ -1,4 +1,5 @@
 """This will be replaced with hypothesis later"""
+
 import random
 import time
 from typing import Any

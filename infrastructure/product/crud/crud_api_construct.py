@@ -9,7 +9,7 @@ from constructs import Construct
 import infrastructure.product.constants as constants
 from infrastructure.product.crud.crud_api_db_construct import ApiDbConstruct
 from infrastructure.product.crud.crud_monitoring import CrudMonitoring
-from infrastructure.product.crud.identity_provider.identity_provider_construct import IdentityProviderConstruct
+from infrastructure.product.crud.identity_provider_construct import IdentityProviderConstruct
 from infrastructure.product.crud.waf_construct import WafToApiGatewayConstruct
 
 

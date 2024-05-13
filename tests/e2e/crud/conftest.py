@@ -7,6 +7,7 @@ import pytest
 from infrastructure.product.constants import (
     APIGATEWAY,
     IDENTITY_APP_CLIENT_ID_OUTPUT,
+    IDENTITY_USER_POOL_ID_OUTPUT,
     PRODUCT_RESOURCE,
     PRODUCTS_RESOURCE,
     STREAM_PROCESSOR_TEST_TABLE_NAME_OUTPUT,
@@ -62,23 +63,46 @@ def add_product_entry_to_db(api_gw_url_slash_product: str, table_name: str, id_t
 
 
 @pytest.fixture(scope='session', autouse=True)
-def id_token() -> str:
+def id_token() -> Generator[str, None, None]:
     # Initialize boto3 client for Secrets Manager and Cognito Identity
     secrets_manager_client = boto3.client('secretsmanager')
     cognito_client = boto3.client('cognito-idp')
 
     # Name of the secret created in the previous CDK stack
-    SECRET_NAME = get_stack_output(TEST_USER_IDENTITY_SECRET_NAME_OUTPUT)
     CLIENT_ID = get_stack_output(IDENTITY_APP_CLIENT_ID_OUTPUT)
+    USER_POOL_ID = get_stack_output(IDENTITY_USER_POOL_ID_OUTPUT)
+    SECRET_NAME = get_stack_output(TEST_USER_IDENTITY_SECRET_NAME_OUTPUT)
 
-    # Retrieve secret from Secrets Manager
     response = secrets_manager_client.get_secret_value(SecretId=SECRET_NAME)
     secret = json.loads(response['SecretString'])
+    username = 'aabbaa'
+    password = secret['password']
 
+    email = 'aaaaaa@gmail.com'
+    response = cognito_client.admin_create_user(
+        UserPoolId=USER_POOL_ID,
+        Username=username,
+        UserAttributes=[
+            {
+                'Name': 'email',
+                'Value': email,
+            },
+            {'Name': 'email_verified', 'Value': 'True'},
+        ],
+        TemporaryPassword='Ini111111tial1$!',
+    )
+
+    cognito_client.admin_set_user_password(
+        UserPoolId=USER_POOL_ID,
+        Username=username,
+        Password=password,
+        Permanent=True,
+    )
     # Use the credentials from the secret to login to the Cognito User Pool
     auth_response = cognito_client.initiate_auth(
         AuthFlow='USER_PASSWORD_AUTH',
-        AuthParameters={'USERNAME': secret['username'], 'PASSWORD': secret['password']},
+        AuthParameters={'USERNAME': username, 'PASSWORD': password},
         ClientId=CLIENT_ID,
     )
-    return auth_response['AuthenticationResult']['IdToken']
+    yield auth_response['AuthenticationResult']['IdToken']
+    cognito_client.admin_delete_user(UserPoolId=USER_POOL_ID, Username=username)
