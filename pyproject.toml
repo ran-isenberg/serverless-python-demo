@@ -32,7 +32,7 @@ infrastructure = { path = "infrastructure", develop = true }
 aws-cdk-lib = ">=2.100.0"
 constructs = ">=10.0.0"
 cdk-nag = ">2.0.0"
-"aws-cdk.aws-lambda-python-alpha" = "^2.100.0-alpha.0"
+"aws-cdk.aws-lambda-python-alpha" = "^2.145.0a0"
 cdk-monitoring-constructs = "*"
 # DEV
 pytest = "*"
