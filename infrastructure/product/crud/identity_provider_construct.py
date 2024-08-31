@@ -56,7 +56,7 @@ class IdentityProviderConstruct(Construct):
         # Save the user's credentials to AWS Secrets Manager
         user_credentials_secret = secrets.Secret(
             self,
-            f'{self.id_}TestUserSecret',
+            f'{self.id_}TestsUserSecret',
             description='Credentials for the test user in the Cognito User Pool',
             generate_secret_string=secrets.SecretStringGenerator(
                 secret_string_template=Fn.sub('{"username": "${user}"}', {'user': constants.TEST_USER_USERNAME}),
