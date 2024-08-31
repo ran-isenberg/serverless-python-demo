@@ -46,7 +46,6 @@ theme:
 
 markdown_extensions:
   - admonition
-  - abbr
   - pymdownx.tabbed:
       alternate_style: true
   - pymdownx.highlight:
@@ -55,48 +54,39 @@ markdown_extensions:
   - pymdownx.snippets:
       base_path: "."
       check_paths: true
-      restrict_base_path: false
   - meta
   - toc:
       permalink: true
       toc_depth: 4
   - attr_list
-  - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.emoji
   - pymdownx.inlinehilite
+  - pymdownx.snippets
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.tasklist:
-      custom_checkbox: true
 
-copyright: Copyright &copy; 2023 Ran Isenberg and Heitor Lessa
+copyright: Copyright &copy; 2024 Ran Isenberg and Heitor Lessa
 
 plugins:
+  - git-revision-date
   - search
-  - mkdocstrings:
-      handlers:
-        python:
-          options:
-            docstring_style: numpy
-            docstring_section_style: spacy
-            show_source: true
-            heading_level: 4
-            allow_inspection: true
-            group_by_category: true # Attributes, Functions, Classes etc.
-            show_category_heading: true # Attributes, Functions, Classes etc.
-            show_bases: true # show inheritance
-            show_docstring_examples: true
-            show_if_no_docstring: true # show Pydantic models and global attrs
-            merge_init_into_class: true # avoid Class params + __init__ params
-            separate_signature: false
-            show_signature_annotations: false
-            show_docstring_attributes: false
-            show_root_heading: false
-            members_order: source
+  - render_swagger
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: slide
+      width: 100%
+      height: auto
+      zoomable: true
+      draggable: true
+      skip_classes:
+        - custom-skip-class-name
+      auto_caption: false
+      caption_position: bottom
 
 watch:
   - product

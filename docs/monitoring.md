@@ -12,7 +12,7 @@ By aggregating metrics, logs, and alarms, CloudWatch facilitates swift issue dia
 
 ## **Service Architecture**
 
-![hl](../images/design.png)
+![hl](images/design.png)
 
 The goal is to monitor the service API gateway, Lambda function, and DynamoDB tables and ensure everything is in order.
 
@@ -39,7 +39,7 @@ KPI metrics are included in the bottom part as well.
 
 Personas that use this dashboard: SRE, developers, and product teams (KPIs)
 
-![hl](../images/monitoring/high_level.png)
+![hl](images/monitoring/high_level.png)
 
 ### **Low Level Dashboard**
 
@@ -57,13 +57,13 @@ We have two dashboards : one for CRUD module and the other for the streaming mod
 
 #### **CRUD**
 
-![lv](../images/monitoring/low_level.png)
-![dynamo](../images/monitoring/dynamo.png)
+![lv](images/monitoring/low_level.png)
+![dynamo](images/monitoring/dynamo.png)
 
 #### **Streaming**
 
-![hl](../images/monitoring/stream_low_level.png)
-![hl](../images/monitoring/eb.png)
+![hl](images/monitoring/stream_low_level.png)
+![hl](images/monitoring/eb.png)
 
 ### **Alarms**
 
@@ -80,12 +80,12 @@ In this dashboard, you will find an example of two types of alarms:
 
 For latency-related issues, we define the following alarm:
 
-![p90](../images/monitoring/alarm_p90.png)
+![p90](images/monitoring/alarm_p90.png)
 
 For P90, P50 metrics, follow this [explanation.](https://www.dnv.com/article/terminology-explained-p10-p50-and-p90-202611#:~:text=Proved%20(P90)%3A%20The%20lowest,equal%20or%20exceed%20P10%20estimate.){:target="_blank" rel="noopener"}
 
 For internal server errors rate, we define the following alarm:
-![5xx](../images/monitoring/alarm_5xx.png)
+![5xx](images/monitoring/alarm_5xx.png)
 
 #### Actions
 
