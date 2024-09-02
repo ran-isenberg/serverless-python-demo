@@ -2584,20 +2584,20 @@ files = [
 
 [[package]]
 name = "stamina"
-version = "23.3.0"
+version = "24.3.0"
 description = "Production-grade retries made easy."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "stamina-23.3.0-py3-none-any.whl", hash = "sha256:efd0a6918bbb2adc9268768f7f9009d04f41c4fb5888e0aca82590d757988923"},
-    {file = "stamina-23.3.0.tar.gz", hash = "sha256:48f1b3c39ea7e03775fdc0653f9f6ad183b401c84e0eeada12ff18accc712a61"},
+    {file = "stamina-24.3.0-py3-none-any.whl", hash = "sha256:28caf1a5db514256d86e32b60621630552fa9a60dace4e6fb5c78ba15f26236e"},
+    {file = "stamina-24.3.0.tar.gz", hash = "sha256:1d763c98962ca11f1729c357422926a750a138e803e7beb9f9d6c99d33d9997d"},
 ]
 
 [package.dependencies]
 tenacity = "*"
 
 [package.extras]
-dev = ["nox", "prometheus-client", "stamina[tests,typing]", "structlog", "tomli", "trio"]
+dev = ["anyio", "mypy (>=1.4)", "nox (>=2024.3.2)", "prometheus-client", "pytest", "structlog", "tomli", "trio", "uv"]
 docs = ["furo", "myst-parser", "prometheus-client", "sphinx (>=7.2.2)", "sphinx-copybutton", "sphinx-notfound-page", "structlog"]
 tests = ["anyio", "pytest"]
 typing = ["mypy (>=1.4)"]
@@ -2951,4 +2951,4 @@ requests = ">=2.0,<3.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12.0"
-content-hash = "08fedf2fdac31fdc2b85f532b64afc3171dfbd66d34c00d4f4e34db75eb599ab"
+content-hash = "69489fab1ec23a71f44e3f1fef2e85acd5d5af2850b52db910680028645541f4"
