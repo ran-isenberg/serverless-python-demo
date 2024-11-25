@@ -32,51 +32,51 @@ tests-mypy = ["mypy (>=1.11.1)", "pytest-mypy-plugins"]
 
 [[package]]
 name = "aws-cdk-asset-awscli-v1"
-version = "2.2.202"
+version = "2.2.212"
 description = "A library that contains the AWS CLI for use in Lambda Layers"
 optional = false
 python-versions = "~=3.8"
 files = [
-    {file = "aws-cdk.asset-awscli-v1-2.2.202.tar.gz", hash = "sha256:3ef87d6530736b3a7b0f777fe3b4297994dd40c3ce9306d95f80f48fb18036e8"},
-    {file = "aws_cdk.asset_awscli_v1-2.2.202-py3-none-any.whl", hash = "sha256:96205ea2e5e132ec52fabfff37ea25b9b859498f167d05b32564c949822cd331"},
+    {file = "aws_cdk.asset_awscli_v1-2.2.212-py3-none-any.whl", hash = "sha256:12161e2d528698957bc2c0f53d2f5e81de54f8ad0e4b94316634bdc1db50f539"},
+    {file = "aws_cdk_asset_awscli_v1-2.2.212.tar.gz", hash = "sha256:3a4374562f37c9cd3f59cb45173a18ef0f781c0f1df187773662a1dd14cc18fd"},
 ]
 
 [package.dependencies]
-jsii = ">=1.93.0,<2.0.0"
+jsii = ">=1.105.0,<2.0.0"
 publication = ">=0.0.3"
-typeguard = ">=2.13.3,<2.14.0"
+typeguard = ">=2.13.3,<4.3.0"
 
 [[package]]
 name = "aws-cdk-asset-kubectl-v20"
-version = "2.1.2"
-description = "A library that contains kubectl for use in Lambda Layers"
+version = "2.1.3"
+description = "A Lambda Layer that contains kubectl v1.20"
 optional = false
-python-versions = "~=3.7"
+python-versions = "~=3.8"
 files = [
-    {file = "aws-cdk.asset-kubectl-v20-2.1.2.tar.gz", hash = "sha256:346283e43018a43e3b3ca571de3f44e85d49c038dc20851894cb8f9b2052b164"},
-    {file = "aws_cdk.asset_kubectl_v20-2.1.2-py3-none-any.whl", hash = "sha256:7f0617ab6cb942b066bd7174bf3e1f377e57878c3e1cddc21d6b2d13c92d0cc1"},
+    {file = "aws_cdk.asset_kubectl_v20-2.1.3-py3-none-any.whl", hash = "sha256:d5612e5bd03c215a28ce53193b1144ecf4e93b3b6779563c046a8a74d83a3979"},
+    {file = "aws_cdk_asset_kubectl_v20-2.1.3.tar.gz", hash = "sha256:237cd8530d9e8be0bbc7159af927dbb6b7f91bf3f4099c8ef4d9a213b34264be"},
 ]
 
 [package.dependencies]
-jsii = ">=1.70.0,<2.0.0"
+jsii = ">=1.103.1,<2.0.0"
 publication = ">=0.0.3"
-typeguard = ">=2.13.3,<2.14.0"
+typeguard = ">=2.13.3,<5.0.0"
 
 [[package]]
 name = "aws-cdk-asset-node-proxy-agent-v6"
-version = "2.0.3"
+version = "2.1.0"
 description = "@aws-cdk/asset-node-proxy-agent-v6"
 optional = false
 python-versions = "~=3.8"
 files = [
-    {file = "aws-cdk.asset-node-proxy-agent-v6-2.0.3.tar.gz", hash = "sha256:b62cb10c69a42cab135e6bc670e3d2d3121fd4f53a0f61e53449da4b12738a6f"},
-    {file = "aws_cdk.asset_node_proxy_agent_v6-2.0.3-py3-none-any.whl", hash = "sha256:ef2ff0634ab037e2ebddbe69d7c92515a847c6c8bb2abdfc85b089f5e87761cb"},
+    {file = "aws_cdk.asset_node_proxy_agent_v6-2.1.0-py3-none-any.whl", hash = "sha256:24a388b69a44d03bae6dbf864c4e25ba650d4b61c008b4568b94ffbb9a69e40e"},
+    {file = "aws_cdk_asset_node_proxy_agent_v6-2.1.0.tar.gz", hash = "sha256:1f292c0631f86708ba4ee328b3a2b229f7e46ea1c79fbde567ee9eb119c2b0e2"},
 ]
 
 [package.dependencies]
-jsii = ">=1.96.0,<2.0.0"
+jsii = ">=1.103.1,<2.0.0"
 publication = ">=0.0.3"
-typeguard = ">=2.13.3,<2.14.0"
+typeguard = ">=2.13.3,<5.0.0"
 
 [[package]]
 name = "aws-cdk-aws-lambda-python-alpha"
@@ -98,13 +98,13 @@ typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "aws-cdk-cloud-assembly-schema"
-version = "36.0.22"
+version = "38.0.1"
 description = "Cloud Assembly Schema"
 optional = false
 python-versions = "~=3.8"
 files = [
-    {file = "aws_cdk.cloud_assembly_schema-36.0.22-py3-none-any.whl", hash = "sha256:34f64dd17facad357a76edd951c00cd74abb1fa66eda1efb6618d28e39416677"},
-    {file = "aws_cdk_cloud_assembly_schema-36.0.22.tar.gz", hash = "sha256:e9434280853ddcc6d76a5f96ec347b93db808e7c0f3a784eb079fc6cd192bf36"},
+    {file = "aws_cdk.cloud_assembly_schema-38.0.1-py3-none-any.whl", hash = "sha256:92613b46213b460681e9424f09b77f06ff059eb1c773092540364ef82fcecf55"},
+    {file = "aws_cdk_cloud_assembly_schema-38.0.1.tar.gz", hash = "sha256:7c75861adc41f7b959910d4b3b191ea242815402e599dbfa31934892838ae25e"},
 ]
 
 [package.dependencies]
@@ -114,24 +114,24 @@ typeguard = ">=2.13.3,<5.0.0"
 
 [[package]]
 name = "aws-cdk-lib"
-version = "2.155.0"
+version = "2.170.0"
 description = "Version 2 of the AWS Cloud Development Kit library"
 optional = false
 python-versions = "~=3.8"
 files = [
-    {file = "aws_cdk_lib-2.155.0-py3-none-any.whl", hash = "sha256:260e6b237f7e916700d18402d811c0dbabb36b0d90275ee73810ce9746650961"},
-    {file = "aws_cdk_lib-2.155.0.tar.gz", hash = "sha256:4156ec3f6bd6fce09285a7309ca1f62b3ed95ef0a9e902eab4f649e118911771"},
+    {file = "aws_cdk_lib-2.170.0-py3-none-any.whl", hash = "sha256:0eb2b58d45c3ada4b3980488bce1a2279626b081fcdaad55f4aed6b4c6bd4d70"},
+    {file = "aws_cdk_lib-2.170.0.tar.gz", hash = "sha256:9194b7637e0204aa031e28ec761d325d0f4a931d3a303b0121812e9ec0bc1147"},
 ]
 
 [package.dependencies]
-"aws-cdk.asset-awscli-v1" = ">=2.2.202,<3.0.0"
-"aws-cdk.asset-kubectl-v20" = ">=2.1.2,<3.0.0"
-"aws-cdk.asset-node-proxy-agent-v6" = ">=2.0.3,<3.0.0"
-"aws-cdk.cloud-assembly-schema" = ">=36.0.5,<37.0.0"
+"aws-cdk.asset-awscli-v1" = ">=2.2.208,<3.0.0"
+"aws-cdk.asset-kubectl-v20" = ">=2.1.3,<3.0.0"
+"aws-cdk.asset-node-proxy-agent-v6" = ">=2.1.0,<3.0.0"
+"aws-cdk.cloud-assembly-schema" = ">=38.0.1,<39.0.0"
 constructs = ">=10.0.0,<11.0.0"
-jsii = ">=1.102.0,<2.0.0"
+jsii = ">=1.104.0,<2.0.0"
 publication = ">=0.0.3"
-typeguard = ">=2.13.3,<2.14.0"
+typeguard = ">=2.13.3,<4.3.0"
 
 [[package]]
 name = "aws-lambda-env-modeler"
@@ -338,21 +338,21 @@ typeguard = ">=2.13.3,<2.14.0"
 
 [[package]]
 name = "cdk-nag"
-version = "2.28.194"
+version = "2.34.6"
 description = "Check CDK v2 applications for best practices using a combination on available rule packs."
 optional = false
 python-versions = "~=3.8"
 files = [
-    {file = "cdk_nag-2.28.194-py3-none-any.whl", hash = "sha256:ab9666a7c3669a60c0981190b4595485744de868be9cca985f395f3a489260a4"},
-    {file = "cdk_nag-2.28.194.tar.gz", hash = "sha256:36dd0578902b6f97e5c2e0b41c6fe503fc831cc6f41e11a0277255639546b767"},
+    {file = "cdk_nag-2.34.6-py3-none-any.whl", hash = "sha256:2a93557bf29f7ce928a2c067e9891cc756af6e01060991af3bb9ed423844aaad"},
+    {file = "cdk_nag-2.34.6.tar.gz", hash = "sha256:caa2c02852e6059bda7883d636db6e73b324881aabc0dacd72180bf60b958d09"},
 ]
 
 [package.dependencies]
-aws-cdk-lib = ">=2.116.0,<3.0.0"
+aws-cdk-lib = ">=2.156.0,<3.0.0"
 constructs = ">=10.0.5,<11.0.0"
-jsii = ">=1.103.1,<2.0.0"
+jsii = ">=1.105.0,<2.0.0"
 publication = ">=0.0.3"
-typeguard = ">=2.13.3,<5.0.0"
+typeguard = ">=2.13.3,<4.3.0"
 
 [[package]]
 name = "certifi"
@@ -1122,22 +1122,22 @@ files = [
 
 [[package]]
 name = "jsii"
-version = "1.103.1"
+version = "1.105.0"
 description = "Python client for jsii runtime"
 optional = false
 python-versions = "~=3.8"
 files = [
-    {file = "jsii-1.103.1-py3-none-any.whl", hash = "sha256:24b96349230ca22f50fcd69c501e69b6c486acf37bbe0b5869f4c185572b079e"},
-    {file = "jsii-1.103.1.tar.gz", hash = "sha256:7eaa46e8cd9546edc6bba81d0b32df9f8ed8f5848305277d261cccfe00b9c1eb"},
+    {file = "jsii-1.105.0-py3-none-any.whl", hash = "sha256:8888088479b449db6d8e3a7df25434ec4580bf4fc13f4f952e9db5f2a3fc0c0f"},
+    {file = "jsii-1.105.0.tar.gz", hash = "sha256:435682d509e628e6f8a765b017102e6fcd553f4d0f6b3417b3f7eb295c2e0d1f"},
 ]
 
 [package.dependencies]
 attrs = ">=21.2,<25.0"
-cattrs = ">=1.8,<23.3"
+cattrs = ">=1.8,<24.2"
 importlib-resources = ">=5.2.0"
 publication = ">=0.0.3"
 python-dateutil = "*"
-typeguard = ">=2.13.3,<5.0.0"
+typeguard = ">=2.13.3,<4.5.0"
 typing-extensions = ">=3.8,<5.0"
 
 [[package]]
