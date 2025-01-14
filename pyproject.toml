@@ -1,3 +1,6 @@
+[build-system]
+requires = ["poetry>=2.0.1"]
+build-backend = "poetry.core.masonry.api"
 [tool.poetry]
 name = "serverless-python-demo"
 version = "1.0.0"
@@ -61,6 +64,9 @@ mkdocstrings = "^0.23.0"
 mkdocstrings-python = "^1.7.1"
 ruff = "*"
 stamina = "^23.2.0"
+
+[tool.poetry.requires-plugins]
+poetry-plugin-export = ">=1.9"
 
 [tool.pytest.ini_options]
 testpaths = "tests"
