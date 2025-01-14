@@ -158,7 +158,7 @@ class CrudApiConstruct(Construct):
         lambda_function = _lambda.Function(
             self,
             constants.CREATE_LAMBDA,
-            runtime=_lambda.Runtime.PYTHON_3_12,
+            runtime=_lambda.Runtime.PYTHON_3_13,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
             handler='product.crud.handlers.handle_create_product.lambda_handler',
             environment={
@@ -197,7 +197,7 @@ class CrudApiConstruct(Construct):
         lambda_function = _lambda.Function(
             self,
             constants.DELETE_LAMBDA,
-            runtime=_lambda.Runtime.PYTHON_3_12,
+            runtime=_lambda.Runtime.PYTHON_3_13,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
             handler='product.crud.handlers.handle_delete_product.lambda_handler',
             environment={
@@ -235,7 +235,7 @@ class CrudApiConstruct(Construct):
         lambda_function = _lambda.Function(
             self,
             constants.GET_LAMBDA,
-            runtime=_lambda.Runtime.PYTHON_3_12,
+            runtime=_lambda.Runtime.PYTHON_3_13,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
             handler='product.crud.handlers.handle_get_product.lambda_handler',
             environment={
@@ -273,7 +273,7 @@ class CrudApiConstruct(Construct):
         lambda_function = _lambda.Function(
             self,
             constants.LIST_LAMBDA,
-            runtime=_lambda.Runtime.PYTHON_3_12,
+            runtime=_lambda.Runtime.PYTHON_3_13,
             code=_lambda.Code.from_asset(constants.BUILD_FOLDER),
             handler='product.crud.handlers.handle_list_products.lambda_handler',
             environment={

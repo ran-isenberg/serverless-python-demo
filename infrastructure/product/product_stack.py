@@ -47,7 +47,7 @@ class ServiceStack(Stack):
             self,
             f'{id_}{constants.LAMBDA_LAYER_NAME}',
             entry=constants.COMMON_LAYER_BUILD_FOLDER,
-            compatible_runtimes=[_lambda.Runtime.PYTHON_3_12],
+            compatible_runtimes=[_lambda.Runtime.PYTHON_3_13],
             removal_policy=RemovalPolicy.DESTROY,
         )
 
